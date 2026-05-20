@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
 
     // Determine initial route based on authentication state
     final AuthService auth = Get.find<AuthService>();
-    final String initialRoute = auth.isLoggedIn ? Routes.HOME : Routes.LOGIN;
+    final String initialRoute = auth.isLoggedIn ? Routes.home : Routes.login;
 
     return ScreenUtilInit(
       designSize: const Size(375, 812), // Standard design size for scaling UI

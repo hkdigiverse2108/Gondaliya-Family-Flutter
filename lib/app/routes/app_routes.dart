@@ -3,19 +3,25 @@ part of 'app_pages.dart';
 abstract class Routes {
   Routes._();
 
-  static const HOME = _Paths.HOME;
-  static const FAMILY = _Paths.FAMILY;
-  static const BUSINESS = _Paths.BUSINESS;
-  static const LOGIN = _Paths.LOGIN;
-  static const REGISTER = _Paths.REGISTER;
+  static const home = _Paths.home;
+  static const family = _Paths.family;
+  static const business = _Paths.business;
+  static const login = _Paths.login;
+  static const register = _Paths.register;
+  static const chat = _Paths.chat;
+  static const announcements = _Paths.announcements;
+  static const myBusiness = _Paths.myBusiness;
 }
 
 abstract class _Paths {
   _Paths._();
 
-  static const HOME = '/home';
-  static const FAMILY = '/family';
-  static const BUSINESS = '/business';
-  static const LOGIN = '/login';
-  static const REGISTER = '/register';
+  static const home = '/home';
+  static const family = '/family';
+  static const business = '/business';
+  static const login = '/login';
+  static const register = '/register';
+  static const chat = '/chat';
+  static const announcements = '/announcements';
+  static const myBusiness = '/my-business';
 }

@@ -16,6 +16,13 @@ class UserModel extends Equatable {
   final String houseType; // 'Owned' or 'Rented'
   final String mobile1;
   final String mobile2;
+  final String occupationType; // 'Business', 'Job', 'None'
+  final String? businessName;
+  final String? businessCategory;
+  final String? businessAddress;
+  final String? companyName;
+  final String? jobRole;
+  final String? companyAddress;
   final List<FamilyMember> familyMembers;
   final DateTime createdAt;
 
@@ -34,6 +41,13 @@ class UserModel extends Equatable {
     required this.houseType,
     required this.mobile1,
     required this.mobile2,
+    required this.occupationType,
+    this.businessName,
+    this.businessCategory,
+    this.businessAddress,
+    this.companyName,
+    this.jobRole,
+    this.companyAddress,
     required this.familyMembers,
     required this.createdAt,
   });
@@ -54,6 +68,13 @@ class UserModel extends Equatable {
       'houseType': houseType,
       'mobile1': mobile1,
       'mobile2': mobile2,
+      'occupationType': occupationType,
+      'businessName': businessName,
+      'businessCategory': businessCategory,
+      'businessAddress': businessAddress,
+      'companyName': companyName,
+      'jobRole': jobRole,
+      'companyAddress': companyAddress,
       'familyMembers': familyMembers.map((e) => e.toJson()).toList(),
       'createdAt': createdAt.toIso8601String(),
     };
@@ -75,6 +96,13 @@ class UserModel extends Equatable {
       houseType: json['houseType'] as String,
       mobile1: json['mobile1'] as String,
       mobile2: json['mobile2'] as String,
+      occupationType: json['occupationType'] as String? ?? 'None',
+      businessName: json['businessName'] as String?,
+      businessCategory: json['businessCategory'] as String?,
+      businessAddress: json['businessAddress'] as String?,
+      companyName: json['companyName'] as String?,
+      jobRole: json['jobRole'] as String?,
+      companyAddress: json['companyAddress'] as String?,
       familyMembers:
           (json['familyMembers'] as List<dynamic>?)
               ?.map((e) => FamilyMember.fromJson(e as Map<String, dynamic>))
@@ -99,6 +127,13 @@ class UserModel extends Equatable {
     String? houseType,
     String? mobile1,
     String? mobile2,
+    String? occupationType,
+    String? businessName,
+    String? businessCategory,
+    String? businessAddress,
+    String? companyName,
+    String? jobRole,
+    String? companyAddress,
     List<FamilyMember>? familyMembers,
     DateTime? createdAt,
   }) {
@@ -117,6 +152,13 @@ class UserModel extends Equatable {
       houseType: houseType ?? this.houseType,
       mobile1: mobile1 ?? this.mobile1,
       mobile2: mobile2 ?? this.mobile2,
+      occupationType: occupationType ?? this.occupationType,
+      businessName: businessName ?? this.businessName,
+      businessCategory: businessCategory ?? this.businessCategory,
+      businessAddress: businessAddress ?? this.businessAddress,
+      companyName: companyName ?? this.companyName,
+      jobRole: jobRole ?? this.jobRole,
+      companyAddress: companyAddress ?? this.companyAddress,
       familyMembers: familyMembers ?? this.familyMembers,
       createdAt: createdAt ?? this.createdAt,
     );
@@ -138,6 +180,13 @@ class UserModel extends Equatable {
     houseType,
     mobile1,
     mobile2,
+    occupationType,
+    businessName,
+    businessCategory,
+    businessAddress,
+    companyName,
+    jobRole,
+    companyAddress,
     familyMembers,
     createdAt,
   ];

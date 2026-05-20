@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/values/colors.dart';
 import '../../../../core/values/sizes.dart';
 import '../../../global_widgets/generation_avatar.dart';
+import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
 
 class FamilyStep extends StatelessWidget {
@@ -59,22 +60,11 @@ class FamilyStep extends StatelessWidget {
         ),
         SizedBox(height: AppSizes.spacingM.h),
 
-        // List of Family Members styled as cards
+        // List of Family Members styled as NeomorphicCards
         Obx(() {
           if (controller.familyMembers.isEmpty) {
-            return Container(
+            return NeomorphicCard(
               padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
-              decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.cardDark.withValues(alpha: 0.5)
-                    : AppColors.white,
-                border: Border.all(
-                  color: isDark
-                      ? AppColors.dividerDark
-                      : AppColors.dividerLight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-              ),
               child: Center(
                 child: Column(
                   children: [
@@ -112,95 +102,75 @@ class FamilyStep extends StatelessWidget {
                 member.age,
               );
 
-              return Container(
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.cardDark : AppColors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  border: Border.all(
-                    color: isDark
-                        ? AppColors.dividerDark
-                        : AppColors.dividerLight,
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: isDark
-                          ? Colors.black.withValues(alpha: 0.1)
-                          : AppColors.shadowLight,
-                      offset: const Offset(0, 4),
-                      blurRadius: 12,
+              return NeomorphicCard(
+                padding: EdgeInsets.all(12.w),
+                child: Row(
+                  children: [
+                    GenerationAvatar(
+                      name: member.name,
+                      color: genColor,
+                      radius: 20,
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            member.name,
+                            style: GoogleFonts.outfit(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.sp,
+                              color: isDark
+                                  ? AppColors.white
+                                  : AppColors.textLightPrimary,
+                            ),
+                          ),
+                          SizedBox(height: 4.h),
+                          Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8.w,
+                                  vertical: 2.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: genColor.withValues(alpha: 0.15),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: Text(
+                                  member.relationship,
+                                  style: GoogleFonts.outfit(
+                                    color: genColor,
+                                    fontSize: 10.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 8.w),
+                              Text(
+                                '${member.age} Yrs • ${member.occupation}',
+                                style: GoogleFonts.outfit(
+                                  fontSize: 11.sp,
+                                  color: isDark
+                                      ? AppColors.textDarkSecondary
+                                      : AppColors.textLightSecondary,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.delete_outline_rounded,
+                        color: AppColors.error,
+                      ),
+                      onPressed: () =>
+                          controller.removeFamilyMemberDraft(member.id),
                     ),
                   ],
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(12.w),
-                  child: Row(
-                    children: [
-                      GenerationAvatar(
-                        name: member.fullName,
-                        color: genColor,
-                        radius: 20,
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              member.fullName,
-                              style: GoogleFonts.outfit(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 15.sp,
-                                color: isDark
-                                    ? AppColors.white
-                                    : AppColors.textLightPrimary,
-                              ),
-                            ),
-                            SizedBox(height: 4.h),
-                            Row(
-                              children: [
-                                Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 8.w,
-                                    vertical: 2.h,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: genColor.withValues(alpha: 0.15),
-                                    borderRadius: BorderRadius.circular(12.r),
-                                  ),
-                                  child: Text(
-                                    member.relationship,
-                                    style: GoogleFonts.outfit(
-                                      color: genColor,
-                                      fontSize: 10.sp,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                Text(
-                                  '${member.age} Yrs • ${member.occupation}',
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 11.sp,
-                                    color: isDark
-                                        ? AppColors.textDarkSecondary
-                                        : AppColors.textLightSecondary,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.delete_outline_rounded,
-                          color: AppColors.error,
-                        ),
-                        onPressed: () =>
-                            controller.removeFamilyMemberDraft(member.id),
-                      ),
-                    ],
-                  ),
                 ),
               );
             },

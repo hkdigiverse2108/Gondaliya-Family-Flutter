@@ -31,7 +31,21 @@ class RegisterController extends GetxController {
   final talukaController = TextEditingController();
   final districtController = TextEditingController();
 
-  // Step 3: Family Members List (Draft)
+  // Step 3: Occupation Info
+  final occupationType = 'None'.obs; // 'Business', 'Job', 'None'
+  final occupationFormKey = GlobalKey<FormState>();
+
+  // Business fields
+  final businessNameController = TextEditingController();
+  final businessCategoryController = TextEditingController();
+  final businessAddressController = TextEditingController();
+
+  // Job fields
+  final companyNameController = TextEditingController();
+  final jobRoleController = TextEditingController();
+  final companyAddressController = TextEditingController();
+
+  // Step 4: Family Members List (Draft)
   final familyMembers = <FamilyMember>[].obs;
 
   // Form Keys for validation per step
@@ -64,6 +78,12 @@ class RegisterController extends GetxController {
     pincodeController.dispose();
     talukaController.dispose();
     districtController.dispose();
+    businessNameController.dispose();
+    businessCategoryController.dispose();
+    businessAddressController.dispose();
+    companyNameController.dispose();
+    jobRoleController.dispose();
+    companyAddressController.dispose();
     super.onClose();
   }
 
@@ -76,6 +96,11 @@ class RegisterController extends GetxController {
       }
     } else if (currentStep.value == 1) {
       if (profileFormKey.currentState!.validate()) {
+        currentStep.value++;
+      }
+    } else if (currentStep.value == 2) {
+      if (occupationType.value == 'None' ||
+          (occupationFormKey.currentState?.validate() ?? true)) {
         currentStep.value++;
       }
     }
@@ -102,7 +127,6 @@ class RegisterController extends GetxController {
     required bool isMarried,
     required String bloodGroup,
     required String skill,
-    required String notes,
   }) {
     final newMember = FamilyMember(
       id: _uuid.v4(),
@@ -118,7 +142,6 @@ class RegisterController extends GetxController {
       isMarried: isMarried,
       bloodGroup: bloodGroup,
       skill: skill,
-      notes: notes,
       createdAt: DateTime.now(),
     );
     familyMembers.add(newMember);
@@ -151,6 +174,13 @@ class RegisterController extends GetxController {
       houseType: houseType.value,
       mobile1: mobile1Controller.text.trim(),
       mobile2: mobile2Controller.text.trim(),
+      occupationType: occupationType.value,
+      businessName: occupationType.value == 'Business' ? businessNameController.text.trim() : null,
+      businessCategory: occupationType.value == 'Business' ? businessCategoryController.text.trim() : null,
+      businessAddress: occupationType.value == 'Business' ? businessAddressController.text.trim() : null,
+      companyName: occupationType.value == 'Job' ? companyNameController.text.trim() : null,
+      jobRole: occupationType.value == 'Job' ? jobRoleController.text.trim() : null,
+      companyAddress: occupationType.value == 'Job' ? companyAddressController.text.trim() : null,
       familyMembers: List<FamilyMember>.from(familyMembers),
       createdAt: DateTime.now(),
     );
@@ -166,7 +196,7 @@ class RegisterController extends GetxController {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-      Get.offAllNamed(Routes.HOME);
+      Get.offAllNamed(Routes.home);
     } else {
       Get.snackbar(
         'Error',

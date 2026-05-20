@@ -25,7 +25,6 @@ void showFamilyMemberFormSheet(BuildContext context, {
   final eduController = TextEditingController(text: member?.education);
   final bloodController = TextEditingController(text: member?.bloodGroup);
   final skillController = TextEditingController(text: member?.skill);
-  final notesController = TextEditingController(text: member?.notes);
   final isMarriedRx = (member?.isMarried ?? false).obs;
 
   final isEdit = member != null;
@@ -169,13 +168,6 @@ void showFamilyMemberFormSheet(BuildContext context, {
                 prefixIcon: const Icon(Icons.bolt_rounded, color: AppColors.primaryLight),
               ),
               SizedBox(height: 12.h),
-              CustomTextField(
-                controller: notesController,
-                maxLines: 2,
-                labelText: 'notes'.tr,
-                prefixIcon: const Icon(Icons.notes_rounded, color: AppColors.primaryLight),
-              ),
-              SizedBox(height: 12.h),
               Obx(() => SwitchListTile(
                     title: Text('married'.tr, style: GoogleFonts.outfit(fontSize: 14.sp, color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary)),
                     value: isMarriedRx.value,
@@ -209,7 +201,6 @@ void showFamilyMemberFormSheet(BuildContext context, {
                           isMarried: isMarriedRx.value,
                           bloodGroup: bloodController.text.trim(),
                           skill: skillController.text.trim(),
-                          notes: notesController.text.trim(),
                         ));
                       } else {
                         controller.addFamilyMember(
@@ -225,7 +216,6 @@ void showFamilyMemberFormSheet(BuildContext context, {
                           isMarried: isMarriedRx.value,
                           bloodGroup: bloodController.text.trim(),
                           skill: skillController.text.trim(),
-                          notes: notesController.text.trim(),
                         );
                       }
                       Get.back();

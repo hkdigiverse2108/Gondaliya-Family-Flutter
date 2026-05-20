@@ -1,5 +1,6 @@
 const Map<String, String> guIn = {
-  'app_name': 'ગોંડલીયા પટેલ પરિવાર',
+  'app_name': 'ગોંડલીયા પરિવાર',
+  // 'app_name': 'ગોંડલીયા પટેલ પરિવાર',
   'motto': 'સેવા • સહકાર • સંગઠન',
 
   // Navigation & Actions

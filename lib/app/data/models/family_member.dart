@@ -14,7 +14,6 @@ class FamilyMember extends Equatable {
   final bool isMarried;
   final String bloodGroup;
   final String skill;
-  final String notes;
   final DateTime createdAt;
 
   const FamilyMember({
@@ -31,7 +30,7 @@ class FamilyMember extends Equatable {
     required this.isMarried,
     required this.bloodGroup,
     required this.skill,
-    required this.notes,
+
     required this.createdAt,
   });
 
@@ -50,7 +49,7 @@ class FamilyMember extends Equatable {
       'isMarried': isMarried,
       'bloodGroup': bloodGroup,
       'skill': skill,
-      'notes': notes,
+
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -70,7 +69,7 @@ class FamilyMember extends Equatable {
       isMarried: json['isMarried'] as bool? ?? false,
       bloodGroup: json['bloodGroup'] as String? ?? '',
       skill: json['skill'] as String? ?? '',
-      notes: json['notes'] as String? ?? '',
+
       createdAt: DateTime.parse(json['createdAt'] as String),
     );
   }
@@ -89,7 +88,6 @@ class FamilyMember extends Equatable {
     bool? isMarried,
     String? bloodGroup,
     String? skill,
-    String? notes,
     DateTime? createdAt,
   }) {
     return FamilyMember(
@@ -106,7 +104,6 @@ class FamilyMember extends Equatable {
       isMarried: isMarried ?? this.isMarried,
       bloodGroup: bloodGroup ?? this.bloodGroup,
       skill: skill ?? this.skill,
-      notes: notes ?? this.notes,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -126,7 +123,6 @@ class FamilyMember extends Equatable {
     isMarried,
     bloodGroup,
     skill,
-    notes,
     createdAt,
   ];
 

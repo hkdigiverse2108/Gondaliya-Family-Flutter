@@ -89,7 +89,7 @@ class HomeController extends GetxController {
   // --- Logout ---
   Future<void> logout() async {
     await _authService.logout();
-    Get.offAllNamed(Routes.LOGIN);
+    Get.offAllNamed(Routes.login);
   }
 
   // --- Family Member CRUD Operations ---
@@ -107,7 +107,6 @@ class HomeController extends GetxController {
     required bool isMarried,
     required String bloodGroup,
     required String skill,
-    required String notes,
   }) {
     final member = FamilyMember(
       id: _uuid.v4(),
@@ -123,7 +122,6 @@ class HomeController extends GetxController {
       isMarried: isMarried,
       bloodGroup: bloodGroup,
       skill: skill,
-      notes: notes,
       createdAt: DateTime.now(),
     );
     familyMembers.add(member);

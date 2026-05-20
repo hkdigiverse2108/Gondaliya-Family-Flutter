@@ -49,4 +49,126 @@ class AppColors {
   static const Color white = Colors.white;
   static const Color black = Colors.black;
   static const Color transparent = Colors.transparent;
+
+  // Neumorphic shadow utilities
+  static List<BoxShadow> neumorphicShadowLight({
+    double blur = 15,
+    double distance = 5,
+  }) {
+    return [
+      // Soft shadow (bottom-right)
+      BoxShadow(
+        color: const Color(0xFF000000).withValues(alpha: 0.1),
+        blurRadius: blur,
+        offset: Offset(distance, distance),
+      ),
+      // Highlight shadow (top-left)
+      BoxShadow(
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.7),
+        blurRadius: blur,
+        offset: Offset(-distance, -distance),
+      ),
+    ];
+  }
+
+  static List<BoxShadow> neumorphicShadowDark({
+    double blur = 15,
+    double distance = 5,
+  }) {
+    return [
+      // Dark shadow (bottom-right)
+      BoxShadow(
+        color: const Color(0xFF000000).withValues(alpha: 0.5),
+        blurRadius: blur,
+        offset: Offset(distance, distance),
+      ),
+      // Light highlight (top-left)
+      BoxShadow(
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.15),
+        blurRadius: blur,
+        offset: Offset(-distance, -distance),
+      ),
+    ];
+  }
+
+  static List<BoxShadow> neumorphicInsetShadowLight({
+    double blur = 12,
+    double distance = 4,
+  }) {
+    return [
+      // Inner shadow effect (top-left)
+      BoxShadow(
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.8),
+        blurRadius: blur,
+        offset: Offset(-distance, -distance),
+        spreadRadius: -1,
+      ),
+      // Inner dark shadow (bottom-right)
+      BoxShadow(
+        color: const Color(0xFF000000).withValues(alpha: 0.12),
+        blurRadius: blur,
+        offset: Offset(distance, distance),
+        spreadRadius: -1,
+      ),
+    ];
+  }
+
+  static List<BoxShadow> neumorphicInsetShadowDark({
+    double blur = 12,
+    double distance = 4,
+  }) {
+    return [
+      // Inner highlight (top-left)
+      BoxShadow(
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.1),
+        blurRadius: blur,
+        offset: Offset(-distance, -distance),
+        spreadRadius: -1,
+      ),
+      // Inner dark shadow (bottom-right)
+      BoxShadow(
+        color: const Color(0xFF000000).withValues(alpha: 0.6),
+        blurRadius: blur,
+        offset: Offset(distance, distance),
+        spreadRadius: -1,
+      ),
+    ];
+  }
+
+  static List<BoxShadow> neumorphicPressShadowLight({
+    double blur = 8,
+    double distance = 2,
+  }) {
+    return [
+      // Pressed state - reduced shadow
+      BoxShadow(
+        color: const Color(0xFF000000).withValues(alpha: 0.08),
+        blurRadius: blur,
+        offset: Offset(distance, distance),
+      ),
+      BoxShadow(
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.5),
+        blurRadius: blur,
+        offset: Offset(-distance, -distance),
+      ),
+    ];
+  }
+
+  static List<BoxShadow> neumorphicPressShadowDark({
+    double blur = 8,
+    double distance = 2,
+  }) {
+    return [
+      BoxShadow(
+        color: const Color(0xFF000000).withValues(alpha: 0.4),
+        blurRadius: blur,
+        offset: Offset(distance, distance),
+      ),
+      BoxShadow(
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.08),
+        blurRadius: blur,
+        offset: Offset(-distance, -distance),
+      ),
+    ];
+  }
 }

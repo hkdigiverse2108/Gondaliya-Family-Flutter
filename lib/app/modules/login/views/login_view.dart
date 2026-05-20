@@ -5,9 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/values/colors.dart';
 import '../../../../core/values/sizes.dart';
 import '../../../routes/app_pages.dart';
-import '../../../global_widgets/custom_text_field.dart';
-import '../../../global_widgets/custom_button.dart';
-import '../../../global_widgets/glass_card.dart';
+import '../../../global_widgets/neomorphic_text_field.dart';
+import '../../../global_widgets/neomorphic_button.dart';
+import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends GetView<LoginController> {
@@ -23,42 +23,40 @@ class LoginView extends GetView<LoginController> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         actions: [
-          // Language Toggle Button (Styled as a premium Chip)
+          // Language Toggle Button (Neumorphic style)
           Padding(
             padding: EdgeInsets.only(right: 16.w),
-            child: Container(
-              decoration: BoxDecoration(
-                color: isDark
-                    ? AppColors.cardDark.withValues(alpha: 0.6)
-                    : AppColors.white.withValues(alpha: 0.8),
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(
-                  color: isDark
-                      ? AppColors.dividerDark
-                      : AppColors.dividerLight,
-                  width: 1,
+            child: GestureDetector(
+              onTap: controller.toggleLanguage,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: isDark ? AppColors.cardDark : AppColors.cardLight,
+                  borderRadius: BorderRadius.circular(20.r),
+                  boxShadow: isDark
+                      ? AppColors.neumorphicShadowDark(blur: 12, distance: 3)
+                      : AppColors.neumorphicShadowLight(blur: 12, distance: 3),
                 ),
-              ),
-              child: TextButton.icon(
-                onPressed: controller.toggleLanguage,
-                style: TextButton.styleFrom(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 4.h,
-                  ),
-                ),
-                icon: Icon(
-                  Icons.language,
-                  color: isDark ? AppColors.secondaryLight : AppColors.primary,
-                  size: 16.w,
-                ),
-                label: Text(
-                  Get.locale?.languageCode == 'gu' ? 'English' : 'ગુજરાતી',
-                  style: GoogleFonts.outfit(
-                    color: isDark ? AppColors.white : AppColors.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13.sp,
-                  ),
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.language,
+                      color: isDark
+                          ? AppColors.secondaryLight
+                          : AppColors.primary,
+                      size: 16.w,
+                    ),
+                    SizedBox(width: 6.w),
+                    Text(
+                      Get.locale?.languageCode == 'gu' ? 'English' : 'ગુજરાતી',
+                      style: GoogleFonts.outfit(
+                        color: isDark ? AppColors.white : AppColors.primary,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.sp,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -192,8 +190,8 @@ class LoginView extends GetView<LoginController> {
                     ),
                     SizedBox(height: AppSizes.spacingL.h),
 
-                    // Frosted Glass Card for Login fields
-                    GlassCard(
+                    // Neumorphic Card for Login fields
+                    NeomorphicCard(
                       borderRadius: AppSizes.radiusXXL.w,
                       padding: EdgeInsets.all(24.w),
                       child: Column(
@@ -213,8 +211,8 @@ class LoginView extends GetView<LoginController> {
                           ),
                           SizedBox(height: AppSizes.spacingXL.h),
 
-                          // Phone Number Input
-                          CustomTextField(
+                          // Phone Number Input - Neumorphic
+                          NeomorphicTextField(
                             controller: controller.phoneController,
                             labelText: 'phone_number'.tr,
                             hintText: 'e.g. 9876543210',
@@ -226,8 +224,8 @@ class LoginView extends GetView<LoginController> {
                           ),
                           SizedBox(height: AppSizes.spacingL.h),
 
-                          // Password Input
-                          CustomTextField(
+                          // Password Input - Neumorphic
+                          NeomorphicTextField(
                             controller: controller.passwordController,
                             labelText: 'password'.tr,
                             isPassword: true,
@@ -238,37 +236,20 @@ class LoginView extends GetView<LoginController> {
                           ),
                           SizedBox(height: AppSizes.spacingXL.h),
 
-                          // Sign In Button with Aurora Gradient background style
+                          // Sign In Button with Neumorphic styling
                           Obx(
-                            () => Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(12.r),
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    AppColors.primary,
-                                    AppColors.tealBridge,
-                                    AppColors.secondary,
-                                  ],
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppColors.primary.withValues(
-                                      alpha: 0.3,
-                                    ),
-                                    offset: const Offset(0, 6),
-                                    blurRadius: 16,
-                                    spreadRadius: -2,
-                                  ),
-                                ],
-                              ),
-                              child: CustomButton(
-                                text: 'sign_in'.tr,
-                                backgroundColor: AppColors.transparent,
-                                isLoading: controller.isLoading.value,
-                                onPressed: controller.login,
-                              ),
+                            () => NeomorphicButton(
+                              text: 'sign_in'.tr,
+                              isLoading: controller.isLoading.value,
+                              onPressed: controller.login,
+                              isGradient: true,
+                              gradientColors: const [
+                                AppColors.primary,
+                                AppColors.tealBridge,
+                                AppColors.secondary,
+                              ],
+                              gradientBegin: Alignment.centerLeft,
+                              gradientEnd: Alignment.centerRight,
                             ),
                           ),
                         ],
@@ -278,8 +259,8 @@ class LoginView extends GetView<LoginController> {
 
                     // Sign Up link
                     Center(
-                      child: TextButton(
-                        onPressed: () => Get.toNamed(Routes.REGISTER),
+                      child: GestureDetector(
+                        onTap: () => Get.toNamed(Routes.register),
                         child: RichText(
                           text: TextSpan(
                             style: GoogleFonts.outfit(
