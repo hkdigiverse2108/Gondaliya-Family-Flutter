@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import '../../../../core/values/colors.dart';
 import '../../../global_widgets/neomorphic_button.dart';
 import '../widgets/account_step.dart';
@@ -10,25 +10,21 @@ import '../widgets/occupation_step.dart';
 import '../widgets/family_step.dart';
 import '../widgets/add_family_sheet.dart';
 import '../controllers/register_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class RegisterView extends GetView<RegisterController> {
   const RegisterView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return SafeArea(
       top: false,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'register'.tr,
-            style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-          ),
-          backgroundColor: AppColors.primary,
-          elevation: 0,
-        ),
+        extendBodyBehindAppBar: true,
+        appBar: GlassAppBar(titleText: 'register'.tr),
         body: Stack(
           children: [
             // Aurora gradients
@@ -42,8 +38,8 @@ class RegisterView extends GetView<RegisterController> {
                   shape: BoxShape.circle,
                   gradient: RadialGradient(
                     colors: [
-                      AppColors.tealBridge.withValues(alpha: 0.25),
-                      AppColors.transparent,
+                      colors.tealBridge.withValues(alpha: isDark ? 0.15 : 0.25),
+                      colors.transparent,
                     ],
                   ),
                 ),
@@ -51,134 +47,180 @@ class RegisterView extends GetView<RegisterController> {
             ),
 
             Obx(() {
-              return Theme(
-                data: Theme.of(context).copyWith(
-                  colorScheme: Theme.of(context).colorScheme.copyWith(
-                    primary: AppColors.primary,
-                    secondary: AppColors.secondary,
+              return Column(
+                children: [
+                  SizedBox(
+                    height:
+                        kToolbarHeight +
+                        MediaQuery.of(context).padding.top +
+                        20.h,
                   ),
-                ),
-                child: Stepper(
-                  type: StepperType.horizontal,
-                  currentStep: controller.currentStep.value,
-                  onStepContinue: controller.nextStep,
-                  onStepCancel: controller.previousStep,
-                  controlsBuilder: (context, controls) {
-                    final isLastStep = controller.currentStep.value == 3;
-                    return Padding(
-                      padding: EdgeInsets.symmetric(vertical: 24.h),
-                      child: Row(
+                  _buildCustomStepperHeader(
+                    controller.currentStep.value,
+                    colors,
+                    isDark,
+                  ),
+                  SizedBox(height: 16.h),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.w,
+                        vertical: 8.h,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
-                          if (controller.currentStep.value > 0)
-                            Expanded(
-                              child: NeomorphicButton(
-                                text: 'back'.tr,
-                                onPressed: controls.onStepCancel,
-                                backgroundColor: isDark
-                                    ? AppColors.cardDark
-                                    : AppColors.cardLight,
-                                textColor: isDark
-                                    ? AppColors.white
-                                    : AppColors.textLightPrimary,
-                              ),
-                            ),
-                          if (controller.currentStep.value > 0)
-                            SizedBox(width: 12.w),
-                          Expanded(
-                            child: Obx(
-                              () => NeomorphicButton(
-                                text: isLastStep ? 'sign_up'.tr : 'next'.tr,
-                                isLoading: controller.isLoading.value,
-                                onPressed: isLastStep
-                                    ? controller.submitRegistration
-                                    : controls.onStepContinue,
-                                isGradient: true,
-                                gradientColors: const [
-                                  AppColors.primary,
-                                  AppColors.tealBridge,
-                                  AppColors.secondary,
-                                ],
-                                gradientBegin: Alignment.centerLeft,
-                                gradientEnd: Alignment.centerRight,
-                              ),
-                            ),
+                          _buildStepContent(
+                            controller.currentStep.value,
+                            controller,
+                            context,
                           ),
+                          SizedBox(height: 32.h),
+                          _buildControls(controller, colors, isDark),
+                          SizedBox(height: 32.h),
                         ],
                       ),
-                    );
-                  },
-                  steps: [
-                    Step(
-                      title: Icon(
-                        Icons.lock_outline_rounded,
-                        color: controller.currentStep.value >= 0
-                            ? (isDark
-                                  ? AppColors.secondaryLight
-                                  : AppColors.primary)
-                            : (isDark ? Colors.grey.shade600 : Colors.grey),
-                      ),
-                      content: AccountStep(controller: controller),
-                      isActive: controller.currentStep.value >= 0,
-                      state: controller.currentStep.value > 0
-                          ? StepState.complete
-                          : StepState.indexed,
                     ),
-                    Step(
-                      title: Icon(
-                        Icons.person_pin_circle_outlined,
-                        color: controller.currentStep.value >= 1
-                            ? (isDark
-                                  ? AppColors.secondaryLight
-                                  : AppColors.primary)
-                            : (isDark ? Colors.grey.shade600 : Colors.grey),
-                      ),
-                      content: ProfileStep(controller: controller),
-                      isActive: controller.currentStep.value >= 1,
-                      state: controller.currentStep.value > 1
-                          ? StepState.complete
-                          : StepState.indexed,
-                    ),
-                    Step(
-                      title: Icon(
-                        Icons.work_outline,
-                        color: controller.currentStep.value >= 2
-                            ? (isDark
-                                  ? AppColors.secondaryLight
-                                  : AppColors.primary)
-                            : (isDark ? Colors.grey.shade600 : Colors.grey),
-                      ),
-                      content: OccupationStep(controller: controller),
-                      isActive: controller.currentStep.value >= 2,
-                      state: controller.currentStep.value > 2
-                          ? StepState.complete
-                          : StepState.indexed,
-                    ),
-                    Step(
-                      title: Icon(
-                        Icons.people_outline_rounded,
-                        color: controller.currentStep.value >= 3
-                            ? (isDark
-                                  ? AppColors.secondaryLight
-                                  : AppColors.primary)
-                            : (isDark ? Colors.grey.shade600 : Colors.grey),
-                      ),
-                      content: FamilyStep(
-                        controller: controller,
-                        onAddMember: () =>
-                            showAddFamilySheet(context, controller),
-                      ),
-                      isActive: controller.currentStep.value >= 3,
-                      state: controller.currentStep.value == 3
-                          ? StepState.editing
-                          : StepState.indexed,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               );
             }),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildCustomStepperHeader(
+    int currentStep,
+    AppColorScheme colors,
+    bool isDark,
+  ) {
+    final icons = [
+      Icons.lock_outline_rounded,
+      Icons.person_outline_rounded,
+      Icons.work_outline_rounded,
+      Icons.people_outline_rounded,
+    ];
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 32.w),
+      child: Row(
+        children: List.generate(icons.length * 2 - 1, (index) {
+          if (index % 2 != 0) {
+            // Connector line
+            final stepIndex = index ~/ 2;
+            final isActive = currentStep > stepIndex;
+            return Expanded(
+              child: Container(
+                height: 2.h,
+                color: isActive
+                    ? AppColors.primary
+                    : (isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+              ),
+            );
+          } else {
+            // Step Icon
+            final stepIndex = index ~/ 2;
+            final isActive = currentStep >= stepIndex;
+            final isCompleted = currentStep > stepIndex;
+
+            return Container(
+              width: 44.w,
+              height: 44.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isActive
+                    ? AppColors.primary
+                    : (isDark ? AppColors.cardDark : AppColors.cardLight),
+                border: Border.all(
+                  color: isActive
+                      ? AppColors.primary
+                      : (isDark ? Colors.grey.shade800 : Colors.grey.shade300),
+                  width: 2,
+                ),
+                boxShadow: isActive
+                    ? [
+                        BoxShadow(
+                          color: AppColors.primary.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ]
+                    : null,
+              ),
+              child: Icon(
+                isCompleted ? Icons.check_rounded : icons[stepIndex],
+                color: isActive
+                    ? Colors.white
+                    : (isDark ? Colors.grey.shade500 : Colors.grey.shade400),
+                size: 20.w,
+              ),
+            );
+          }
+        }),
+      ),
+    );
+  }
+
+  Widget _buildStepContent(
+    int currentStep,
+    RegisterController controller,
+    BuildContext context,
+  ) {
+    switch (currentStep) {
+      case 0:
+        return AccountStep(controller: controller);
+      case 1:
+        return ProfileStep(controller: controller);
+      case 2:
+        return OccupationStep(controller: controller);
+      case 3:
+        return FamilyStep(
+          controller: controller,
+          onAddMember: () => showAddFamilySheet(context, controller),
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
+  Widget _buildControls(
+    RegisterController controller,
+    AppColorScheme colors,
+    bool isDark,
+  ) {
+    final isLastStep = controller.currentStep.value == 3;
+    return Row(
+      children: [
+        if (controller.currentStep.value > 0)
+          Expanded(
+            child: NeomorphicButton(
+              text: 'back'.tr,
+              onPressed: controller.previousStep,
+              backgroundColor: isDark
+                  ? AppColors.cardDark
+                  : AppColors.cardLight,
+              textColor: isDark ? AppColors.white : AppColors.textLightPrimary,
+            ),
+          ),
+        if (controller.currentStep.value > 0) SizedBox(width: 12.w),
+        Expanded(
+          child: Obx(
+            () => NeomorphicButton(
+              text: isLastStep ? 'sign_up'.tr : 'next'.tr,
+              isLoading: controller.isLoading.value,
+              onPressed: isLastStep
+                  ? controller.submitRegistration
+                  : controller.nextStep,
+              isGradient: true,
+              gradientColors: colors.primaryGradient,
+              gradientBegin: Alignment.centerLeft,
+              gradientEnd: Alignment.centerRight,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

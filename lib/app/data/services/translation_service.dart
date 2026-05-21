@@ -13,7 +13,7 @@ class TranslationService extends Translations {
   static const String _key = 'language_code';
 
   static const Locale fallbackLocale = Locale('en', 'US');
-  
+
   static final List<Locale> locales = [
     const Locale('en', 'US'),
     const Locale('gu', 'IN'),
@@ -26,7 +26,7 @@ class TranslationService extends Translations {
       if (storedLang == 'gu') return const Locale('gu', 'IN');
       return const Locale('en', 'US');
     }
-    
+
     // Default to device locale if it is Gujarati, otherwise default to English
     final Locale? deviceLocale = Get.deviceLocale;
     if (deviceLocale != null && deviceLocale.languageCode == 'gu') {
@@ -37,7 +37,9 @@ class TranslationService extends Translations {
 
   /// Change the application locale and save it to local storage
   static void changeLocale(String langCode) {
-    final Locale newLocale = langCode == 'gu' ? const Locale('gu', 'IN') : const Locale('en', 'US');
+    final Locale newLocale = langCode == 'gu'
+        ? const Locale('gu', 'IN')
+        : const Locale('en', 'US');
     Get.updateLocale(newLocale);
     _box.write(_key, langCode);
   }
@@ -48,8 +50,5 @@ class TranslationService extends Translations {
   }
 
   @override
-  Map<String, Map<String, String>> get keys => {
-        'en_US': enUs,
-        'gu_IN': guIn,
-      };
+  Map<String, Map<String, String>> get keys => {'en_US': enUs, 'gu_IN': guIn};
 }

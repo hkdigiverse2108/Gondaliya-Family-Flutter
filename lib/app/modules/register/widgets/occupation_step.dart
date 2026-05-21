@@ -7,6 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/values/colors.dart';
 import '../controllers/register_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../data/models/enums.dart';
+import '../../../global_widgets/neomorphic_dropdown_field.dart';
+import '../../../global_widgets/neomorphic_text_field.dart';
+import '../../../global_widgets/neomorphic_card.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
@@ -26,8 +31,8 @@ class OccupationStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+    final colors = context.appColors;
+
     return Form(
       key: controller.occupationFormKey,
       child: Column(
@@ -38,7 +43,7 @@ class OccupationStep extends StatelessWidget {
             style: GoogleFonts.outfit(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
-              color: isDark ? AppColors.white : AppColors.textLightPrimary,
+              color: colors.textPrimary,
             ),
           ),
           SizedBox(height: 8.h),
@@ -46,99 +51,32 @@ class OccupationStep extends StatelessWidget {
             'તમે શું કરો છો તે પસંદ કરો', // Choose what you do
             style: GoogleFonts.outfit(
               fontSize: 14.sp,
-              color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              color: colors.textSecondary,
             ),
           ),
           SizedBox(height: 24.h),
 
-          // Radio Buttons for Selection
-          Obx(() => Row(
-            children: [
-              Expanded(
-                child: RadioListTile<String>(
-                  title: Text('વ્યવસાય', style: GoogleFonts.outfit()),
-                  value: 'Business',
-                  groupValue: controller.occupationType.value,
-                  onChanged: (val) => controller.occupationType.value = val!,
-                  contentPadding: EdgeInsets.zero,
-                  activeColor: AppColors.primary,
-                ),
-              ),
-              Expanded(
-                child: RadioListTile<String>(
-                  title: Text('નોકરી', style: GoogleFonts.outfit()),
-                  value: 'Job',
-                  groupValue: controller.occupationType.value,
-                  onChanged: (val) => controller.occupationType.value = val!,
-                  contentPadding: EdgeInsets.zero,
-                  activeColor: AppColors.primary,
-                ),
-              ),
-            ],
-          )),
-          Obx(() => RadioListTile<String>(
-            title: Text('કોઈ નહિ', style: GoogleFonts.outfit()),
-            value: 'None',
-            groupValue: controller.occupationType.value,
-            onChanged: (val) => controller.occupationType.value = val!,
-            contentPadding: EdgeInsets.zero,
-            activeColor: AppColors.primary,
-          )),
+          // Custom Segmented Control for Selection
+          NeomorphicCard(
+            borderRadius: 16.r,
+            padding: EdgeInsets.all(4.w),
+            child: Row(
+              children: [
+                _buildOccupationTab(context, 'Business', 'વ્યવસાય', Icons.storefront_outlined, colors),
+                _buildOccupationTab(context, 'Job', 'નોકરી', Icons.work_outline, colors),
+                _buildOccupationTab(context, 'None', 'કોઈ નહિ', Icons.block, colors),
+              ],
+            ),
+          ),
 
-          SizedBox(height: 16.h),
+          SizedBox(height: 24.h),
 
           // Conditional Forms
           Obx(() {
             if (controller.occupationType.value == 'Business') {
-              return Column(
-                children: [
-                  _buildTextField(
-                    controller: controller.businessNameController,
-                    label: 'વ્યવસાયનું નામ',
-                    icon: Icons.storefront_outlined,
-                    isDark: isDark,
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildTextField(
-                    controller: controller.businessCategoryController,
-                    label: 'વ્યવસાયની શ્રેણી',
-                    icon: Icons.category_outlined,
-                    isDark: isDark,
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildTextField(
-                    controller: controller.businessAddressController,
-                    label: 'વ્યવસાયનું સરનામું',
-                    icon: Icons.location_on_outlined,
-                    isDark: isDark,
-                  ),
-                ],
-              );
+              return _buildBusinessForm(colors);
             } else if (controller.occupationType.value == 'Job') {
-              return Column(
-                children: [
-                  _buildTextField(
-                    controller: controller.companyNameController,
-                    label: 'કંપનીનું નામ',
-                    icon: Icons.business_outlined,
-                    isDark: isDark,
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildTextField(
-                    controller: controller.jobRoleController,
-                    label: 'નોકરીનો હોદ્દો',
-                    icon: Icons.work_outline,
-                    isDark: isDark,
-                  ),
-                  SizedBox(height: 16.h),
-                  _buildTextField(
-                    controller: controller.companyAddressController,
-                    label: 'કંપનીનું સરનામું',
-                    icon: Icons.location_city_outlined,
-                    isDark: isDark,
-                  ),
-                ],
-              );
+              return _buildJobForm(colors);
             }
             return const SizedBox.shrink();
           }),
@@ -147,55 +85,252 @@ class OccupationStep extends StatelessWidget {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    required IconData icon,
-    required bool isDark,
-  }) {
-    return TextFormField(
-      controller: controller,
-      textCapitalization: TextCapitalization.characters,
-      inputFormatters: [UpperCaseTextFormatter()],
-      style: GoogleFonts.outfit(
-        color: isDark ? AppColors.white : AppColors.textLightPrimary,
-      ),
-      validator: (value) {
-        if (value == null || value.trim().isEmpty) {
-          return 'કૃપા કરીને $label દાખલ કરો'; // Please enter $label
-        }
-        return null;
-      },
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: GoogleFonts.outfit(
-          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-        ),
-        prefixIcon: Icon(
-          icon,
-          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-        ),
-        filled: true,
-        fillColor: isDark ? AppColors.cardDark : Colors.grey.shade50,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: BorderSide(
-            color: isDark ? Colors.grey.shade800 : Colors.grey.shade200,
+  Widget _buildOccupationTab(BuildContext context, String value, String label, IconData icon, AppColorScheme colors) {
+    return Expanded(
+      child: Obx(() {
+        final isSelected = controller.occupationType.value == value;
+        return GestureDetector(
+          onTap: () => controller.occupationType.value = value,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 200),
+            padding: EdgeInsets.symmetric(vertical: 12.h),
+            decoration: BoxDecoration(
+              color: isSelected ? colors.primary : Colors.transparent,
+              borderRadius: BorderRadius.circular(12.r),
+              boxShadow: isSelected
+                  ? [
+                      BoxShadow(
+                        color: colors.primary.withValues(alpha: 0.3),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      )
+                    ]
+                  : null,
+            ),
+            child: Column(
+              children: [
+                Icon(
+                  icon,
+                  color: isSelected ? colors.white : colors.textSecondary,
+                  size: 24.sp,
+                ),
+                SizedBox(height: 4.h),
+                Text(
+                  label,
+                  style: GoogleFonts.outfit(
+                    color: isSelected ? colors.white : colors.textSecondary,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                    fontSize: 12.sp,
+                  ),
+                ),
+              ],
+            ),
           ),
+        );
+      }),
+    );
+  }
+
+  Widget _buildBusinessForm(AppColorScheme colors) {
+    return Column(
+      children: [
+        NeomorphicTextField(
+          controller: controller.businessNameController,
+          labelText: 'વ્યવસાયનું નામ (Business Name)',
+          prefixIcon: Icon(Icons.storefront_outlined, color: colors.textPrimary),
+          inputFormatters: [UpperCaseTextFormatter()],
+          validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: const BorderSide(color: AppColors.primary),
+        SizedBox(height: 16.h),
+        Row(
+          children: [
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessCategoryController,
+                labelText: 'શ્રેણી (Category)',
+                prefixIcon: Icon(Icons.category_outlined, color: colors.textPrimary),
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessSubCategoryController,
+                labelText: 'પેટા શ્રેણી (Sub-Category)',
+                prefixIcon: Icon(Icons.class_outlined, color: colors.textPrimary),
+              ),
+            ),
+          ],
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(16.r),
-          borderSide: BorderSide(color: Colors.red.shade300),
+        SizedBox(height: 16.h),
+        NeomorphicTextField(
+          controller: controller.businessOwnerNameController,
+          labelText: 'માલિકનું નામ (Owner Name)',
+          prefixIcon: Icon(Icons.person_outline, color: colors.textPrimary),
+          inputFormatters: [UpperCaseTextFormatter()],
         ),
-      ),
+        SizedBox(height: 16.h),
+        NeomorphicTextField(
+          controller: controller.businessDescriptionController,
+          labelText: 'વર્ણન (Description)',
+          prefixIcon: Icon(Icons.description_outlined, color: colors.textPrimary),
+          maxLines: 3,
+        ),
+        SizedBox(height: 16.h),
+        NeomorphicTextField(
+          controller: controller.businessAddressController,
+          labelText: 'સરનામું (Shop Address)',
+          prefixIcon: Icon(Icons.location_on_outlined, color: colors.textPrimary),
+          inputFormatters: [UpperCaseTextFormatter()],
+          validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+        ),
+        SizedBox(height: 16.h),
+        Row(
+          children: [
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessCityController,
+                labelText: 'શહેર (City)',
+                prefixIcon: Icon(Icons.location_city_outlined, color: colors.textPrimary),
+                inputFormatters: [UpperCaseTextFormatter()],
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessStateController,
+                labelText: 'રાજ્ય (State)',
+                prefixIcon: Icon(Icons.map_outlined, color: colors.textPrimary),
+                inputFormatters: [UpperCaseTextFormatter()],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        Row(
+          children: [
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessPincodeController,
+                labelText: 'પીનકોડ (Pincode)',
+                prefixIcon: Icon(Icons.pin_drop_outlined, color: colors.textPrimary),
+                keyboardType: TextInputType.number,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessGoogleMapLinkController,
+                labelText: 'મેપ લિંક (Map Link)',
+                prefixIcon: Icon(Icons.link, color: colors.textPrimary),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        Row(
+          children: [
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessMobile1Controller,
+                labelText: 'મોબાઈલ 1 (Mobile 1)',
+                prefixIcon: Icon(Icons.phone_outlined, color: colors.textPrimary),
+                keyboardType: TextInputType.phone,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessMobile2Controller,
+                labelText: 'મોબાઈલ 2 (Mobile 2)',
+                prefixIcon: Icon(Icons.phone_outlined, color: colors.textPrimary),
+                keyboardType: TextInputType.phone,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        Row(
+          children: [
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessEmailController,
+                labelText: 'ઈમેલ (Email)',
+                prefixIcon: Icon(Icons.email_outlined, color: colors.textPrimary),
+                keyboardType: TextInputType.emailAddress,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: NeomorphicTextField(
+                controller: controller.businessWebsiteController,
+                labelText: 'વેબસાઇટ (Website)',
+                prefixIcon: Icon(Icons.language, color: colors.textPrimary),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 16.h),
+        NeomorphicTextField(
+          controller: controller.businessPortfolioLinkController,
+          labelText: 'પોર્ટફોલિયો લિંક (Portfolio Link)',
+          prefixIcon: Icon(Icons.picture_in_picture_alt_outlined, color: colors.textPrimary),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildJobForm(AppColorScheme colors) {
+    return Column(
+      children: [
+        NeomorphicTextField(
+          controller: controller.companyNameController,
+          labelText: 'કંપનીનું નામ (Company Name)',
+          prefixIcon: Icon(Icons.business_outlined, color: colors.textPrimary),
+          inputFormatters: [UpperCaseTextFormatter()],
+          validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+        ),
+        SizedBox(height: 16.h),
+        Obx(() => NeomorphicDropdownField<String>(
+          value: controller.jobCategory.value.isEmpty ? null : controller.jobCategory.value,
+          labelText: 'નોકરીની શ્રેણી (Job Category)',
+          prefixIcon: Icon(Icons.category_outlined, color: colors.textPrimary),
+          items: AppEnums.jobCategories.keys.map((c) => NeomorphicDropdownItem(value: c, label: c)).toList(),
+          onChanged: (val) {
+            if (val != null) {
+              controller.jobCategory.value = val;
+              controller.jobRole.value = ''; // reset role
+            }
+          },
+        )),
+        SizedBox(height: 16.h),
+        Obx(() {
+          if (controller.jobCategory.value.isEmpty) {
+            return const SizedBox.shrink();
+          }
+          final roles = AppEnums.jobCategories[controller.jobCategory.value] ?? [];
+          return Column(
+            children: [
+              NeomorphicDropdownField<String>(
+                value: controller.jobRole.value.isEmpty ? null : controller.jobRole.value,
+                labelText: 'નોકરીનો હોદ્દો (Job Role)',
+                prefixIcon: Icon(Icons.work_outline, color: colors.textPrimary),
+                items: roles.map((r) => NeomorphicDropdownItem(value: r, label: r)).toList(),
+                onChanged: (val) {
+                  if (val != null) controller.jobRole.value = val;
+                },
+              ),
+              SizedBox(height: 16.h),
+            ],
+          );
+        }),
+        NeomorphicTextField(
+          controller: controller.companyAddressController,
+          labelText: 'કંપનીનું સરનામું (Company Address)',
+          prefixIcon: Icon(Icons.location_city_outlined, color: colors.textPrimary),
+          inputFormatters: [UpperCaseTextFormatter()],
+          validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
+        ),
+      ],
     );
   }
 }

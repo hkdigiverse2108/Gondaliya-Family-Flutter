@@ -4,22 +4,17 @@ import 'package:uuid/uuid.dart';
 import '../../../data/models/family_member.dart';
 import '../../../data/models/business.dart';
 import '../../../data/services/storage_service.dart';
-import '../../../data/services/auth_service.dart';
 import '../../../data/services/translation_service.dart';
 import '../../../routes/app_pages.dart';
 
 class HomeController extends GetxController {
-  final StorageService _storageService = Get.find<StorageService>();
-  final AuthService _authService = Get.find<AuthService>();
+  final _storage = Get.find<StorageService>();
   final _uuid = const Uuid();
 
-  // Navigation tab state
   final currentIndex = 0.obs;
-
-  // Theme & Language states
   final isDarkTheme = false.obs;
 
-  // Data lists
+  // Data lists — populated from API in a later task
   final familyMembers = <FamilyMember>[].obs;
   final businesses = <Business>[].obs;
 
@@ -27,143 +22,111 @@ class HomeController extends GetxController {
   final familySearchQuery = ''.obs;
   final businessSearchQuery = ''.obs;
 
-  // Filter lists based on search queries
   List<FamilyMember> get filteredFamilyMembers {
-    if (familySearchQuery.value.trim().isEmpty) {
-      return familyMembers;
-    }
-    final query = familySearchQuery.value.toLowerCase();
-    return familyMembers.where((member) {
-      return member.name.toLowerCase().contains(query) ||
-          member.surname.toLowerCase().contains(query) ||
-          member.fatherName.toLowerCase().contains(query) ||
-          member.occupation.toLowerCase().contains(query) ||
-          member.relationship.toLowerCase().contains(query);
-    }).toList();
+    if (familySearchQuery.value.trim().isEmpty) return familyMembers;
+    final q = familySearchQuery.value.toLowerCase();
+    return familyMembers
+        .where(
+          (m) =>
+              m.firstName.toLowerCase().contains(q) ||
+              m.middleName.toLowerCase().contains(q) ||
+              m.lastName.toLowerCase().contains(q) ||
+              (m.occupation?.toLowerCase().contains(q) ?? false) ||
+              m.relation.toLowerCase().contains(q),
+        )
+        .toList();
   }
 
   List<Business> get filteredBusinesses {
-    if (businessSearchQuery.value.trim().isEmpty) {
-      return businesses;
-    }
-    final query = businessSearchQuery.value.toLowerCase();
-    return businesses.where((business) {
-      return business.name.toLowerCase().contains(query) ||
-          business.category.toLowerCase().contains(query) ||
-          business.description.toLowerCase().contains(query) ||
-          business.address.toLowerCase().contains(query);
-    }).toList();
+    if (businessSearchQuery.value.trim().isEmpty) return businesses;
+    final q = businessSearchQuery.value.toLowerCase();
+    return businesses
+        .where(
+          (b) =>
+              b.name.toLowerCase().contains(q) ||
+              b.category.toLowerCase().contains(q) ||
+              b.description.toLowerCase().contains(q) ||
+              b.address.toLowerCase().contains(q),
+        )
+        .toList();
   }
 
   @override
   void onInit() {
     super.onInit();
-    // Load persisted theme and data
-    isDarkTheme.value = _storageService.isDarkMode;
-
-    // Load current user's family members
-    if (_authService.isLoggedIn) {
-      familyMembers.assignAll(_authService.currentUser.value!.familyMembers);
-    }
-
-    businesses.assignAll(_storageService.getBusinesses());
+    isDarkTheme.value = _storage.isDarkMode;
+    // TODO: fetch family & business data from API
   }
 
-  void changeTab(int index) {
-    currentIndex.value = index;
-  }
+  void changeTab(int index) => currentIndex.value = index;
 
-  // --- Theme Mode ---
+  // --- Theme ---
   void toggleTheme() {
     isDarkTheme.toggle();
     Get.changeThemeMode(isDarkTheme.value ? ThemeMode.dark : ThemeMode.light);
-    _storageService.saveThemeMode(isDarkTheme.value);
+    _storage.saveThemeMode(isDarkTheme.value);
   }
 
-  // --- Language Switch ---
+  // --- Language ---
   void changeLanguage(String langCode) {
     TranslationService.changeLocale(langCode);
-    update(); // Triggers UI redraw for localized keys
+    update();
   }
 
   // --- Logout ---
   Future<void> logout() async {
-    await _authService.logout();
+    await _storage.clearAuthToken();
     Get.offAllNamed(Routes.login);
   }
 
-  // --- Family Member CRUD Operations ---
-
+  // --- Family Member stubs (local-only until API is wired) ---
   void addFamilyMember({
-    required String name,
-    required String surname,
-    required String fatherName,
-    required int age,
-    required String relationship,
+    required String firstName,
+    required String middleName,
+    required String lastName,
+    required String dob,
+    required String relation,
     required String phoneNumber,
     required String occupation,
-    required String birthDate,
     required String education,
-    required bool isMarried,
+    required String isMarried,
     required String bloodGroup,
-    required String skill,
+    required String skills,
   }) {
-    final member = FamilyMember(
-      id: _uuid.v4(),
-      name: name,
-      surname: surname,
-      fatherName: fatherName,
-      age: age,
-      relationship: relationship,
-      phoneNumber: phoneNumber,
-      occupation: occupation,
-      birthDate: birthDate,
-      education: education,
-      isMarried: isMarried,
-      bloodGroup: bloodGroup,
-      skill: skill,
-      createdAt: DateTime.now(),
+    familyMembers.add(
+      FamilyMember(
+        id: _uuid.v4(),
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        dob: dob,
+        relation: relation,
+        phoneNumber: phoneNumber,
+        occupation: occupation,
+        education: education,
+        isMarried: isMarried,
+        bloodGroup: bloodGroup,
+        skills: skills,
+        createdAt: DateTime.now(),
+      ),
     );
-    familyMembers.add(member);
-
-    // Save to user profile
-    if (_authService.isLoggedIn) {
-      final updatedUser = _authService.currentUser.value!.copyWith(
-        familyMembers: List<FamilyMember>.from(familyMembers),
-      );
-      _authService.updateCurrentUser(updatedUser);
-    }
+    // TODO: persist via API
   }
 
-  void updateFamilyMember(FamilyMember updatedMember) {
-    final index = familyMembers.indexWhere((m) => m.id == updatedMember.id);
-    if (index != -1) {
-      familyMembers[index] = updatedMember;
-
-      // Save to user profile
-      if (_authService.isLoggedIn) {
-        final updatedUser = _authService.currentUser.value!.copyWith(
-          familyMembers: List<FamilyMember>.from(familyMembers),
-        );
-        _authService.updateCurrentUser(updatedUser);
-      }
+  void updateFamilyMember(FamilyMember updated) {
+    final i = familyMembers.indexWhere((m) => m.id == updated.id);
+    if (i != -1) {
+      familyMembers[i] = updated;
+      // TODO: persist via API
     }
   }
 
   void deleteFamilyMember(String id) {
     familyMembers.removeWhere((m) => m.id == id);
-
-    // Save to user profile
-    if (_authService.isLoggedIn) {
-      final updatedUser = _authService.currentUser.value!.copyWith(
-        familyMembers: List<FamilyMember>.from(familyMembers),
-      );
-      _authService.updateCurrentUser(updatedUser);
-    }
+    // TODO: persist via API
   }
 
-  // --- Business CRUD Operations ---
-
+  // --- Business stubs (local-only until API is wired) ---
   void addBusiness({
     required String name,
     required String category,
@@ -172,30 +135,31 @@ class HomeController extends GetxController {
     required String description,
     String? ownerId,
   }) {
-    final business = Business(
-      id: _uuid.v4(),
-      name: name,
-      category: category,
-      address: address,
-      contact: contact,
-      description: description,
-      ownerId: ownerId ?? _authService.currentUser.value?.id,
-      createdAt: DateTime.now(),
+    businesses.add(
+      Business(
+        id: _uuid.v4(),
+        name: name,
+        category: category,
+        address: address,
+        contact: contact,
+        description: description,
+        ownerId: ownerId,
+        createdAt: DateTime.now(),
+      ),
     );
-    businesses.add(business);
-    _storageService.saveBusinesses(businesses);
+    // TODO: persist via API
   }
 
-  void updateBusiness(Business updatedBusiness) {
-    final index = businesses.indexWhere((b) => b.id == updatedBusiness.id);
-    if (index != -1) {
-      businesses[index] = updatedBusiness;
-      _storageService.saveBusinesses(businesses);
+  void updateBusiness(Business updated) {
+    final i = businesses.indexWhere((b) => b.id == updated.id);
+    if (i != -1) {
+      businesses[i] = updated;
+      // TODO: persist via API
     }
   }
 
   void deleteBusiness(String id) {
     businesses.removeWhere((b) => b.id == id);
-    _storageService.saveBusinesses(businesses);
+    // TODO: persist via API
   }
 }

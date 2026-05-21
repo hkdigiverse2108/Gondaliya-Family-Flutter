@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../../../core/values/colors.dart';
 import '../../../data/models/family_member.dart';
 import '../../../global_widgets/generation_avatar.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class FamilyMemberCard extends StatelessWidget {
   final FamilyMember member;
@@ -22,25 +23,24 @@ class FamilyMemberCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
     final genColor = GenerationAvatar.getGenerationColor(
-      member.relationship,
-      member.age,
+      member.relation,
+      30, // Using default age for generation color for now since we only have DOB string
     );
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardDark : AppColors.white,
+        color: colors.card,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+          color: colors.divider,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark
-                ? Colors.black.withValues(alpha: 0.15)
-                : AppColors.shadowLight,
+            color: colors.shadow,
             offset: const Offset(0, 6),
             blurRadius: 16,
           ),
@@ -56,7 +56,7 @@ class FamilyMemberCard extends StatelessWidget {
               child: Row(
                 children: [
                   GenerationAvatar(
-                    name: member.name,
+                    name: member.firstName,
                     color: genColor,
                     radius: 22,
                   ),
@@ -66,7 +66,7 @@ class FamilyMemberCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          member.name,
+                          '${member.firstName} ${member.lastName}',
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.sp,
@@ -88,7 +88,7 @@ class FamilyMemberCard extends StatelessWidget {
                                 vertical: 2.h,
                               ),
                               child: Text(
-                                member.relationship,
+                                member.relation,
                                 style: GoogleFonts.outfit(
                                   color: genColor,
                                   fontSize: 10.sp,
@@ -96,7 +96,7 @@ class FamilyMemberCard extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            if (member.isMarried) ...[
+                            if (member.isMarried.toLowerCase() == 'married') ...[
                               SizedBox(width: 8.w),
                               Icon(
                                 Icons.favorite_rounded,
@@ -182,7 +182,7 @@ class FamilyMemberCard extends StatelessWidget {
 
             Container(
               height: 1,
-              color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+              color: colors.divider,
             ),
 
             // Details section with icons & styling
@@ -194,14 +194,14 @@ class FamilyMemberCard extends StatelessWidget {
                   _buildIconDetail(
                     context,
                     Icons.cake_outlined,
-                    'age'.tr,
-                    '${member.age}',
+                    'dob'.tr,
+                    member.dob,
                   ),
                   _buildIconDetail(
                     context,
                     Icons.work_outline_rounded,
                     'occupation'.tr,
-                    member.occupation,
+                    member.occupation ?? '',
                   ),
                   _buildIconDetail(
                     context,
@@ -216,7 +216,7 @@ class FamilyMemberCard extends StatelessWidget {
             if (member.phoneNumber.isNotEmpty) ...[
               Container(
                 height: 1,
-                color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+                color: colors.divider,
               ),
               Container(
                 width: double.infinity,
@@ -250,7 +250,8 @@ class FamilyMemberCard extends StatelessWidget {
     String label,
     String value,
   ) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
     return Expanded(
       child: Row(
         children: [

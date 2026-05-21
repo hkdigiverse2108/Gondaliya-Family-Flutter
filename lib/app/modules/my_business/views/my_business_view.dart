@@ -1,32 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/values/colors.dart';
 import '../controllers/my_business_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class MyBusinessView extends GetView<MyBusinessController> {
   const MyBusinessView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'My Business',
-            style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-          ),
+        extendBodyBehindAppBar: true,
+        appBar: GlassAppBar(
+          titleText: 'My Business',
           centerTitle: true,
           bottom: TabBar(
             indicatorColor: AppColors.primary,
             labelColor: AppColors.primary,
-            unselectedLabelColor: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
-            labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14.sp),
+            unselectedLabelColor: colors.textSecondary,
+            labelStyle: GoogleFonts.outfit(
+              fontWeight: FontWeight.bold,
+              fontSize: 14.sp,
+            ),
             tabs: const [
               Tab(text: 'My Listings'),
               Tab(text: 'Inquiries'),
@@ -34,10 +37,7 @@ class MyBusinessView extends GetView<MyBusinessController> {
           ),
         ),
         body: TabBarView(
-          children: [
-            _buildMyListings(isDark),
-            _buildInquiries(isDark),
-          ],
+          children: [_buildMyListings(colors), _buildInquiries(colors)],
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -45,13 +45,19 @@ class MyBusinessView extends GetView<MyBusinessController> {
           },
           backgroundColor: AppColors.primary,
           icon: const Icon(Icons.add_rounded, color: Colors.white),
-          label: Text('Add Listing', style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
+          label: Text(
+            'Add Listing',
+            style: GoogleFonts.outfit(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
   }
 
-  Widget _buildMyListings(bool isDark) {
+  Widget _buildMyListings(AppColorScheme colors) {
     return ListView.builder(
       padding: EdgeInsets.all(16.w),
       itemCount: 3,
@@ -60,7 +66,7 @@ class MyBusinessView extends GetView<MyBusinessController> {
           margin: EdgeInsets.only(bottom: 16.h),
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.cardDark : AppColors.cardLight,
+            color: colors.card,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(
@@ -79,7 +85,11 @@ class MyBusinessView extends GetView<MyBusinessController> {
                   color: Colors.grey.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
-                child: Icon(Icons.image_outlined, color: Colors.grey, size: 32.r),
+                child: Icon(
+                  Icons.image_outlined,
+                  color: Colors.grey,
+                  size: 32.r,
+                ),
               ),
               SizedBox(width: 16.w),
               Expanded(
@@ -105,11 +115,18 @@ class MyBusinessView extends GetView<MyBusinessController> {
                     SizedBox(height: 8.h),
                     Row(
                       children: [
-                        Icon(Icons.remove_red_eye_outlined, size: 14.sp, color: Colors.grey),
+                        Icon(
+                          Icons.remove_red_eye_outlined,
+                          size: 14.sp,
+                          color: Colors.grey,
+                        ),
                         SizedBox(width: 4.w),
                         Text(
                           '124 views',
-                          style: GoogleFonts.outfit(fontSize: 12.sp, color: Colors.grey),
+                          style: GoogleFonts.outfit(
+                            fontSize: 12.sp,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
@@ -119,11 +136,14 @@ class MyBusinessView extends GetView<MyBusinessController> {
               Column(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.edit_rounded, color: AppColors.primary),
+                    icon: Icon(Icons.edit_rounded, color: colors.textPrimary),
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent),
+                    icon: const Icon(
+                      Icons.delete_outline_rounded,
+                      color: Colors.redAccent,
+                    ),
                     onPressed: () {},
                   ),
                 ],
@@ -135,11 +155,12 @@ class MyBusinessView extends GetView<MyBusinessController> {
     );
   }
 
-  Widget _buildInquiries(bool isDark) {
+  Widget _buildInquiries(AppColorScheme colors) {
     return ListView.separated(
       padding: EdgeInsets.all(16.w),
       itemCount: 5,
-      separatorBuilder: (context, index) => Divider(height: 32.h, color: Colors.grey.withValues(alpha: 0.2)),
+      separatorBuilder: (context, index) =>
+          Divider(height: 32.h, color: Colors.grey.withValues(alpha: 0.2)),
       itemBuilder: (context, index) {
         return Row(
           children: [
@@ -165,7 +186,7 @@ class MyBusinessView extends GetView<MyBusinessController> {
                     'Interested in "My Listing Item $index"',
                     style: GoogleFonts.outfit(
                       fontSize: 14.sp,
-                      color: isDark ? Colors.white70 : Colors.black87,
+                      color: colors.textSecondary,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,

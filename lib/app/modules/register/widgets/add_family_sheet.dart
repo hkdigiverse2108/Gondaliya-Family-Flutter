@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,22 +6,25 @@ import '../../../../core/values/colors.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_button.dart';
 import '../controllers/register_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../data/models/enums.dart';
+import '../../../global_widgets/neomorphic_dropdown_field.dart';
 
 void showAddFamilySheet(BuildContext context, RegisterController controller) {
   final formKey = GlobalKey<FormState>();
   final nameCtrl = TextEditingController();
-  final fatherNameCtrl = TextEditingController();
+  final middleNameCtrl = TextEditingController();
   final surnameCtrl = TextEditingController();
-  final ageCtrl = TextEditingController();
-  final relationCtrl = TextEditingController();
   final phoneCtrl = TextEditingController();
   final occupCtrl = TextEditingController();
   final birthDateCtrl = TextEditingController();
   final eduCtrl = TextEditingController();
-  final bloodCtrl = TextEditingController();
   final skillCtrl = TextEditingController();
-  var isMarriedVal = false.obs;
-  final isDark = Theme.of(context).brightness == Brightness.dark;
+  var relationVal = AppEnums.relations.first.obs;
+  var bloodVal = AppEnums.bloodGroups.first.obs;
+  var isMarriedVal = AppEnums.maritalStatus.first.obs;
+  final colors = context.appColors;
+  final isDark = colors.isDark;
 
   Get.bottomSheet(
     SafeArea(
@@ -62,9 +64,9 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 NeomorphicTextField(
                   controller: nameCtrl,
                   labelText: 'name'.tr,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.person_outline_rounded,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                   validator: (val) => val == null || val.trim().isEmpty
                       ? 'field_required'.tr
@@ -72,23 +74,20 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 ),
                 SizedBox(height: 12.h),
                 NeomorphicTextField(
-                  controller: fatherNameCtrl,
-                  labelText: 'father_name'.tr,
-                  prefixIcon: const Icon(
+                  controller: middleNameCtrl,
+                  labelText: 'Middle Name',
+                  prefixIcon: Icon(
                     Icons.person_outline_rounded,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
-                  validator: (val) => val == null || val.trim().isEmpty
-                      ? 'field_required'.tr
-                      : null,
                 ),
                 SizedBox(height: 12.h),
                 NeomorphicTextField(
                   controller: surnameCtrl,
                   labelText: 'surname'.tr,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.person_outline_rounded,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                   validator: (val) => val == null || val.trim().isEmpty
                       ? 'field_required'.tr
@@ -98,36 +97,20 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 Row(
                   children: [
                     Expanded(
-                      child: NeomorphicTextField(
-                        controller: ageCtrl,
-                        labelText: 'age'.tr,
-                        keyboardType: TextInputType.number,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        prefixIcon: const Icon(
-                          Icons.calendar_today_outlined,
-                          color: AppColors.primaryLight,
-                        ),
-                        validator: (val) => val == null || val.trim().isEmpty
-                            ? 'field_required'.tr
-                            : null,
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: NeomorphicTextField(
-                        controller: relationCtrl,
+                      child: Obx(() => NeomorphicDropdownField<String>(
+                        value: relationVal.value,
                         labelText: 'relationship'.tr,
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           Icons.family_restroom_rounded,
-                          color: AppColors.primaryLight,
+                          color: colors.textPrimary,
                         ),
-                        hintText: 'Father, Son, etc.',
-                        validator: (val) => val == null || val.trim().isEmpty
-                            ? 'field_required'.tr
-                            : null,
-                      ),
+                        items: AppEnums.relations
+                            .map((r) => NeomorphicDropdownItem(value: r, label: r.tr))
+                            .toList(),
+                        onChanged: (val) {
+                          if (val != null) relationVal.value = val;
+                        },
+                      )),
                     ),
                   ],
                 ),
@@ -136,9 +119,9 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                   controller: phoneCtrl,
                   labelText: 'phone_number'.tr,
                   keyboardType: TextInputType.phone,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.phone_iphone_outlined,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                   validator: (val) {
                     if (val != null && val.isNotEmpty && val.length != 10) {
@@ -151,14 +134,29 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 Row(
                   children: [
                     Expanded(
-                      child: NeomorphicTextField(
-                        controller: birthDateCtrl,
-                        labelText: 'birth_date'.tr,
-                        prefixIcon: const Icon(
-                          Icons.cake_outlined,
-                          color: AppColors.primaryLight,
+                      child: InkWell(
+                        onTap: () async {
+                          final date = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now(),
+                          );
+                          if (date != null) {
+                            birthDateCtrl.text = "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+                          }
+                        },
+                        child: IgnorePointer(
+                          child: NeomorphicTextField(
+                            controller: birthDateCtrl,
+                            labelText: 'birth_date'.tr,
+                            prefixIcon: Icon(
+                              Icons.cake_outlined,
+                              color: colors.textPrimary,
+                            ),
+                            hintText: 'DD/MM/YYYY',
+                          ),
                         ),
-                        hintText: 'DD/MM/YYYY',
                       ),
                     ),
                     SizedBox(width: 12.w),
@@ -166,9 +164,9 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                       child: NeomorphicTextField(
                         controller: eduCtrl,
                         labelText: 'education'.tr,
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           Icons.school_outlined,
-                          color: AppColors.primaryLight,
+                          color: colors.textPrimary,
                         ),
                       ),
                     ),
@@ -181,23 +179,28 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                       child: NeomorphicTextField(
                         controller: occupCtrl,
                         labelText: 'occupation'.tr,
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           Icons.work_outline_rounded,
-                          color: AppColors.primaryLight,
+                          color: colors.textPrimary,
                         ),
                       ),
                     ),
                     SizedBox(width: 12.w),
                     Expanded(
-                      child: NeomorphicTextField(
-                        controller: bloodCtrl,
+                      child: Obx(() => NeomorphicDropdownField<String>(
+                        value: bloodVal.value,
                         labelText: 'blood_group'.tr,
-                        prefixIcon: const Icon(
+                        prefixIcon: Icon(
                           Icons.bloodtype_outlined,
-                          color: AppColors.primaryLight,
+                          color: colors.textPrimary,
                         ),
-                        hintText: 'A+, B+, etc.',
-                      ),
+                        items: AppEnums.bloodGroups
+                            .map((bg) => NeomorphicDropdownItem(value: bg, label: bg))
+                            .toList(),
+                        onChanged: (val) {
+                          if (val != null) bloodVal.value = val;
+                        },
+                      )),
                     ),
                   ],
                 ),
@@ -205,54 +208,47 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 NeomorphicTextField(
                   controller: skillCtrl,
                   labelText: 'skill'.tr,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.bolt_rounded,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: 12.h),
-                Obx(
-                  () => SwitchListTile(
-                    title: Text(
-                      'married'.tr,
-                      style: GoogleFonts.outfit(
-                        fontSize: 14.sp,
-                        color: isDark
-                            ? AppColors.textDarkPrimary
-                            : AppColors.textLightPrimary,
-                      ),
-                    ),
-                    value: isMarriedVal.value,
-                    onChanged: (val) => isMarriedVal.value = val,
-                    contentPadding: EdgeInsets.zero,
+                Obx(() => NeomorphicDropdownField<String>(
+                  value: isMarriedVal.value,
+                  labelText: 'marital_status'.tr,
+                  prefixIcon: Icon(
+                    Icons.favorite_border_rounded,
+                    color: colors.textPrimary,
                   ),
-                ),
+                  items: AppEnums.maritalStatus
+                      .map((ms) => NeomorphicDropdownItem(value: ms, label: ms.tr))
+                      .toList(),
+                  onChanged: (val) {
+                    if (val != null) isMarriedVal.value = val;
+                  },
+                )),
                 SizedBox(height: 20.h),
                 NeomorphicButton(
                   text: 'add'.tr,
                   isGradient: true,
-                  gradientColors: const [
-                    AppColors.primary,
-                    AppColors.tealBridge,
-                    AppColors.secondary,
-                  ],
+                  gradientColors: colors.primaryGradient,
                   gradientBegin: Alignment.centerLeft,
                   gradientEnd: Alignment.centerRight,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       controller.addFamilyMemberDraft(
-                        name: nameCtrl.text.trim(),
-                        fatherName: fatherNameCtrl.text.trim(),
-                        surname: surnameCtrl.text.trim(),
-                        age: int.parse(ageCtrl.text.trim()),
-                        relationship: relationCtrl.text.trim(),
+                        firstName: nameCtrl.text.trim(),
+                        middleName: middleNameCtrl.text.trim(),
+                        lastName: surnameCtrl.text.trim(),
+                        relation: relationVal.value,
                         phoneNumber: phoneCtrl.text.trim(),
                         occupation: occupCtrl.text.trim(),
-                        birthDate: birthDateCtrl.text.trim(),
+                        dob: birthDateCtrl.text.trim(),
                         education: eduCtrl.text.trim(),
                         isMarried: isMarriedVal.value,
-                        bloodGroup: bloodCtrl.text.trim(),
-                        skill: skillCtrl.text.trim(),
+                        bloodGroup: bloodVal.value,
+                        skills: skillCtrl.text.trim(),
                       );
                       Get.back();
                     }

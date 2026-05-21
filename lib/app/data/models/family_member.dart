@@ -1,109 +1,117 @@
 import 'package:equatable/equatable.dart';
+import 'work_details.dart';
 
 class FamilyMember extends Equatable {
-  final String id;
-  final String name;
-  final String surname;
-  final String fatherName;
-  final int age;
-  final String relationship;
-  final String phoneNumber;
-  final String occupation;
-  final String birthDate; // DD/MM/YYYY
+  final String? id;
+  final String firstName;
+  final String middleName;
+  final String lastName;
+  final String? profilePhoto;
+  final String relation;
+  final String dob;
   final String education;
-  final bool isMarried;
+  final String? occupation;
+  final String isMarried;
   final String bloodGroup;
-  final String skill;
-  final DateTime createdAt;
+  final String? skills;
+  final String phoneNumber;
+  final WorkDetails? workDetails;
+  final DateTime? createdAt;
 
   const FamilyMember({
-    required this.id,
-    required this.name,
-    required this.surname,
-    required this.fatherName,
-    required this.age,
-    required this.relationship,
-    required this.phoneNumber,
-    required this.occupation,
-    required this.birthDate,
+    this.id,
+    required this.firstName,
+    required this.middleName,
+    required this.lastName,
+    this.profilePhoto,
+    required this.relation,
+    required this.dob,
     required this.education,
+    this.occupation,
     required this.isMarried,
     required this.bloodGroup,
-    required this.skill,
-
-    required this.createdAt,
+    this.skills,
+    required this.phoneNumber,
+    this.workDetails,
+    this.createdAt,
   });
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
-      'name': name,
-      'surname': surname,
-      'fatherName': fatherName,
-      'age': age,
-      'relationship': relationship,
-      'phoneNumber': phoneNumber,
-      'occupation': occupation,
-      'birthDate': birthDate,
+      if (id != null) 'id': id,
+      'firstName': firstName,
+      'middleName': middleName,
+      'lastName': lastName,
+      'profilePhoto': profilePhoto,
+      'relation': relation,
+      'dob': dob,
       'education': education,
+      'occupation': occupation,
       'isMarried': isMarried,
       'bloodGroup': bloodGroup,
-      'skill': skill,
-
-      'createdAt': createdAt.toIso8601String(),
+      'skills': skills,
+      'phoneNumber': phoneNumber,
+      'workDetails': workDetails?.toJson() ?? {},
+      if (createdAt != null) 'createdAt': createdAt?.toIso8601String(),
     };
   }
 
   factory FamilyMember.fromJson(Map<String, dynamic> json) {
     return FamilyMember(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      surname: json['surname'] as String,
-      fatherName: json['fatherName'] as String,
-      age: json['age'] as int,
-      relationship: json['relationship'] as String,
-      phoneNumber: json['phoneNumber'] as String,
-      occupation: json['occupation'] as String,
-      birthDate: json['birthDate'] as String? ?? '',
+      id: json['_id'] as String? ?? json['id'] as String?,
+      firstName: json['firstName'] as String? ?? '',
+      middleName: json['middleName'] as String? ?? '',
+      lastName: json['lastName'] as String? ?? '',
+      profilePhoto: json['profilePhoto'] == 'null' ? null : json['profilePhoto'] as String?,
+      relation: json['relation'] as String? ?? '',
+      dob: json['dob'] as String? ?? '',
       education: json['education'] as String? ?? '',
-      isMarried: json['isMarried'] as bool? ?? false,
+      occupation: json['occupation'] as String?,
+      isMarried: json['isMarried'] as String? ?? '',
       bloodGroup: json['bloodGroup'] as String? ?? '',
-      skill: json['skill'] as String? ?? '',
-
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      skills: json['skills'] as String?,
+      phoneNumber: json['phoneNumber'] as String? ?? '',
+      workDetails: json['workDetails'] != null && json['workDetails'].toString() != '{}'
+          ? WorkDetails.fromJson(json['workDetails'] as Map<String, dynamic>)
+          : null,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'] as String)
+          : null,
     );
   }
 
   FamilyMember copyWith({
     String? id,
-    String? name,
-    String? surname,
-    String? fatherName,
-    int? age,
-    String? relationship,
-    String? phoneNumber,
-    String? occupation,
-    String? birthDate,
+    String? firstName,
+    String? middleName,
+    String? lastName,
+    String? profilePhoto,
+    String? relation,
+    String? dob,
     String? education,
-    bool? isMarried,
+    String? occupation,
+    String? isMarried,
     String? bloodGroup,
-    String? skill,
+    String? skills,
+    String? phoneNumber,
+    WorkDetails? workDetails,
     DateTime? createdAt,
   }) {
     return FamilyMember(
       id: id ?? this.id,
-      name: name ?? this.name,
-      surname: surname ?? this.surname,
-      fatherName: fatherName ?? this.fatherName,
-      age: age ?? this.age,
-      relationship: relationship ?? this.relationship,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      occupation: occupation ?? this.occupation,
-      birthDate: birthDate ?? this.birthDate,
+      firstName: firstName ?? this.firstName,
+      middleName: middleName ?? this.middleName,
+      lastName: lastName ?? this.lastName,
+      profilePhoto: profilePhoto ?? this.profilePhoto,
+      relation: relation ?? this.relation,
+      dob: dob ?? this.dob,
       education: education ?? this.education,
+      occupation: occupation ?? this.occupation,
       isMarried: isMarried ?? this.isMarried,
       bloodGroup: bloodGroup ?? this.bloodGroup,
-      skill: skill ?? this.skill,
+      skills: skills ?? this.skills,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      workDetails: workDetails ?? this.workDetails,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -111,18 +119,19 @@ class FamilyMember extends Equatable {
   @override
   List<Object?> get props => [
     id,
-    name,
-    surname,
-    fatherName,
-    age,
-    relationship,
-    phoneNumber,
-    occupation,
-    birthDate,
+    firstName,
+    middleName,
+    lastName,
+    profilePhoto,
+    relation,
+    dob,
     education,
+    occupation,
     isMarried,
     bloodGroup,
-    skill,
+    skills,
+    phoneNumber,
+    workDetails,
     createdAt,
   ];
 

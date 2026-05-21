@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../data/services/auth_service.dart';
+import '../../../data/repositories/auth_repository.dart';
+import '../../../data/services/storage_service.dart';
 import '../../../routes/app_pages.dart';
 
 class LoginController extends GetxController {
-  final AuthService _authService = Get.find<AuthService>();
+  final _authRepo = AuthRepository();
+  final _storage = Get.find<StorageService>();
+  final isDarkTheme = false.obs;
 
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
-
   final isLoading = false.obs;
 
   @override
@@ -34,24 +36,54 @@ class LoginController extends GetxController {
     }
 
     isLoading.value = true;
-    
-    // Simulate slight network delay for better UX feel
-    await Future.delayed(const Duration(milliseconds: 600));
-
-    final success = await _authService.login(phone, password);
+    final response = await _authRepo.login(
+      phoneNumber: phone,
+      password: password,
+    );
     isLoading.value = false;
 
-    if (success) {
+    if (response.success) {
+      // Save the token returned by the API
+      if (response.data?.token != null) {
+        await _storage.saveAuthToken(response.data!.token!);
+      }
+
+      if (response.data?.id != null && response.data!.id.isNotEmpty) {
+        // Fetch actual user data
+        isLoading.value = true;
+        final userResponse = await _authRepo.getUserById(response.data!.id);
+        isLoading.value = false;
+
+        if (userResponse.success && userResponse.data != null) {
+          await _storage.saveUser(userResponse.data!);
+        } else {
+          Get.snackbar(
+            'Error',
+            userResponse.message ?? 'Failed to fetch user details',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
+          return;
+        }
+      }
+
       Get.offAllNamed(Routes.home);
     } else {
       Get.snackbar(
         'Error',
-        'login_failed'.tr,
+        response.message ?? 'login_failed'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
       );
     }
+  }
+
+  void toggleTheme() {
+    isDarkTheme.toggle();
+    Get.changeThemeMode(isDarkTheme.value ? ThemeMode.dark : ThemeMode.light);
+    _storage.saveThemeMode(isDarkTheme.value);
   }
 
   void toggleLanguage() {

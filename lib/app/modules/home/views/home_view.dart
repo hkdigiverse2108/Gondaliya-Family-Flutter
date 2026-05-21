@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/values/colors.dart';
 
@@ -10,51 +11,55 @@ import 'tabs/marketplace_tab_view.dart';
 import 'tabs/profile_tab_view.dart';
 import '../widgets/home_dialogs.dart';
 import '../controllers/home_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return Obx(() {
       return Scaffold(
-        appBar: AppBar(
+        extendBodyBehindAppBar: true,
+        appBar: GlassAppBar(
           title: Row(
-            mainAxisSize: MainAxisSize.min,
             children: [
-              _buildAppBarLogo(),
-              SizedBox(width: 10.w),
+              // _buildAppBarLogo(),
+              // SizedBox(width: 10.w),
               Text(
                 'app_name'.tr,
                 style: GoogleFonts.outfit(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.sp,
-                  color: AppColors.white,
+                  color: colors.textPrimary,
                 ),
               ),
             ],
           ),
-          backgroundColor: AppColors.primary,
-          elevation: 0,
           actions: [
             IconButton(
               tooltip: 'select_language'.tr,
-              icon: const Icon(Icons.language, color: AppColors.white),
+              icon: Icon(Icons.language, color: colors.textPrimary),
               onPressed: () => showLanguageDialog(context, controller),
             ),
             IconButton(
-              tooltip: controller.isDarkTheme.value ? 'light_mode'.tr : 'dark_mode'.tr,
+              tooltip: controller.isDarkTheme.value
+                  ? 'light_mode'.tr
+                  : 'dark_mode'.tr,
               icon: Icon(
-                controller.isDarkTheme.value ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
-                color: AppColors.white,
+                controller.isDarkTheme.value
+                    ? Icons.light_mode_outlined
+                    : Icons.dark_mode_outlined,
+                color: colors.textPrimary,
               ),
               onPressed: controller.toggleTheme,
             ),
             IconButton(
               tooltip: 'logout'.tr,
-              icon: const Icon(Icons.logout_rounded, color: AppColors.white),
+              icon: Icon(Icons.logout_rounded, color: colors.textPrimary),
               onPressed: controller.logout,
             ),
             SizedBox(width: 8.w),
@@ -74,8 +79,10 @@ class HomeView extends GetView<HomeController> {
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        AppColors.primaryLight.withValues(alpha: 0.15),
-                        AppColors.transparent,
+                        colors.primaryVariant.withValues(
+                          alpha: isDark ? 0.08 : 0.15,
+                        ),
+                        colors.transparent,
                       ],
                     ),
                   ),
@@ -91,8 +98,10 @@ class HomeView extends GetView<HomeController> {
                     shape: BoxShape.circle,
                     gradient: RadialGradient(
                       colors: [
-                        AppColors.secondary.withValues(alpha: 0.12),
-                        AppColors.transparent,
+                        colors.secondary.withValues(
+                          alpha: isDark ? 0.06 : 0.12,
+                        ),
+                        colors.transparent,
                       ],
                     ),
                   ),
@@ -114,22 +123,20 @@ class HomeView extends GetView<HomeController> {
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
-            border: Border(
-              top: BorderSide(
-                color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
-                width: 1,
-              ),
-            ),
+            border: Border(top: BorderSide(color: colors.divider, width: 1)),
           ),
           child: BottomNavigationBar(
             currentIndex: controller.currentIndex.value,
             onTap: controller.changeTab,
-            selectedItemColor: isDark ? AppColors.secondaryLight : AppColors.primary,
+            selectedItemColor: colors.accent,
             unselectedItemColor: isDark ? Colors.white54 : Colors.black45,
-            backgroundColor: isDark ? AppColors.cardDark : AppColors.white,
+            backgroundColor: colors.card,
             elevation: 8,
             type: BottomNavigationBarType.fixed,
-            selectedLabelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 12.sp),
+            selectedLabelStyle: GoogleFonts.outfit(
+              fontWeight: FontWeight.bold,
+              fontSize: 12.sp,
+            ),
             unselectedLabelStyle: GoogleFonts.outfit(fontSize: 11.sp),
             items: const [
               BottomNavigationBarItem(
@@ -159,25 +166,25 @@ class HomeView extends GetView<HomeController> {
     });
   }
 
-  Widget _buildAppBarLogo() {
-    return Image.asset(
-      'assets/images/logo.png',
-      height: 32.h,
-      width: 32.w,
-      errorBuilder: (context, error, stackTrace) {
-        return Container(
-          decoration: const BoxDecoration(
-            color: AppColors.white,
-            shape: BoxShape.circle,
-          ),
-          padding: EdgeInsets.all(4.w),
-          child: Icon(
-            Icons.nature_people_rounded,
-            size: 20.w,
-            color: AppColors.primary,
-          ),
-        );
-      },
-    );
-  }
+  // Widget _buildAppBarLogo() {
+  //   return Image.asset(
+  //     'assets/images/logo.png',
+  //     height: 32.h,
+  //     width: 32.w,
+  //     errorBuilder: (context, error, stackTrace) {
+  //       return Container(
+  //         decoration: const BoxDecoration(
+  //           color: AppColors.white,
+  //           shape: BoxShape.circle,
+  //         ),
+  //         padding: EdgeInsets.all(4.w),
+  //         child: Icon(
+  //           Icons.nature_people_rounded,
+  //           size: 20.w,
+  //           color: AppColors.primary,
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 }

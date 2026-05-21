@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/values/colors.dart';
 import '../controllers/chat_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class ChatView extends GetView<ChatController> {
   const ChatView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'General Chat',
-          style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-        ),
+      appBar: GlassAppBar(
+        titleText: 'General Chat',
         centerTitle: true,
         actions: [
           IconButton(
@@ -34,67 +34,71 @@ class ChatView extends GetView<ChatController> {
           // Give / Take Toggle
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-            color: isDark ? AppColors.cardDark : AppColors.cardLight,
+            color: colors.card,
             child: Row(
               children: [
                 Expanded(
-                  child: Obx(() => GestureDetector(
-                    onTap: () => controller.chatMode.value = ChatMode.give,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      decoration: BoxDecoration(
-                        color: controller.chatMode.value == ChatMode.give
-                            ? AppColors.primary
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(
+                  child: Obx(
+                    () => GestureDetector(
+                      onTap: () => controller.chatMode.value = ChatMode.give,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        decoration: BoxDecoration(
                           color: controller.chatMode.value == ChatMode.give
                               ? AppColors.primary
-                              : Colors.grey.shade300,
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: controller.chatMode.value == ChatMode.give
+                                ? AppColors.primary
+                                : Colors.grey.shade300,
+                          ),
                         ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Give (Offer)',
-                        style: GoogleFonts.outfit(
-                          fontWeight: FontWeight.bold,
-                          color: controller.chatMode.value == ChatMode.give
-                              ? Colors.white
-                              : (isDark ? Colors.white : Colors.black87),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Give (Offer)',
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.bold,
+                            color: controller.chatMode.value == ChatMode.give
+                                ? Colors.white
+                                : (isDark ? Colors.white : Colors.black87),
+                          ),
                         ),
                       ),
                     ),
-                  )),
+                  ),
                 ),
                 SizedBox(width: 12.w),
                 Expanded(
-                  child: Obx(() => GestureDetector(
-                    onTap: () => controller.chatMode.value = ChatMode.take,
-                    child: Container(
-                      padding: EdgeInsets.symmetric(vertical: 12.h),
-                      decoration: BoxDecoration(
-                        color: controller.chatMode.value == ChatMode.take
-                            ? AppColors.secondary
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(12.r),
-                        border: Border.all(
+                  child: Obx(
+                    () => GestureDetector(
+                      onTap: () => controller.chatMode.value = ChatMode.take,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        decoration: BoxDecoration(
                           color: controller.chatMode.value == ChatMode.take
                               ? AppColors.secondary
-                              : Colors.grey.shade300,
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(12.r),
+                          border: Border.all(
+                            color: controller.chatMode.value == ChatMode.take
+                                ? AppColors.secondary
+                                : Colors.grey.shade300,
+                          ),
                         ),
-                      ),
-                      alignment: Alignment.center,
-                      child: Text(
-                        'Take (Request)',
-                        style: GoogleFonts.outfit(
-                          fontWeight: FontWeight.bold,
-                          color: controller.chatMode.value == ChatMode.take
-                              ? Colors.white
-                              : (isDark ? Colors.white : Colors.black87),
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Take (Request)',
+                          style: GoogleFonts.outfit(
+                            fontWeight: FontWeight.bold,
+                            color: controller.chatMode.value == ChatMode.take
+                                ? Colors.white
+                                : (isDark ? Colors.white : Colors.black87),
+                          ),
                         ),
                       ),
                     ),
-                  )),
+                  ),
                 ),
               ],
             ),
@@ -115,9 +119,11 @@ class ChatView extends GetView<ChatController> {
 
           // Input Area
           Container(
-            padding: EdgeInsets.all(16.w).copyWith(bottom: 16.w + MediaQuery.of(context).padding.bottom),
+            padding: EdgeInsets.all(
+              16.w,
+            ).copyWith(bottom: 16.w + MediaQuery.of(context).padding.bottom),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.cardDark : AppColors.cardLight,
+              color: colors.card,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -164,12 +170,17 @@ class ChatView extends GetView<ChatController> {
                         decoration: InputDecoration(
                           hintText: 'Type a message...',
                           filled: true,
-                          fillColor: isDark ? Colors.black26 : Colors.grey.shade100,
+                          fillColor: isDark
+                              ? Colors.black26
+                              : Colors.grey.shade100,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24.r),
                             borderSide: BorderSide.none,
                           ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+                          contentPadding: EdgeInsets.symmetric(
+                            horizontal: 16.w,
+                            vertical: 12.h,
+                          ),
                         ),
                       ),
                     ),
@@ -178,7 +189,10 @@ class ChatView extends GetView<ChatController> {
                       backgroundColor: AppColors.primary,
                       radius: 24.r,
                       child: IconButton(
-                        icon: const Icon(Icons.send_rounded, color: Colors.white),
+                        icon: const Icon(
+                          Icons.send_rounded,
+                          color: Colors.white,
+                        ),
                         onPressed: () {},
                       ),
                     ),
@@ -228,7 +242,9 @@ class ChatView extends GetView<ChatController> {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
               decoration: BoxDecoration(
-                color: mode == ChatMode.give ? Colors.green.withValues(alpha: 0.8) : Colors.orange.withValues(alpha: 0.8),
+                color: mode == ChatMode.give
+                    ? Colors.green.withValues(alpha: 0.8)
+                    : Colors.orange.withValues(alpha: 0.8),
                 borderRadius: BorderRadius.circular(4.r),
               ),
               child: Text(
@@ -245,7 +261,9 @@ class ChatView extends GetView<ChatController> {
               'This is a sample message in the general chat stream.',
               style: GoogleFonts.outfit(
                 fontSize: 14.sp,
-                color: isMe ? Colors.white : (isDark ? Colors.white : Colors.black87),
+                color: isMe
+                    ? Colors.white
+                    : (isDark ? Colors.white : Colors.black87),
               ),
             ),
             SizedBox(height: 4.h),

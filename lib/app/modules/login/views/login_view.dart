@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../../core/values/colors.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/sizes.dart';
 import '../../../routes/app_pages.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
@@ -15,14 +15,27 @@ class LoginView extends GetView<LoginController> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        scrolledUnderElevation: 0,
         actions: [
+          IconButton(
+            tooltip: controller.isDarkTheme.value
+                ? 'light_mode'.tr
+                : 'dark_mode'.tr,
+            icon: Icon(
+              controller.isDarkTheme.value
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+              color: colors.textPrimary,
+            ),
+            onPressed: controller.toggleTheme,
+          ),
           // Language Toggle Button (Neumorphic style)
           Padding(
             padding: EdgeInsets.only(right: 16.w),
@@ -30,28 +43,20 @@ class LoginView extends GetView<LoginController> {
               onTap: controller.toggleLanguage,
               child: Container(
                 decoration: BoxDecoration(
-                  color: isDark ? AppColors.cardDark : AppColors.cardLight,
+                  color: colors.card,
                   borderRadius: BorderRadius.circular(20.r),
-                  boxShadow: isDark
-                      ? AppColors.neumorphicShadowDark(blur: 12, distance: 3)
-                      : AppColors.neumorphicShadowLight(blur: 12, distance: 3),
+                  boxShadow: colors.neumorphicShadow(blur: 10, distance: 2),
                 ),
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.language,
-                      color: isDark
-                          ? AppColors.secondaryLight
-                          : AppColors.primary,
-                      size: 16.w,
-                    ),
+                    Icon(Icons.language, color: colors.textPrimary, size: 16.w),
                     SizedBox(width: 6.w),
                     Text(
                       Get.locale?.languageCode == 'gu' ? 'English' : 'ગુજરાતી',
                       style: GoogleFonts.outfit(
-                        color: isDark ? AppColors.white : AppColors.primary,
+                        color: colors.textPrimary,
                         fontWeight: FontWeight.bold,
                         fontSize: 12.sp,
                       ),
@@ -74,13 +79,13 @@ class LoginView extends GetView<LoginController> {
               height: 300.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.primary.withValues(
-                  alpha: isDark ? 0.25 : 0.15,
+                color: colors.primary.withValues(
+                  alpha: colors.isDark ? 0.25 : 0.15,
                 ),
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.primary.withValues(alpha: 0.4),
-                    AppColors.transparent,
+                    colors.primary.withValues(alpha: 0.4),
+                    colors.transparent,
                   ],
                 ),
               ),
@@ -94,13 +99,13 @@ class LoginView extends GetView<LoginController> {
               height: 400.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.secondary.withValues(
-                  alpha: isDark ? 0.2 : 0.1,
+                color: colors.secondary.withValues(
+                  alpha: colors.isDark ? 0.2 : 0.1,
                 ),
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.secondary.withValues(alpha: 0.35),
-                    AppColors.transparent,
+                    colors.secondary.withValues(alpha: 0.35),
+                    colors.transparent,
                   ],
                 ),
               ),
@@ -129,19 +134,15 @@ class LoginView extends GetView<LoginController> {
                                 height: 90.h,
                                 width: 90.w,
                                 decoration: BoxDecoration(
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      AppColors.primary,
-                                      AppColors.tealBridge,
-                                      AppColors.secondary,
-                                    ],
+                                  gradient: LinearGradient(
+                                    colors: colors.primaryGradient,
                                     begin: Alignment.topLeft,
                                     end: Alignment.bottomRight,
                                   ),
                                   shape: BoxShape.circle,
                                   boxShadow: [
                                     BoxShadow(
-                                      color: AppColors.primary.withValues(
+                                      color: colors.primary.withValues(
                                         alpha: 0.3,
                                       ),
                                       blurRadius: 15,
@@ -149,10 +150,10 @@ class LoginView extends GetView<LoginController> {
                                     ),
                                   ],
                                 ),
-                                child: const Icon(
+                                child: Icon(
                                   Icons.nature_people,
                                   size: 48,
-                                  color: AppColors.white,
+                                  color: colors.white,
                                 ),
                               );
                             },
@@ -166,9 +167,9 @@ class LoginView extends GetView<LoginController> {
                             style: GoogleFonts.outfit(
                               fontSize: 22.sp,
                               fontWeight: FontWeight.bold,
-                              color: isDark
-                                  ? AppColors.white
-                                  : AppColors.primary,
+                              color: colors.isDark
+                                  ? colors.white
+                                  : colors.primary,
                               letterSpacing: -0.2,
                             ),
                           ),
@@ -180,9 +181,7 @@ class LoginView extends GetView<LoginController> {
                               fontSize: AppSizes.fontSizeBodyMedium.sp,
                               fontWeight: FontWeight.w500,
                               fontStyle: FontStyle.italic,
-                              color: isDark
-                                  ? AppColors.textDarkSecondary
-                                  : AppColors.textLightSecondary,
+                              color: colors.textSecondary,
                             ),
                           ),
                         ],
@@ -202,9 +201,9 @@ class LoginView extends GetView<LoginController> {
                             style: GoogleFonts.outfit(
                               fontSize: 24.sp,
                               fontWeight: FontWeight.bold,
-                              color: isDark
-                                  ? AppColors.white
-                                  : AppColors.textLightPrimary,
+                              color: colors.isDark
+                                  ? colors.white
+                                  : colors.textPrimary,
                               letterSpacing: -0.5,
                             ),
                             textAlign: TextAlign.center,
@@ -217,9 +216,10 @@ class LoginView extends GetView<LoginController> {
                             labelText: 'phone_number'.tr,
                             hintText: 'e.g. 9876543210',
                             keyboardType: TextInputType.phone,
-                            prefixIcon: const Icon(
+                            showValidationIcon: false,
+                            prefixIcon: Icon(
                               Icons.phone_iphone_outlined,
-                              color: AppColors.primaryLight,
+                              color: colors.textPrimary,
                             ),
                           ),
                           SizedBox(height: AppSizes.spacingL.h),
@@ -229,9 +229,9 @@ class LoginView extends GetView<LoginController> {
                             controller: controller.passwordController,
                             labelText: 'password'.tr,
                             isPassword: true,
-                            prefixIcon: const Icon(
+                            prefixIcon: Icon(
                               Icons.lock_outline_rounded,
-                              color: AppColors.primaryLight,
+                              color: colors.textPrimary,
                             ),
                           ),
                           SizedBox(height: AppSizes.spacingXL.h),
@@ -243,11 +243,7 @@ class LoginView extends GetView<LoginController> {
                               isLoading: controller.isLoading.value,
                               onPressed: controller.login,
                               isGradient: true,
-                              gradientColors: const [
-                                AppColors.primary,
-                                AppColors.tealBridge,
-                                AppColors.secondary,
-                              ],
+                              gradientColors: colors.primaryGradient,
                               gradientBegin: Alignment.centerLeft,
                               gradientEnd: Alignment.centerRight,
                             ),
@@ -265,9 +261,7 @@ class LoginView extends GetView<LoginController> {
                           text: TextSpan(
                             style: GoogleFonts.outfit(
                               fontSize: AppSizes.fontSizeBodyLarge.sp,
-                              color: isDark
-                                  ? AppColors.textDarkSecondary
-                                  : AppColors.textLightSecondary,
+                              color: colors.textSecondary,
                             ),
                             children: [
                               TextSpan(
@@ -280,9 +274,7 @@ class LoginView extends GetView<LoginController> {
                                     .last
                                     .trim(),
                                 style: GoogleFonts.outfit(
-                                  color: isDark
-                                      ? AppColors.secondaryLight
-                                      : AppColors.primary,
+                                  color: colors.accent,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),

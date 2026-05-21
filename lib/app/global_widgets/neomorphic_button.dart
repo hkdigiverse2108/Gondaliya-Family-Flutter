@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/values/sizes.dart';
-import '../../core/values/colors.dart';
+import '../../core/theme/app_color_scheme.dart';
 
 class NeomorphicButton extends StatefulWidget {
   final String text;
@@ -71,11 +71,11 @@ class _NeomorphicButtonState extends State<NeomorphicButton>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
     final theme = Theme.of(context);
 
     final buttonColor = widget.backgroundColor ?? theme.primaryColor;
-    final contentColor = widget.textColor ?? AppColors.white;
+    final contentColor = widget.textColor ?? colors.white;
 
     return AnimatedBuilder(
       animation: _shadowAnimation,
@@ -83,15 +83,10 @@ class _NeomorphicButtonState extends State<NeomorphicButton>
         final shadowDistance = 5.0 * _shadowAnimation.value;
         final shadowBlur = 15.0 * _shadowAnimation.value;
 
-        final shadows = isDark
-            ? AppColors.neumorphicShadowDark(
-                blur: shadowBlur,
-                distance: shadowDistance,
-              )
-            : AppColors.neumorphicShadowLight(
-                blur: shadowBlur,
-                distance: shadowDistance,
-              );
+        final shadows = colors.neumorphicShadow(
+          blur: shadowBlur,
+          distance: shadowDistance,
+        );
 
         return Listener(
           onPointerDown: widget.isLoading ? null : _onPointerDown,
@@ -105,13 +100,7 @@ class _NeomorphicButtonState extends State<NeomorphicButton>
                 boxShadow: widget.isLoading ? [] : shadows,
                 gradient: widget.isGradient
                     ? LinearGradient(
-                        colors:
-                            widget.gradientColors ??
-                            [
-                              AppColors.primary,
-                              AppColors.tealBridge,
-                              AppColors.secondary,
-                            ],
+                        colors: widget.gradientColors ?? colors.primaryGradient,
                         begin: widget.gradientBegin ?? Alignment.centerLeft,
                         end: widget.gradientEnd ?? Alignment.centerRight,
                       )

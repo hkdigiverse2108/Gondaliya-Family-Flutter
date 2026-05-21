@@ -7,6 +7,7 @@ import '../../../../core/values/sizes.dart';
 import '../../../global_widgets/generation_avatar.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class FamilyStep extends StatelessWidget {
   final RegisterController controller;
@@ -20,7 +21,8 @@ class FamilyStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -33,7 +35,7 @@ class FamilyStep extends StatelessWidget {
               style: GoogleFonts.outfit(
                 fontSize: AppSizes.fontSizeTitleMedium.sp,
                 fontWeight: FontWeight.bold,
-                color: isDark ? AppColors.secondaryLight : AppColors.primary,
+                color: colors.accent,
               ),
             ),
             ElevatedButton.icon(
@@ -98,8 +100,8 @@ class FamilyStep extends StatelessWidget {
             itemBuilder: (context, index) {
               final member = controller.familyMembers[index];
               final genColor = GenerationAvatar.getGenerationColor(
-                member.relationship,
-                member.age,
+                member.relation,
+                30,
               );
 
               return NeomorphicCard(
@@ -107,7 +109,7 @@ class FamilyStep extends StatelessWidget {
                 child: Row(
                   children: [
                     GenerationAvatar(
-                      name: member.name,
+                      name: member.firstName,
                       color: genColor,
                       radius: 20,
                     ),
@@ -117,7 +119,7 @@ class FamilyStep extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            member.name,
+                            '${member.firstName} ${member.lastName}',
                             style: GoogleFonts.outfit(
                               fontWeight: FontWeight.bold,
                               fontSize: 15.sp,
@@ -139,7 +141,7 @@ class FamilyStep extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Text(
-                                  member.relationship,
+                                  member.relation,
                                   style: GoogleFonts.outfit(
                                     color: genColor,
                                     fontSize: 10.sp,
@@ -149,7 +151,7 @@ class FamilyStep extends StatelessWidget {
                               ),
                               SizedBox(width: 8.w),
                               Text(
-                                '${member.age} Yrs • ${member.occupation}',
+                                '${member.dob} • ${member.occupation}',
                                 style: GoogleFonts.outfit(
                                   fontSize: 11.sp,
                                   color: isDark
@@ -168,7 +170,7 @@ class FamilyStep extends StatelessWidget {
                         color: AppColors.error,
                       ),
                       onPressed: () =>
-                          controller.removeFamilyMemberDraft(member.id),
+                          controller.removeFamilyMemberDraft(member.id!),
                     ),
                   ],
                 ),

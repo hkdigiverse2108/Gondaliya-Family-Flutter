@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/values/sizes.dart';
-import '../../core/values/colors.dart';
+import '../../core/theme/app_color_scheme.dart';
 
 class NeomorphicTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -18,6 +18,7 @@ class NeomorphicTextField extends StatefulWidget {
   final int maxLines;
   final bool enabled;
   final bool showValidationIcon;
+  final int? maxLength;
 
   const NeomorphicTextField({
     super.key,
@@ -34,6 +35,7 @@ class NeomorphicTextField extends StatefulWidget {
     this.maxLines = 1,
     this.enabled = true,
     this.showValidationIcon = true,
+    this.maxLength,
   });
 
   @override
@@ -79,17 +81,13 @@ class _NeomorphicTextFieldState extends State<NeomorphicTextField>
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     // Inset shadows for neumorphic effect
-    final insetShadows = isDark
-        ? AppColors.neumorphicInsetShadowDark()
-        : AppColors.neumorphicInsetShadowLight();
+    final insetShadows = colors.neumorphicInsetShadow();
 
     // Focus shadows - slightly more pronounced
-    final focusShadows = isDark
-        ? AppColors.neumorphicShadowDark(blur: 12, distance: 3)
-        : AppColors.neumorphicShadowLight(blur: 12, distance: 3);
+    final focusShadows = colors.neumorphicShadow(blur: 12, distance: 3);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -106,8 +104,18 @@ class _NeomorphicTextFieldState extends State<NeomorphicTextField>
             keyboardType: widget.keyboardType,
             validator: (value) {
               final error = widget.validator?.call(value);
-              _errorText = error;
-              return error;
+              if (_errorText != error) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (mounted) {
+                    setState(() {
+                      _errorText = error;
+                    });
+                  }
+                });
+              }
+              return error != null
+                  ? ''
+                  : null; // Return empty string to trigger errorBorder without showing text inside container
             },
             inputFormatters: widget.inputFormatters,
             onChanged: widget.onChanged,
@@ -115,30 +123,23 @@ class _NeomorphicTextFieldState extends State<NeomorphicTextField>
             enabled: widget.enabled,
             style: GoogleFonts.outfit(
               fontSize: AppSizes.fontSizeInputText,
-              color: isDark
-                  ? AppColors.textDarkPrimary
-                  : AppColors.textLightPrimary,
+              color: colors.textPrimary,
             ),
+            maxLength: widget.maxLength,
             decoration: InputDecoration(
               labelText: widget.labelText,
               hintText: widget.hintText,
               prefixIcon: widget.prefixIcon,
-              suffixIcon: _buildSuffixIcon(isDark),
+              suffixIcon: _buildSuffixIcon(colors),
               filled: true,
-              fillColor: isDark ? AppColors.cardDark : AppColors.cardLight,
+              fillColor: widget.enabled ? colors.card : colors.divider,
               labelStyle: GoogleFonts.outfit(
                 fontSize: AppSizes.fontSizeInputLabel,
-                color: _isFocused
-                    ? AppColors.primary
-                    : (isDark
-                          ? AppColors.textDarkSecondary
-                          : AppColors.textLightSecondary),
+                color: _isFocused ? colors.primary : colors.textSecondary,
               ),
               hintStyle: GoogleFonts.outfit(
                 fontSize: AppSizes.fontSizeInputHint,
-                color: isDark
-                    ? AppColors.textDarkSecondary.withValues(alpha: 0.6)
-                    : AppColors.textLightSecondary.withValues(alpha: 0.6),
+                color: colors.textSecondary.withValues(alpha: 0.6),
               ),
               contentPadding: EdgeInsets.symmetric(
                 horizontal: 16,
@@ -150,43 +151,55 @@ class _NeomorphicTextFieldState extends State<NeomorphicTextField>
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide.none,
+                borderSide: widget.controller?.text.isEmpty == false
+                    ? BorderSide(color: colors.primary, width: 1.5)
+                    : BorderSide.none,
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppColors.primary, width: 1.5),
+                borderSide: BorderSide(color: colors.primary, width: 1.5),
               ),
               errorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppColors.error, width: 1.5),
+                borderSide: BorderSide(color: colors.error, width: 1.5),
               ),
               focusedErrorBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(color: AppColors.error, width: 1.5),
+                borderSide: BorderSide(color: colors.error, width: 1.5),
               ),
-              errorStyle: GoogleFonts.outfit(
-                fontSize: AppSizes.fontSizeInputHint,
-                color: AppColors.error,
-              ),
+              errorStyle: const TextStyle(height: 0, fontSize: 0),
             ),
           ),
         ),
         if (_errorText != null && _errorText!.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.only(top: 8.0),
-            child: Text(
-              _errorText!,
-              style: GoogleFonts.outfit(
-                fontSize: AppSizes.fontSizeInputHint,
-                color: AppColors.error,
-              ),
+            padding: const EdgeInsets.only(top: 2, left: 12.0),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.error_outline_rounded,
+                  size: 14,
+                  color: colors.error,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    _errorText!,
+                    style: GoogleFonts.outfit(
+                      fontSize: AppSizes.fontSizeInputHint,
+                      color: colors.error,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
       ],
     );
   }
 
-  Widget? _buildSuffixIcon(bool isDark) {
+  Widget? _buildSuffixIcon(AppColorScheme colors) {
     if (widget.isPassword) {
       return GestureDetector(
         onTap: () {
@@ -198,7 +211,7 @@ class _NeomorphicTextFieldState extends State<NeomorphicTextField>
           _obscureText
               ? Icons.visibility_off_outlined
               : Icons.visibility_outlined,
-          color: AppColors.primaryLight,
+          color: colors.textPrimary,
           size: 20,
         ),
       );
@@ -208,11 +221,7 @@ class _NeomorphicTextFieldState extends State<NeomorphicTextField>
         _errorText == null &&
         widget.controller != null &&
         widget.controller!.text.isNotEmpty) {
-      return Icon(
-        Icons.check_circle_outline,
-        color: AppColors.success,
-        size: 20,
-      );
+      return Icon(Icons.check_circle_outline, color: colors.success, size: 20);
     }
 
     return widget.suffixIcon;

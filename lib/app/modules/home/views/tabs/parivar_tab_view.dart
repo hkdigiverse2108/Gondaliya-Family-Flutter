@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/values/colors.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class ParivarTabView extends StatefulWidget {
   const ParivarTabView({super.key});
@@ -28,18 +29,19 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return Column(
       children: [
         // Village Tabs
         Container(
-          color: isDark ? AppColors.cardDark : AppColors.cardLight,
+          color: colors.card,
           child: TabBar(
             controller: _tabController,
             indicatorColor: AppColors.primary,
             labelColor: AppColors.primary,
-            unselectedLabelColor: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            unselectedLabelColor: colors.textSecondary,
             labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14.sp),
             tabs: const [
               Tab(text: 'Village 1'),
@@ -71,9 +73,9 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
           child: TabBarView(
             controller: _tabController,
             children: [
-              _buildMemberList(isDark, 'Village 1'),
-              _buildMemberList(isDark, 'Village 2'),
-              _buildMemberList(isDark, 'Village 3'),
+              _buildMemberList(colors, 'Village 1'),
+              _buildMemberList(colors, 'Village 2'),
+              _buildMemberList(colors, 'Village 3'),
             ],
           ),
         ),
@@ -81,7 +83,7 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
     );
   }
 
-  Widget _buildMemberList(bool isDark, String villageName) {
+  Widget _buildMemberList(AppColorScheme colors, String villageName) {
     return ListView.separated(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       itemCount: 10,
@@ -90,7 +92,7 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
         return Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.cardDark : AppColors.cardLight,
+            color: colors.card,
             borderRadius: BorderRadius.circular(16.r),
             boxShadow: [
               BoxShadow(

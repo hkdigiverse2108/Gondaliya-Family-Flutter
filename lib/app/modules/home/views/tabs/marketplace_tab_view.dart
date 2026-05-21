@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/values/colors.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class MarketplaceTabView extends StatefulWidget {
   const MarketplaceTabView({super.key});
@@ -28,19 +29,20 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTick
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return Column(
       children: [
         // Tabs
         Container(
-          color: isDark ? AppColors.cardDark : AppColors.cardLight,
+          color: colors.card,
           child: TabBar(
             controller: _tabController,
             isScrollable: true,
             indicatorColor: AppColors.primary,
             labelColor: AppColors.primary,
-            unselectedLabelColor: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+            unselectedLabelColor: colors.textSecondary,
             labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14.sp),
             tabs: const [
               Tab(text: 'All'),
@@ -89,10 +91,10 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTick
           child: TabBarView(
             controller: _tabController,
             children: [
-              _buildListing(isDark, 'All'),
-              _buildListing(isDark, 'Rent'),
-              _buildListing(isDark, 'Seasonal'),
-              _buildListing(isDark, '2nd Hand'),
+              _buildListing(colors, 'All'),
+              _buildListing(colors, 'Rent'),
+              _buildListing(colors, 'Seasonal'),
+              _buildListing(colors, '2nd Hand'),
             ],
           ),
         ),
@@ -100,7 +102,7 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTick
     );
   }
 
-  Widget _buildListing(bool isDark, String category) {
+  Widget _buildListing(AppColorScheme colors, String category) {
     return ListView.separated(
       padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
       itemCount: 10,
@@ -111,7 +113,7 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTick
         return Container(
           padding: EdgeInsets.all(12.w),
           decoration: BoxDecoration(
-            color: isDark ? AppColors.cardDark : AppColors.cardLight,
+            color: colors.card,
             borderRadius: BorderRadius.circular(16.r),
             border: isSponsored ? Border.all(color: AppColors.secondary, width: 2) : null,
             boxShadow: [

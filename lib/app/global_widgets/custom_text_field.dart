@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/values/sizes.dart';
-import '../../core/values/colors.dart';
+import '../../core/theme/app_color_scheme.dart';
 
 class CustomTextField extends StatefulWidget {
   final TextEditingController? controller;
@@ -49,7 +49,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     return TextFormField(
       controller: widget.controller,
@@ -62,7 +62,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       enabled: widget.enabled,
       style: GoogleFonts.outfit(
         fontSize: AppSizes.fontSizeInputText,
-        color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary,
+        color: colors.textPrimary,
       ),
       decoration: InputDecoration(
         labelText: widget.labelText,
@@ -70,28 +70,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
         prefixIcon: widget.prefixIcon,
         labelStyle: GoogleFonts.outfit(
           fontSize: AppSizes.fontSizeInputLabel,
-          color: isDark
-              ? AppColors.textDarkSecondary
-              : AppColors.textLightSecondary,
+          color: colors.textSecondary,
         ),
         hintStyle: GoogleFonts.outfit(
           fontSize: AppSizes.fontSizeInputHint,
-          color: isDark
-              ? AppColors.textDarkSecondary.withValues(alpha: 0.6)
-              : AppColors.textLightSecondary.withValues(alpha: 0.6),
+          color: colors.textSecondary.withValues(alpha: 0.6),
         ),
         errorStyle: GoogleFonts.outfit(
           fontSize: AppSizes.fontSizeInputError,
-          color: AppColors.error,
+          color: colors.error,
         ),
         suffixIcon: widget.isPassword
             ? IconButton(
                 icon: Icon(
                   _obscureText ? Icons.visibility_off : Icons.visibility,
                   size: 20,
-                  color: isDark
-                      ? AppColors.textDarkSecondary
-                      : AppColors.textLightSecondary,
+                  color: colors.textSecondary,
                 ),
                 onPressed: () {
                   setState(() {

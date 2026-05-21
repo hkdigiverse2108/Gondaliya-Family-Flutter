@@ -6,8 +6,8 @@ class AppColors {
   // Primary colors (Branded Navy Blue)
   static const Color primary = Color(0xFF2B3B82);
   static const Color primaryLight = Color(0xFF4A5BB2);
-  static const Color primaryDark = Color(0xFF141836);
-  static const Color primaryDeep = Color(0xFF0D112B);
+  static const Color primaryDark = Color(0xFF1A1A1A);
+  static const Color primaryDeep = Color(0xFF0A0A0A);
 
   // Secondary colors (Branded Emerald Green)
   static const Color secondary = Color(0xFF1BB273);
@@ -29,10 +29,10 @@ class AppColors {
   static const Color cardLight = Color(0xFFFFFFFF);
   static const Color dividerLight = Color(0xFFE2E8F0);
 
-  // Dark Mode Midnight Navy System
-  static const Color bgDark = Color(0xFF0A0D23);
-  static const Color cardDark = Color(0xFF131737);
-  static const Color dividerDark = Color(0xFF212957);
+  // Dark Mode System (Polished Black/Charcoal)
+  static const Color bgDark = Color(0xFF121212);
+  static const Color cardDark = Color(0xFF1E1E1E);
+  static const Color dividerDark = Color(0xFF2C2C2C);
 
   // Text colors
   static const Color textLightPrimary = Color(0xFF0F172A);
@@ -78,13 +78,13 @@ class AppColors {
     return [
       // Dark shadow (bottom-right)
       BoxShadow(
-        color: const Color(0xFF000000).withValues(alpha: 0.5),
+        color: const Color(0xFF000000).withValues(alpha: 0.6),
         blurRadius: blur,
         offset: Offset(distance, distance),
       ),
-      // Light highlight (top-left)
+      // Light highlight (top-left) - much more subtle for black theme
       BoxShadow(
-        color: const Color(0xFFFFFFFF).withValues(alpha: 0.15),
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.03),
         blurRadius: blur,
         offset: Offset(-distance, -distance),
       ),
@@ -118,16 +118,16 @@ class AppColors {
     double distance = 4,
   }) {
     return [
-      // Inner highlight (top-left)
+      // Inner highlight (top-left) - subtle for black theme
       BoxShadow(
-        color: const Color(0xFFFFFFFF).withValues(alpha: 0.1),
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.02),
         blurRadius: blur,
         offset: Offset(-distance, -distance),
         spreadRadius: -1,
       ),
       // Inner dark shadow (bottom-right)
       BoxShadow(
-        color: const Color(0xFF000000).withValues(alpha: 0.6),
+        color: const Color(0xFF000000).withValues(alpha: 0.8),
         blurRadius: blur,
         offset: Offset(distance, distance),
         spreadRadius: -1,
@@ -160,12 +160,12 @@ class AppColors {
   }) {
     return [
       BoxShadow(
-        color: const Color(0xFF000000).withValues(alpha: 0.4),
+        color: const Color(0xFF000000).withValues(alpha: 0.5),
         blurRadius: blur,
         offset: Offset(distance, distance),
       ),
       BoxShadow(
-        color: const Color(0xFFFFFFFF).withValues(alpha: 0.08),
+        color: const Color(0xFFFFFFFF).withValues(alpha: 0.02),
         blurRadius: blur,
         offset: Offset(-distance, -distance),
       ),

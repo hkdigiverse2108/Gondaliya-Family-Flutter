@@ -8,27 +8,31 @@ import '../../../global_widgets/custom_text_field.dart';
 import '../../../global_widgets/custom_button.dart';
 import '../../../data/models/family_member.dart';
 import '../controllers/home_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
-void showFamilyMemberFormSheet(BuildContext context, {
+void showFamilyMemberFormSheet(
+  BuildContext context, {
   required HomeController controller,
   FamilyMember? member,
 }) {
   final formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController(text: member?.name);
-  final surnameController = TextEditingController(text: member?.surname);
-  final fatherNameController = TextEditingController(text: member?.fatherName);
-  final ageController = TextEditingController(text: member != null ? '${member.age}' : '');
-  final relationshipController = TextEditingController(text: member?.relationship);
+  final nameController = TextEditingController(text: member?.firstName);
+  final surnameController = TextEditingController(text: member?.lastName);
+  final middleNameController = TextEditingController(text: member?.middleName);
+  final relationshipController = TextEditingController(text: member?.relation);
   final phoneController = TextEditingController(text: member?.phoneNumber);
   final occupationController = TextEditingController(text: member?.occupation);
-  final birthDateController = TextEditingController(text: member?.birthDate);
+  final birthDateController = TextEditingController(text: member?.dob);
   final eduController = TextEditingController(text: member?.education);
   final bloodController = TextEditingController(text: member?.bloodGroup);
-  final skillController = TextEditingController(text: member?.skill);
-  final isMarriedRx = (member?.isMarried ?? false).obs;
+  final skillController = TextEditingController(text: member?.skills);
+  final isMarriedRx =
+      ((member?.isMarried.toLowerCase() == 'married') ||
+              member?.isMarried == 'true')
+          .obs;
 
   final isEdit = member != null;
-  final isDark = Theme.of(context).brightness == Brightness.dark;
+  final colors = context.appColors;
 
   Get.bottomSheet(
     Container(
@@ -54,7 +58,7 @@ void showFamilyMemberFormSheet(BuildContext context, {
                 style: GoogleFonts.outfit(
                   fontWeight: FontWeight.bold,
                   fontSize: 18.sp,
-                  color: isDark ? AppColors.secondaryLight : AppColors.primary,
+                  color: colors.accent,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -64,9 +68,13 @@ void showFamilyMemberFormSheet(BuildContext context, {
               CustomTextField(
                 controller: nameController,
                 labelText: 'full_name'.tr,
-                prefixIcon: const Icon(Icons.person_outline_rounded, color: AppColors.primaryLight),
-                validator: (value) =>
-                    value == null || value.trim().isEmpty ? 'field_required'.tr : null,
+                prefixIcon: Icon(
+                  Icons.person_outline_rounded,
+                  color: colors.textPrimary,
+                ),
+                validator: (value) => value == null || value.trim().isEmpty
+                    ? 'field_required'.tr
+                    : null,
               ),
               SizedBox(height: 12.h),
               Row(
@@ -74,21 +82,12 @@ void showFamilyMemberFormSheet(BuildContext context, {
                   Expanded(
                     flex: 2,
                     child: CustomTextField(
-                      controller: ageController,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      labelText: 'age'.tr,
-                      prefixIcon: const Icon(Icons.calendar_today_outlined, color: AppColors.primaryLight),
-                      validator: (value) {
-                        if (value == null || value.trim().isEmpty) {
-                          return 'field_required'.tr;
-                        }
-                        final parsedAge = int.tryParse(value);
-                        if (parsedAge == null || parsedAge <= 0 || parsedAge > 120) {
-                          return 'invalid_age'.tr;
-                        }
-                        return null;
-                      },
+                      controller: middleNameController,
+                      labelText: 'Middle Name',
+                      prefixIcon: Icon(
+                        Icons.person_outline_rounded,
+                        color: colors.textPrimary,
+                      ),
                     ),
                   ),
                   SizedBox(width: 12.w),
@@ -97,10 +96,15 @@ void showFamilyMemberFormSheet(BuildContext context, {
                     child: CustomTextField(
                       controller: relationshipController,
                       labelText: 'relationship'.tr,
-                      prefixIcon: const Icon(Icons.family_restroom_rounded, color: AppColors.primaryLight),
+                      prefixIcon: Icon(
+                        Icons.family_restroom_rounded,
+                        color: colors.textPrimary,
+                      ),
                       hintText: 'Father, Daughter, etc.',
                       validator: (value) =>
-                          value == null || value.trim().isEmpty ? 'field_required'.tr : null,
+                          value == null || value.trim().isEmpty
+                          ? 'field_required'.tr
+                          : null,
                     ),
                   ),
                 ],
@@ -111,7 +115,10 @@ void showFamilyMemberFormSheet(BuildContext context, {
                 keyboardType: TextInputType.phone,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 labelText: 'phone_number'.tr,
-                prefixIcon: const Icon(Icons.phone_iphone_outlined, color: AppColors.primaryLight),
+                prefixIcon: Icon(
+                  Icons.phone_iphone_outlined,
+                  color: colors.textPrimary,
+                ),
                 validator: (value) {
                   if (value != null && value.isNotEmpty && value.length != 10) {
                     return 'invalid_phone'.tr;
@@ -126,7 +133,10 @@ void showFamilyMemberFormSheet(BuildContext context, {
                     child: CustomTextField(
                       controller: birthDateController,
                       labelText: 'birth_date'.tr,
-                      prefixIcon: const Icon(Icons.cake_outlined, color: AppColors.primaryLight),
+                      prefixIcon: Icon(
+                        Icons.cake_outlined,
+                        color: colors.textPrimary,
+                      ),
                       hintText: 'DD/MM/YYYY',
                     ),
                   ),
@@ -135,7 +145,10 @@ void showFamilyMemberFormSheet(BuildContext context, {
                     child: CustomTextField(
                       controller: eduController,
                       labelText: 'education'.tr,
-                      prefixIcon: const Icon(Icons.school_outlined, color: AppColors.primaryLight),
+                      prefixIcon: Icon(
+                        Icons.school_outlined,
+                        color: colors.textPrimary,
+                      ),
                     ),
                   ),
                 ],
@@ -147,7 +160,10 @@ void showFamilyMemberFormSheet(BuildContext context, {
                     child: CustomTextField(
                       controller: occupationController,
                       labelText: 'occupation'.tr,
-                      prefixIcon: const Icon(Icons.work_outline_rounded, color: AppColors.primaryLight),
+                      prefixIcon: Icon(
+                        Icons.work_outline_rounded,
+                        color: colors.textPrimary,
+                      ),
                     ),
                   ),
                   SizedBox(width: 12.w),
@@ -155,7 +171,10 @@ void showFamilyMemberFormSheet(BuildContext context, {
                     child: CustomTextField(
                       controller: bloodController,
                       labelText: 'blood_group'.tr,
-                      prefixIcon: const Icon(Icons.bloodtype_outlined, color: AppColors.primaryLight),
+                      prefixIcon: Icon(
+                        Icons.bloodtype_outlined,
+                        color: colors.textPrimary,
+                      ),
                       hintText: 'A+, B+, etc.',
                     ),
                   ),
@@ -165,22 +184,31 @@ void showFamilyMemberFormSheet(BuildContext context, {
               CustomTextField(
                 controller: skillController,
                 labelText: 'skill'.tr,
-                prefixIcon: const Icon(Icons.bolt_rounded, color: AppColors.primaryLight),
+                prefixIcon: Icon(
+                  Icons.bolt_rounded,
+                  color: colors.textPrimary,
+                ),
               ),
               SizedBox(height: 12.h),
-              Obx(() => SwitchListTile(
-                    title: Text('married'.tr, style: GoogleFonts.outfit(fontSize: 14.sp, color: isDark ? AppColors.textDarkPrimary : AppColors.textLightPrimary)),
-                    value: isMarriedRx.value,
-                    onChanged: (val) => isMarriedRx.value = val,
-                    contentPadding: EdgeInsets.zero,
-                  )),
+              Obx(
+                () => SwitchListTile(
+                  title: Text(
+                    'married'.tr,
+                    style: GoogleFonts.outfit(
+                      fontSize: 14.sp,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  value: isMarriedRx.value,
+                  onChanged: (val) => isMarriedRx.value = val,
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
               SizedBox(height: 20.h),
               Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12.r),
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primary, AppColors.tealBridge, AppColors.secondary],
-                  ),
+                  gradient: LinearGradient(colors: colors.primaryGradient),
                 ),
                 child: CustomButton(
                   text: 'save'.tr,
@@ -188,42 +216,50 @@ void showFamilyMemberFormSheet(BuildContext context, {
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
                       if (isEdit) {
-                        controller.updateFamilyMember(member.copyWith(
-                          name: nameController.text.trim(),
-                          surname: surnameController.text.trim(),
-                          fatherName: fatherNameController.text.trim(),
-                          age: int.parse(ageController.text.trim()),
-                          relationship: relationshipController.text.trim(),
-                          phoneNumber: phoneController.text.trim(),
-                          occupation: occupationController.text.trim(),
-                          birthDate: birthDateController.text.trim(),
-                          education: eduController.text.trim(),
-                          isMarried: isMarriedRx.value,
-                          bloodGroup: bloodController.text.trim(),
-                          skill: skillController.text.trim(),
-                        ));
+                        controller.updateFamilyMember(
+                          member.copyWith(
+                            firstName: nameController.text.trim(),
+                            middleName: middleNameController.text.trim(),
+                            lastName: surnameController.text.trim(),
+                            relation: relationshipController.text.trim(),
+                            phoneNumber: phoneController.text.trim(),
+                            occupation: occupationController.text.trim(),
+                            dob: birthDateController.text.trim(),
+                            education: eduController.text.trim(),
+                            isMarried: isMarriedRx.value
+                                ? 'married'
+                                : 'unmarried',
+                            bloodGroup: bloodController.text.trim(),
+                            skills: skillController.text.trim(),
+                          ),
+                        );
                       } else {
                         controller.addFamilyMember(
-                          name: nameController.text.trim(),
-                          surname: surnameController.text.trim(),
-                          fatherName: fatherNameController.text.trim(),
-                          age: int.parse(ageController.text.trim()),
-                          relationship: relationshipController.text.trim(),
+                          firstName: nameController.text.trim(),
+                          middleName: middleNameController.text.trim(),
+                          lastName: surnameController.text.trim(),
+                          relation: relationshipController.text.trim(),
                           phoneNumber: phoneController.text.trim(),
                           occupation: occupationController.text.trim(),
-                          birthDate: birthDateController.text.trim(),
+                          dob: birthDateController.text.trim(),
                           education: eduController.text.trim(),
-                          isMarried: isMarriedRx.value,
+                          isMarried: isMarriedRx.value
+                              ? 'married'
+                              : 'unmarried',
                           bloodGroup: bloodController.text.trim(),
-                          skill: skillController.text.trim(),
+                          skills: skillController.text.trim(),
                         );
                       }
                       Get.back();
                       Get.snackbar(
                         'Success',
-                        isEdit ? 'Member updated successfully' : 'Member added successfully',
+                        isEdit
+                            ? 'Member updated successfully'
+                            : 'Member added successfully',
                         snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.secondary.withValues(alpha: 0.9),
+                        backgroundColor: AppColors.secondary.withValues(
+                          alpha: 0.9,
+                        ),
                         colorText: AppColors.white,
                       );
                     }

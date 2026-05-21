@@ -7,6 +7,7 @@ import '../../../../core/values/sizes.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class AccountStep extends StatelessWidget {
   final RegisterController controller;
@@ -15,7 +16,8 @@ class AccountStep extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -42,9 +44,9 @@ class AccountStep extends StatelessWidget {
                   labelText: 'phone_number'.tr,
                   hintText: 'e.g. 9876543210',
                   keyboardType: TextInputType.phone,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.phone_iphone_outlined,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                   validator: (val) {
                     if (val == null || val.trim().isEmpty) {
@@ -59,9 +61,9 @@ class AccountStep extends StatelessWidget {
                   controller: controller.passwordController,
                   labelText: 'password'.tr,
                   isPassword: true,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.lock_outline_rounded,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                   validator: (val) {
                     if (val == null || val.isEmpty) {
@@ -76,9 +78,9 @@ class AccountStep extends StatelessWidget {
                   controller: controller.confirmPasswordController,
                   labelText: 'confirm_password'.tr,
                   isPassword: true,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.lock_reset_rounded,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                   validator: (val) {
                     if (val == null || val.isEmpty) {
@@ -106,9 +108,9 @@ class AccountStep extends StatelessWidget {
                   controller: controller.mobile1Controller,
                   labelText: 'mobile_1'.tr,
                   enabled: false,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.phone_iphone_outlined,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                 ),
                 SizedBox(height: AppSizes.spacingM.h),
@@ -116,9 +118,9 @@ class AccountStep extends StatelessWidget {
                   controller: controller.mobile2Controller,
                   labelText: 'mobile_2'.tr,
                   keyboardType: TextInputType.phone,
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.phone_iphone_outlined,
-                    color: AppColors.primaryLight,
+                    color: colors.textPrimary,
                   ),
                   validator: (val) {
                     if (val != null && val.isNotEmpty && val.length != 10) {

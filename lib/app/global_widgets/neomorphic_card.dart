@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../core/values/colors.dart';
+import '../../core/theme/app_color_scheme.dart';
 
 class NeomorphicCard extends StatelessWidget {
   final Widget child;
@@ -25,19 +25,12 @@ class NeomorphicCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bgColor =
-        backgroundColor ?? (isDark ? AppColors.cardDark : AppColors.cardLight);
-
-    final shadows = isDark
-        ? AppColors.neumorphicShadowDark(
-            blur: shadowBlur,
-            distance: shadowDistance,
-          )
-        : AppColors.neumorphicShadowLight(
-            blur: shadowBlur,
-            distance: shadowDistance,
-          );
+    final colors = context.appColors;
+    final bgColor = backgroundColor ?? colors.card;
+    final shadows = colors.neumorphicShadow(
+      blur: shadowBlur,
+      distance: shadowDistance,
+    );
 
     return GestureDetector(
       onTap: onTap,

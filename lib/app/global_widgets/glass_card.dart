@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../../core/theme/app_color_scheme.dart';
 
 class GlassCard extends StatelessWidget {
   final Widget child;
@@ -21,7 +22,7 @@ class GlassCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     return Container(
       margin: margin,
@@ -34,12 +35,12 @@ class GlassCard extends StatelessWidget {
             decoration: BoxDecoration(
               color:
                   fillColor ??
-                  (isDark
-                      ? const Color(0xFF131737).withValues(alpha: 0.65)
-                      : const Color(0xFFFFFFFF).withValues(alpha: 0.75)),
+                  (colors.isDark
+                      ? colors.card.withValues(alpha: 0.65)
+                      : colors.card.withValues(alpha: 0.75)),
               borderRadius: BorderRadius.circular(borderRadius),
               border: Border.all(
-                color: isDark
+                color: colors.isDark
                     ? Colors.white.withValues(alpha: 0.08)
                     : Colors.white.withValues(alpha: 0.25),
                 width: 1.5,

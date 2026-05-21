@@ -12,14 +12,22 @@ import '../modules/announcements/views/announcements_view.dart';
 import '../modules/my_business/bindings/my_business_binding.dart';
 import '../modules/my_business/views/my_business_view.dart';
 
+import '../modules/splash/bindings/splash_binding.dart';
+import '../modules/splash/views/splash_view.dart';
+
 part 'app_routes.dart';
 
 class AppPages {
   AppPages._();
 
-  static const initial = Routes.login;
+  static const initial = Routes.splash;
 
   static final routes = [
+    GetPage(
+      name: _Paths.splash,
+      page: () => const SplashView(),
+      binding: SplashBinding(),
+    ),
     GetPage(
       name: _Paths.home,
       page: () => const HomeView(),

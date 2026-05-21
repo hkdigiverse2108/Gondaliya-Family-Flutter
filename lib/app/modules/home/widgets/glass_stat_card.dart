@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/values/colors.dart';
 import '../../../global_widgets/glass_card.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 /// A frosted-glass style statistics card used on the dashboard.
 class GlassStatCard extends StatelessWidget {
@@ -24,7 +24,7 @@ class GlassStatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     return GestureDetector(
       onTap: onTap,
@@ -67,7 +67,7 @@ class GlassStatCard extends StatelessWidget {
             Text(
               value,
               style: GoogleFonts.outfit(
-                color: isDark ? AppColors.white : AppColors.textLightPrimary,
+                color: colors.textPrimary,
                 fontSize: 28.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -76,7 +76,7 @@ class GlassStatCard extends StatelessWidget {
             Text(
               title,
               style: GoogleFonts.outfit(
-                color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                color: colors.textSecondary,
                 fontWeight: FontWeight.w500,
                 fontSize: 12.sp,
               ),

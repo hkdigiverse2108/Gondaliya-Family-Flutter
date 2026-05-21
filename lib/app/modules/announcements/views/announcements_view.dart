@@ -1,26 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/values/colors.dart';
 import '../controllers/announcements_controller.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class AnnouncementsView extends GetView<AnnouncementsController> {
   const AnnouncementsView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Announcements',
-          style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-      ),
+      extendBodyBehindAppBar: true,
+      appBar: GlassAppBar(titleText: 'Announcements', centerTitle: true),
       body: ListView.separated(
         padding: EdgeInsets.all(16.w),
         itemCount: 10,
@@ -29,7 +27,7 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
           final hasImage = index % 2 == 0;
           return Container(
             decoration: BoxDecoration(
-              color: isDark ? AppColors.cardDark : AppColors.cardLight,
+              color: colors.card,
               borderRadius: BorderRadius.circular(16.r),
               boxShadow: [
                 BoxShadow(
@@ -50,7 +48,11 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
                       CircleAvatar(
                         backgroundColor: AppColors.primary,
                         radius: 20.r,
-                        child: Icon(Icons.campaign_rounded, color: Colors.white, size: 24.r),
+                        child: Icon(
+                          Icons.campaign_rounded,
+                          color: Colors.white,
+                          size: 24.r,
+                        ),
                       ),
                       SizedBox(width: 12.w),
                       Expanded(
@@ -77,10 +79,12 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
                     ],
                   ),
                 ),
-                
+
                 // Content
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w).copyWith(bottom: hasImage ? 12.h : 16.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16.w,
+                  ).copyWith(bottom: hasImage ? 12.h : 16.h),
                   child: Text(
                     'This is an important announcement regarding the upcoming family gathering. Please make sure to RSVP by the end of the week!',
                     style: GoogleFonts.outfit(
@@ -102,7 +106,11 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
                         bottomRight: Radius.circular(16.r),
                       ),
                     ),
-                    child: Icon(Icons.image_outlined, color: Colors.grey, size: 60.r),
+                    child: Icon(
+                      Icons.image_outlined,
+                      color: Colors.grey,
+                      size: 60.r,
+                    ),
                   ),
               ],
             ),

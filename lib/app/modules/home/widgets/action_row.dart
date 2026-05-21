@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../../../../core/values/colors.dart';
 import '../../../global_widgets/glass_card.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 /// A tappable action row with icon, title, subtitle, and a chevron indicator.
 class ActionRow extends StatelessWidget {
@@ -24,7 +24,7 @@ class ActionRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     return InkWell(
       onTap: onTap,
@@ -56,7 +56,7 @@ class ActionRow extends StatelessWidget {
                     style: GoogleFonts.outfit(
                       fontWeight: FontWeight.bold,
                       fontSize: 14.sp,
-                      color: isDark ? AppColors.white : AppColors.textLightPrimary,
+                      color: colors.textPrimary,
                     ),
                   ),
                   SizedBox(height: 2.h),
@@ -64,7 +64,7 @@ class ActionRow extends StatelessWidget {
                     subtitle,
                     style: GoogleFonts.outfit(
                       fontSize: 11.sp,
-                      color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                      color: colors.textSecondary,
                     ),
                   ),
                 ],
@@ -72,7 +72,7 @@ class ActionRow extends StatelessWidget {
             ),
             Icon(
               Icons.chevron_right_rounded,
-              color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+              color: colors.textSecondary,
               size: 20.w,
             ),
           ],

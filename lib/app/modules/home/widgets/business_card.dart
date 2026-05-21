@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import '../../../../core/values/colors.dart';
 import '../../../data/models/business.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class BusinessCard extends StatelessWidget {
   final Business business;
@@ -21,19 +22,20 @@ class BusinessCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardDark : AppColors.white,
+        color: colors.card,
         borderRadius: BorderRadius.circular(20.r),
         border: Border.all(
-          color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+          color: colors.divider,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: isDark ? Colors.black.withValues(alpha: 0.15) : AppColors.shadowLight,
+            color: colors.shadow,
             offset: const Offset(0, 6),
             blurRadius: 16,
           )
@@ -68,7 +70,7 @@ class BusinessCard extends StatelessWidget {
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.sp,
-                            color: isDark ? AppColors.white : AppColors.textLightPrimary,
+                            color: colors.textPrimary,
                           ),
                         ),
                         SizedBox(height: 4.h),
@@ -81,7 +83,7 @@ class BusinessCard extends StatelessWidget {
                           child: Text(
                             business.category,
                             style: GoogleFonts.outfit(
-                              color: isDark ? AppColors.secondaryLight : AppColors.secondaryDark,
+                              color: colors.secondary,
                               fontSize: 10.sp,
                               fontWeight: FontWeight.bold,
                             ),
@@ -91,7 +93,7 @@ class BusinessCard extends StatelessWidget {
                     ),
                   ),
                   PopupMenuButton<String>(
-                    icon: Icon(Icons.more_vert_rounded, color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary),
+                    icon: Icon(Icons.more_vert_rounded, color: colors.textSecondary),
                     onSelected: (value) {
                       if (value == 'edit') {
                         onEdit();
@@ -136,7 +138,7 @@ class BusinessCard extends StatelessWidget {
                 business.description,
                 style: GoogleFonts.outfit(
                   fontSize: 13.sp,
-                  color: isDark ? AppColors.textDarkSecondary : AppColors.textLightSecondary,
+                  color: colors.textSecondary,
                 ),
               ),
             ),
@@ -144,7 +146,7 @@ class BusinessCard extends StatelessWidget {
 
             Container(
               height: 1,
-              color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+              color: colors.divider,
             ),
 
             // Address Row
@@ -159,7 +161,7 @@ class BusinessCard extends StatelessWidget {
                       business.address,
                       style: GoogleFonts.outfit(
                         fontSize: 12.sp,
-                        color: isDark ? AppColors.white : AppColors.textLightPrimary,
+                        color: colors.textPrimary,
                       ),
                     ),
                   ),
@@ -171,7 +173,7 @@ class BusinessCard extends StatelessWidget {
             if (business.contact.isNotEmpty) ...[
               Container(
                 height: 1,
-                color: isDark ? AppColors.dividerDark : AppColors.dividerLight,
+                color: colors.divider,
               ),
               Container(
                 width: double.infinity,

@@ -5,13 +5,15 @@ import 'package:get/get.dart';
 
 import '../../../../../core/values/colors.dart';
 import '../../../../routes/app_pages.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class ProfileTabView extends StatelessWidget {
   const ProfileTabView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
+    final isDark = colors.isDark;
 
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
@@ -21,7 +23,7 @@ class ProfileTabView extends StatelessWidget {
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 32.h),
             decoration: BoxDecoration(
-              color: isDark ? AppColors.cardDark : AppColors.cardLight,
+              color: colors.card,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -124,7 +126,7 @@ class ProfileTabView extends StatelessWidget {
                   icon: Icons.storefront_rounded,
                   title: 'My Business',
                   subtitle: 'Manage your listings and inquiries',
-                  isDark: isDark,
+                  colors: colors,
                   onTap: () {
                     Get.toNamed(Routes.myBusiness);
                   },
@@ -145,7 +147,7 @@ class ProfileTabView extends StatelessWidget {
                   icon: Icons.dark_mode_outlined,
                   title: 'Dark Mode',
                   subtitle: 'System Default',
-                  isDark: isDark,
+                  colors: colors,
                   trailing: Switch(
                     value: isDark,
                     onChanged: (val) {
@@ -159,7 +161,7 @@ class ProfileTabView extends StatelessWidget {
                   icon: Icons.language_rounded,
                   title: 'Language',
                   subtitle: 'English (App labels in Gujarati)',
-                  isDark: isDark,
+                  colors: colors,
                 ),
 
                 SizedBox(height: 24.h),
@@ -167,7 +169,7 @@ class ProfileTabView extends StatelessWidget {
                 _buildMenuOption(
                   icon: Icons.logout_rounded,
                   title: 'Logout',
-                  isDark: isDark,
+                  colors: colors,
                   color: Colors.redAccent,
                   onTap: () {
                     Get.offAllNamed(Routes.login);
@@ -187,7 +189,7 @@ class ProfileTabView extends StatelessWidget {
     required IconData icon,
     required String title,
     String? subtitle,
-    required bool isDark,
+    required AppColorScheme colors,
     Widget? trailing,
     Color? color,
     VoidCallback? onTap,
@@ -195,7 +197,7 @@ class ProfileTabView extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(bottom: 12.h),
       decoration: BoxDecoration(
-        color: isDark ? AppColors.cardDark : AppColors.cardLight,
+        color: colors.card,
         borderRadius: BorderRadius.circular(16.r),
         boxShadow: [
           BoxShadow(

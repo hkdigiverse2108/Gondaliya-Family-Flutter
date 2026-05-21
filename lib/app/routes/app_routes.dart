@@ -11,6 +11,7 @@ abstract class Routes {
   static const chat = _Paths.chat;
   static const announcements = _Paths.announcements;
   static const myBusiness = _Paths.myBusiness;
+  static const splash = _Paths.splash;
 }
 
 abstract class _Paths {
@@ -24,4 +25,5 @@ abstract class _Paths {
   static const chat = '/chat';
   static const announcements = '/announcements';
   static const myBusiness = '/my-business';
+  static const splash = '/splash';
 }

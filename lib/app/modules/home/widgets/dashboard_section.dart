@@ -6,6 +6,7 @@ import '../../../../core/values/colors.dart';
 
 import 'glass_stat_card.dart';
 import 'action_row.dart';
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 /// The full dashboard section containing the header banner, stats row,
 /// and quick-action items.
@@ -27,7 +28,7 @@ class DashboardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final colors = context.appColors;
 
     return SingleChildScrollView(
       padding: EdgeInsets.all(16.w),
@@ -38,8 +39,8 @@ class DashboardSection extends StatelessWidget {
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(24.r),
-              gradient: const LinearGradient(
-                colors: [AppColors.primary, AppColors.tealBridge],
+              gradient: LinearGradient(
+                colors: colors.primaryGradient,
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -48,7 +49,7 @@ class DashboardSection extends StatelessWidget {
                   color: AppColors.primary.withValues(alpha: 0.35),
                   blurRadius: 15,
                   offset: const Offset(0, 8),
-                )
+                ),
               ],
             ),
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
@@ -137,7 +138,7 @@ class DashboardSection extends StatelessWidget {
             style: GoogleFonts.outfit(
               fontWeight: FontWeight.bold,
               fontSize: 16.sp,
-              color: isDark ? AppColors.white : AppColors.textLightPrimary,
+              color: colors.textPrimary,
             ),
           ),
           SizedBox(height: 12.h),
