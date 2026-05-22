@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,6 +49,10 @@ class AccountStep extends StatelessWidget {
                     Icons.phone_iphone_outlined,
                     color: colors.textPrimary,
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
                   validator: (val) {
                     if (val == null || val.trim().isEmpty) {
                       return 'field_required'.tr;
@@ -122,6 +127,10 @@ class AccountStep extends StatelessWidget {
                     Icons.phone_iphone_outlined,
                     color: colors.textPrimary,
                   ),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(10),
+                  ],
                   validator: (val) {
                     if (val != null && val.isNotEmpty && val.length != 10) {
                       return 'invalid_phone'.tr;

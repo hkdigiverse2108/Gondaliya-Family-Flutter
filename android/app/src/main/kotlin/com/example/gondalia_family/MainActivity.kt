@@ -1,4 +1,4 @@
-package com.example.gondalia_family
+package com.gondaliya.family
 
 import io.flutter.embedding.android.FlutterActivity
 

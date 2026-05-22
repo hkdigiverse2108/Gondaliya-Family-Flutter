@@ -37,7 +37,7 @@ class MyBusinessView extends GetView<MyBusinessController> {
           ),
         ),
         body: TabBarView(
-          children: [_buildMyListings(colors), _buildInquiries(colors)],
+          children: [_buildMyListings(colors, context), _buildInquiries(colors, context)],
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -57,9 +57,14 @@ class MyBusinessView extends GetView<MyBusinessController> {
     );
   }
 
-  Widget _buildMyListings(AppColorScheme colors) {
+  Widget _buildMyListings(AppColorScheme colors, BuildContext context) {
     return ListView.builder(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + kToolbarHeight + kTextTabBarHeight + 16.h,
+        left: 16.w,
+        right: 16.w,
+        bottom: 16.h,
+      ),
       itemCount: 3,
       itemBuilder: (context, index) {
         return Container(
@@ -155,9 +160,14 @@ class MyBusinessView extends GetView<MyBusinessController> {
     );
   }
 
-  Widget _buildInquiries(AppColorScheme colors) {
+  Widget _buildInquiries(AppColorScheme colors, BuildContext context) {
     return ListView.separated(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + kToolbarHeight + kTextTabBarHeight + 16.h,
+        left: 16.w,
+        right: 16.w,
+        bottom: 16.h,
+      ),
       itemCount: 5,
       separatorBuilder: (context, index) =>
           Divider(height: 32.h, color: Colors.grey.withValues(alpha: 0.2)),

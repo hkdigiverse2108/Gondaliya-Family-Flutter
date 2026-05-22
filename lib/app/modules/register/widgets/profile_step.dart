@@ -205,6 +205,19 @@ class ProfileStep extends StatelessWidget {
                   ],
                 ),
                 SizedBox(height: AppSizes.spacingM.h),
+                NeomorphicTextField(
+                  controller: controller.pincodeController,
+                  labelText: 'pincode'.tr,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(6),
+                  ],
+                  validator: (val) => val == null || val.trim().isEmpty
+                      ? 'field_required'.tr
+                      : null,
+                ),
+                SizedBox(height: AppSizes.spacingM.h),
                 Obx(
                   () => NeomorphicDropdownField<String>(
                     value: controller.houseType.value,
@@ -254,7 +267,7 @@ class ProfileStep extends StatelessWidget {
                         controller.villageController.text = loc.village;
                         controller.talukaController.text = loc.taluka;
                         controller.districtController.text = loc.district;
-                        controller.pincodeController.text = loc.pincode;
+                        // controller.pincodeController.text = loc.pincode;
 
                         // Default native logic
                         controller.nativeVillageController.text = loc.village;
@@ -287,16 +300,6 @@ class ProfileStep extends StatelessWidget {
                       ),
                     ),
                   ],
-                ),
-                SizedBox(height: AppSizes.spacingM.h),
-                NeomorphicTextField(
-                  controller: controller.pincodeController,
-                  labelText: 'pincode'.tr,
-                  keyboardType: TextInputType.number,
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  validator: (val) => val == null || val.trim().isEmpty
-                      ? 'field_required'.tr
-                      : null,
                 ),
 
                 SizedBox(height: AppSizes.spacingXL.h),

@@ -16,10 +16,8 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
   final middleNameCtrl = TextEditingController();
   final surnameCtrl = TextEditingController();
   final phoneCtrl = TextEditingController();
-  final occupCtrl = TextEditingController();
   final birthDateCtrl = TextEditingController();
   final eduCtrl = TextEditingController();
-  final skillCtrl = TextEditingController();
   var relationVal = AppEnums.relations.first.obs;
   var bloodVal = AppEnums.bloodGroups.first.obs;
   var isMarriedVal = AppEnums.maritalStatus.first.obs;
@@ -63,7 +61,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 SizedBox(height: 12.h),
                 NeomorphicTextField(
                   controller: nameCtrl,
-                  labelText: 'name'.tr,
+                  labelText: 'first_name'.tr,
                   prefixIcon: Icon(
                     Icons.person_outline_rounded,
                     color: colors.textPrimary,
@@ -75,7 +73,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 SizedBox(height: 12.h),
                 NeomorphicTextField(
                   controller: middleNameCtrl,
-                  labelText: 'Middle Name',
+                  labelText: 'middle_name'.tr,
                   prefixIcon: Icon(
                     Icons.person_outline_rounded,
                     color: colors.textPrimary,
@@ -84,7 +82,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 SizedBox(height: 12.h),
                 NeomorphicTextField(
                   controller: surnameCtrl,
-                  labelText: 'surname'.tr,
+                  labelText: 'last_name'.tr,
                   prefixIcon: Icon(
                     Icons.person_outline_rounded,
                     color: colors.textPrimary,
@@ -97,20 +95,27 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                 Row(
                   children: [
                     Expanded(
-                      child: Obx(() => NeomorphicDropdownField<String>(
-                        value: relationVal.value,
-                        labelText: 'relationship'.tr,
-                        prefixIcon: Icon(
-                          Icons.family_restroom_rounded,
-                          color: colors.textPrimary,
+                      child: Obx(
+                        () => NeomorphicDropdownField<String>(
+                          value: relationVal.value,
+                          labelText: 'relationship'.tr,
+                          prefixIcon: Icon(
+                            Icons.family_restroom_rounded,
+                            color: colors.textPrimary,
+                          ),
+                          items: AppEnums.relations
+                              .map(
+                                (r) => NeomorphicDropdownItem(
+                                  value: r,
+                                  label: r.tr,
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (val) {
+                            if (val != null) relationVal.value = val;
+                          },
                         ),
-                        items: AppEnums.relations
-                            .map((r) => NeomorphicDropdownItem(value: r, label: r.tr))
-                            .toList(),
-                        onChanged: (val) {
-                          if (val != null) relationVal.value = val;
-                        },
-                      )),
+                      ),
                     ),
                   ],
                 ),
@@ -131,8 +136,61 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                   },
                 ),
                 SizedBox(height: 12.h),
+                Obx(
+                  () => NeomorphicDropdownField<String>(
+                    value: isMarriedVal.value,
+                    labelText: 'marital_status'.tr,
+                    prefixIcon: Icon(
+                      Icons.favorite_border_rounded,
+                      color: colors.textPrimary,
+                    ),
+                    items: AppEnums.maritalStatus
+                        .map(
+                          (ms) =>
+                              NeomorphicDropdownItem(value: ms, label: ms.tr),
+                        )
+                        .toList(),
+                    onChanged: (val) {
+                      if (val != null) isMarriedVal.value = val;
+                    },
+                  ),
+                ),
+                SizedBox(height: 12.h),
+                NeomorphicTextField(
+                  controller: eduCtrl,
+                  labelText: 'education'.tr,
+                  prefixIcon: Icon(
+                    Icons.school_outlined,
+                    color: colors.textPrimary,
+                  ),
+                ),
+                SizedBox(height: 12.h),
                 Row(
                   children: [
+                    Expanded(
+                      child: Obx(
+                        () => NeomorphicDropdownField<String>(
+                          value: bloodVal.value,
+                          labelText: 'blood_group'.tr,
+                          prefixIcon: Icon(
+                            Icons.bloodtype_outlined,
+                            color: colors.textPrimary,
+                          ),
+                          items: AppEnums.bloodGroups
+                              .map(
+                                (bg) => NeomorphicDropdownItem(
+                                  value: bg,
+                                  label: bg,
+                                ),
+                              )
+                              .toList(),
+                          onChanged: (val) {
+                            if (val != null) bloodVal.value = val;
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
                     Expanded(
                       child: InkWell(
                         onTap: () async {
@@ -143,7 +201,8 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                             lastDate: DateTime.now(),
                           );
                           if (date != null) {
-                            birthDateCtrl.text = "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+                            birthDateCtrl.text =
+                                "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
                           }
                         },
                         child: IgnorePointer(
@@ -159,75 +218,8 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                         ),
                       ),
                     ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: NeomorphicTextField(
-                        controller: eduCtrl,
-                        labelText: 'education'.tr,
-                        prefixIcon: Icon(
-                          Icons.school_outlined,
-                          color: colors.textPrimary,
-                        ),
-                      ),
-                    ),
                   ],
                 ),
-                SizedBox(height: 12.h),
-                Row(
-                  children: [
-                    Expanded(
-                      child: NeomorphicTextField(
-                        controller: occupCtrl,
-                        labelText: 'occupation'.tr,
-                        prefixIcon: Icon(
-                          Icons.work_outline_rounded,
-                          color: colors.textPrimary,
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 12.w),
-                    Expanded(
-                      child: Obx(() => NeomorphicDropdownField<String>(
-                        value: bloodVal.value,
-                        labelText: 'blood_group'.tr,
-                        prefixIcon: Icon(
-                          Icons.bloodtype_outlined,
-                          color: colors.textPrimary,
-                        ),
-                        items: AppEnums.bloodGroups
-                            .map((bg) => NeomorphicDropdownItem(value: bg, label: bg))
-                            .toList(),
-                        onChanged: (val) {
-                          if (val != null) bloodVal.value = val;
-                        },
-                      )),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 12.h),
-                NeomorphicTextField(
-                  controller: skillCtrl,
-                  labelText: 'skill'.tr,
-                  prefixIcon: Icon(
-                    Icons.bolt_rounded,
-                    color: colors.textPrimary,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Obx(() => NeomorphicDropdownField<String>(
-                  value: isMarriedVal.value,
-                  labelText: 'marital_status'.tr,
-                  prefixIcon: Icon(
-                    Icons.favorite_border_rounded,
-                    color: colors.textPrimary,
-                  ),
-                  items: AppEnums.maritalStatus
-                      .map((ms) => NeomorphicDropdownItem(value: ms, label: ms.tr))
-                      .toList(),
-                  onChanged: (val) {
-                    if (val != null) isMarriedVal.value = val;
-                  },
-                )),
                 SizedBox(height: 20.h),
                 NeomorphicButton(
                   text: 'add'.tr,
@@ -243,12 +235,10 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                         lastName: surnameCtrl.text.trim(),
                         relation: relationVal.value,
                         phoneNumber: phoneCtrl.text.trim(),
-                        occupation: occupCtrl.text.trim(),
                         dob: birthDateCtrl.text.trim(),
                         education: eduCtrl.text.trim(),
                         isMarried: isMarriedVal.value,
                         bloodGroup: bloodVal.value,
-                        skills: skillCtrl.text.trim(),
                       );
                       Get.back();
                     }

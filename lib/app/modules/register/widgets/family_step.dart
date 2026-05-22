@@ -93,6 +93,7 @@ class FamilyStep extends StatelessWidget {
           }
 
           return ListView.separated(
+            padding: EdgeInsets.zero,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: controller.familyMembers.length,
@@ -150,13 +151,16 @@ class FamilyStep extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(width: 8.w),
-                              Text(
-                                '${member.dob} • ${member.occupation}',
-                                style: GoogleFonts.outfit(
-                                  fontSize: 11.sp,
-                                  color: isDark
-                                      ? AppColors.textDarkSecondary
-                                      : AppColors.textLightSecondary,
+                              Expanded(
+                                child: Text(
+                                  '${member.dob} • Blood: ${member.bloodGroup}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 11.sp,
+                                    color: isDark
+                                        ? AppColors.textDarkSecondary
+                                        : AppColors.textLightSecondary,
+                                  ),
                                 ),
                               ),
                             ],

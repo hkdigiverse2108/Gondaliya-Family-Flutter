@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -221,6 +222,10 @@ class LoginView extends GetView<LoginController> {
                               Icons.phone_iphone_outlined,
                               color: colors.textPrimary,
                             ),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(10),
+                            ],
                           ),
                           SizedBox(height: AppSizes.spacingL.h),
 

@@ -15,6 +15,9 @@ import '../modules/my_business/views/my_business_view.dart';
 import '../modules/splash/bindings/splash_binding.dart';
 import '../modules/splash/views/splash_view.dart';
 
+import '../modules/placeholder_home/bindings/placeholder_home_binding.dart';
+import '../modules/placeholder_home/views/placeholder_home_view.dart';
+
 part 'app_routes.dart';
 
 class AppPages {
@@ -57,6 +60,11 @@ class AppPages {
       name: _Paths.myBusiness,
       page: () => const MyBusinessView(),
       binding: MyBusinessBinding(),
+    ),
+    GetPage(
+      name: _Paths.placeholderHome,
+      page: () => const PlaceholderHomeView(),
+      binding: PlaceholderHomeBinding(),
     ),
   ];
 }

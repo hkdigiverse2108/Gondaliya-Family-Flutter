@@ -15,8 +15,8 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
-    phoneController.dispose();
-    passwordController.dispose();
+    // Controllers are cleaned up by GC after route transition completes.
+    // Manual dispose here causes "used after being disposed" during animations.
     super.onClose();
   }
 
@@ -68,7 +68,7 @@ class LoginController extends GetxController {
         }
       }
 
-      Get.offAllNamed(Routes.home);
+      Get.offAllNamed(Routes.placeholderHome);
     } else {
       Get.snackbar(
         'Error',

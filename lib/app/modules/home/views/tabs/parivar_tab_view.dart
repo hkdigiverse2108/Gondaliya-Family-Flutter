@@ -34,6 +34,8 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
 
     return Column(
       children: [
+        // Add padding to account for the transparent AppBar and status bar
+        SizedBox(height: Scaffold.of(context).appBarMaxHeight ?? (MediaQuery.of(context).padding.top + kToolbarHeight)),
         // Village Tabs
         Container(
           color: colors.card,

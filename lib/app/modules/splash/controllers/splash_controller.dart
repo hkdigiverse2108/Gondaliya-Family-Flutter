@@ -6,8 +6,8 @@ import '../../../routes/app_pages.dart';
 
 class SplashController extends GetxController {
   @override
-  void onInit() {
-    super.onInit();
+  void onReady() {
+    super.onReady();
     _initializeApp();
   }
 
@@ -22,7 +22,7 @@ class SplashController extends GetxController {
     final storageService = Get.find<StorageService>();
     final token = storageService.authToken;
     if (token != null && token.isNotEmpty) {
-      Get.offAllNamed(Routes.home);
+      Get.offAllNamed(Routes.placeholderHome);
     } else {
       Get.offAllNamed(Routes.login);
     }

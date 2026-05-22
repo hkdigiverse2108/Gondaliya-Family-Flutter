@@ -24,7 +24,10 @@ class RegisterController extends GetxController {
     final locations = await _locationRepo.getLocations(search: query);
     return locations
         .map(
-          (loc) => NeomorphicAsyncDropdownItem(value: loc, label: loc.village),
+          (loc) => NeomorphicAsyncDropdownItem(
+            value: loc,
+            label: "${loc.village} (${loc.taluka})",
+          ),
         )
         .toList();
   }
@@ -73,11 +76,13 @@ class RegisterController extends GetxController {
   final companyAddressController = TextEditingController();
   final jobCategory = ''.obs;
   final jobRole = ''.obs;
+  final jobRoleOtherController = TextEditingController();
 
   // Business Details
   final businessNameController = TextEditingController();
-  final businessCategoryController = TextEditingController();
-  final businessSubCategoryController = TextEditingController();
+  final businessCategory = ''.obs;
+  final businessSubCategory = ''.obs;
+  final businessSubCategoryOtherController = TextEditingController();
   final businessOwnerNameController = TextEditingController();
   final businessDescriptionController = TextEditingController();
   final businessAddressController = TextEditingController();
@@ -130,8 +135,6 @@ class RegisterController extends GetxController {
       currentCityController,
       currentStateController,
       businessNameController,
-      businessCategoryController,
-      businessSubCategoryController,
       businessOwnerNameController,
       businessDescriptionController,
       businessAddressController,
@@ -146,8 +149,10 @@ class RegisterController extends GetxController {
       businessPortfolioLinkController,
       companyNameController,
       companyAddressController,
+      jobRoleOtherController,
+      businessSubCategoryOtherController,
     ]) {
-      c.dispose();
+      // c.dispose(); // Commented out to prevent "used after being disposed" during route transitions
     }
     super.onClose();
   }
@@ -179,10 +184,8 @@ class RegisterController extends GetxController {
     required String relation,
     required String dob,
     required String education,
-    required String occupation,
     required String isMarried,
     required String bloodGroup,
-    required String skills,
     required String phoneNumber,
   }) {
     familyMembers.add(
@@ -194,10 +197,8 @@ class RegisterController extends GetxController {
         relation: relation,
         dob: dob,
         education: education,
-        occupation: occupation,
         isMarried: isMarried,
         bloodGroup: bloodGroup,
-        skills: skills,
         phoneNumber: phoneNumber,
         createdAt: DateTime.now(),
       ),
@@ -235,41 +236,64 @@ class RegisterController extends GetxController {
       'currentCity': currentCityController.text.trim(),
       'currentState': currentStateController.text.trim(),
       'houseType': houseType.value,
-      'familyMembers': familyMembers.map((m) => m.toJson()).toList(),
-      'workDetails': {
-        'hasOwnBusiness': occupationType.value == 'Business',
-        if (occupationType.value == 'Business')
-          'businessDetails': {
-            'category': businessCategoryController.text.trim(),
-            'subCategory': businessSubCategoryController.text.trim(),
-            'businessName': businessNameController.text.trim(),
-            'ownerName': businessOwnerNameController.text.trim(),
-            'description': businessDescriptionController.text.trim(),
-            'locations': [
-              {
-                'shopAddress': businessAddressController.text.trim(),
-                'areaCity': businessCityController.text.trim(),
-                'state': businessStateController.text.trim(),
-                'pincode': businessPincodeController.text.trim(),
-                'googleMapLink': businessGoogleMapLinkController.text.trim(),
-              },
-            ],
-            'contactInfo': {
-              'mobile1': businessMobile1Controller.text.trim(),
-              'mobile2': businessMobile2Controller.text.trim(),
-              'email': businessEmailController.text.trim(),
-              'website': businessWebsiteController.text.trim(),
-              'portfolioLink': businessPortfolioLinkController.text.trim(),
+      'familyMembers': familyMembers
+          .map(
+            (m) => {
+              'firstName': m.firstName,
+              'middleName': m.middleName,
+              'lastName': m.lastName,
+              'profilePhoto': m.profilePhoto ?? '',
+              'relation': m.relation,
+              'dob': m.dob,
+              'education': m.education,
+              'isMarried': m.isMarried,
+              'bloodGroup': m.bloodGroup,
+              'phoneNumber': m.phoneNumber,
             },
-          },
-        if (occupationType.value == 'Job')
-          'jobDetails': {
-            'jobCategory': jobCategory.value,
-            'jobRole': jobRole.value,
-            'companyName': companyNameController.text.trim(),
-            'jobLocation': companyAddressController.text.trim(),
-          },
-      },
+          )
+          .toList(),
+      'workDetails': occupationType.value == 'None'
+          ? null
+          : {
+              'hasOwnBusiness': occupationType.value == 'Business',
+              if (occupationType.value == 'Business')
+                'businessDetails': {
+                  'category': businessCategory.value,
+                  'subCategory': businessSubCategory.value == 'Other Jobs'
+                      ? businessSubCategoryOtherController.text.trim()
+                      : businessSubCategory.value,
+                  'businessName': businessNameController.text.trim(),
+                  'ownerName': businessOwnerNameController.text.trim(),
+                  'description': businessDescriptionController.text.trim(),
+                  'locations': [
+                    {
+                      'shopAddress': businessAddressController.text.trim(),
+                      'areaCity': businessCityController.text.trim(),
+                      'state': businessStateController.text.trim(),
+                      'pincode': businessPincodeController.text.trim(),
+                      'googleMapLink': businessGoogleMapLinkController.text
+                          .trim(),
+                    },
+                  ],
+                  'contactInfo': {
+                    'mobile1': businessMobile1Controller.text.trim(),
+                    'mobile2': businessMobile2Controller.text.trim(),
+                    'email': businessEmailController.text.trim(),
+                    'website': businessWebsiteController.text.trim(),
+                    'portfolioLink': businessPortfolioLinkController.text
+                        .trim(),
+                  },
+                },
+              if (occupationType.value == 'Job')
+                'jobDetails': {
+                  'jobCategory': jobCategory.value,
+                  'jobRole': jobRole.value == 'Other Jobs'
+                      ? jobRoleOtherController.text.trim()
+                      : jobRole.value,
+                  'companyName': companyNameController.text.trim(),
+                  'jobLocation': companyAddressController.text.trim(),
+                },
+            },
     };
 
     if (mobile2Controller.text.trim().isNotEmpty) {
@@ -290,7 +314,9 @@ class RegisterController extends GetxController {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-      Get.offAllNamed(Routes.home);
+      FocusManager.instance.primaryFocus?.unfocus();
+      await Future.delayed(const Duration(milliseconds: 300));
+      Get.offAllNamed(Routes.login);
     } else {
       Get.snackbar(
         'Error',

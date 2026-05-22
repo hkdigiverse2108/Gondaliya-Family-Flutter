@@ -19,6 +19,8 @@ class ProfileTabView extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
+          // Add padding to account for the transparent AppBar and status bar
+          SizedBox(height: Scaffold.of(context).appBarMaxHeight ?? (MediaQuery.of(context).padding.top + kToolbarHeight)),
           // Header / Avatar Section
           Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 32.h),
