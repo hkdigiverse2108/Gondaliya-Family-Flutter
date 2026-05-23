@@ -111,51 +111,6 @@ class RegisterController extends GetxController {
     });
   }
 
-  @override
-  void onClose() {
-    for (final c in [
-      phoneController,
-      passwordController,
-      confirmPasswordController,
-      mobile1Controller,
-      mobile2Controller,
-      nameController,
-      surnameController,
-      fatherNameController,
-      currentAddressController,
-      villageController,
-      pincodeController,
-      talukaController,
-      districtController,
-      dobController,
-      educationController,
-      nativeVillageController,
-      nativeTalukaController,
-      nativeDistrictController,
-      currentCityController,
-      currentStateController,
-      businessNameController,
-      businessOwnerNameController,
-      businessDescriptionController,
-      businessAddressController,
-      businessCityController,
-      businessStateController,
-      businessPincodeController,
-      businessGoogleMapLinkController,
-      businessMobile1Controller,
-      businessMobile2Controller,
-      businessEmailController,
-      businessWebsiteController,
-      businessPortfolioLinkController,
-      companyNameController,
-      companyAddressController,
-      jobRoleOtherController,
-      businessSubCategoryOtherController,
-    ]) {
-      // c.dispose(); // Commented out to prevent "used after being disposed" during route transitions
-    }
-    super.onClose();
-  }
 
   // --- Stepper ---
   void nextStep() {

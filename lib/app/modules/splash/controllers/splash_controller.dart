@@ -22,7 +22,7 @@ class SplashController extends GetxController {
     final storageService = Get.find<StorageService>();
     final token = storageService.authToken;
     if (token != null && token.isNotEmpty) {
-      Get.offAllNamed(Routes.placeholderHome);
+      Get.offAllNamed(Routes.home);
     } else {
       Get.offAllNamed(Routes.login);
     }

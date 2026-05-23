@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gondalia_family/app/modules/home/widgets/marketplace_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../../core/theme/app_color_scheme.dart';
 import '../../../../../core/values/colors.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
 class MarketplaceTabView extends StatefulWidget {
   const MarketplaceTabView({super.key});
@@ -12,13 +13,73 @@ class MarketplaceTabView extends StatefulWidget {
   State<MarketplaceTabView> createState() => _MarketplaceTabViewState();
 }
 
-class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTickerProviderStateMixin {
+class _MarketplaceTabViewState extends State<MarketplaceTabView>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  final List<String> _tabs = ['All', 'Rent', 'Rent / Sale', 'Sale'];
+
+  final List<Map<String, dynamic>> _mockListings = [
+    {
+      'type': 'RENT',
+      'status': 'ACTIVE',
+      'title': '2 BHK Fully Furnished Flat',
+      'location': 'Surat • 395007',
+      'date': 'From 25 May 2025',
+      'price': '₹ 18,000',
+      'priceUnit': 'Month',
+      'contact': '98765 43210',
+      'name': 'Gondaliya Family',
+      'image': 'assets/images/flat1.jpg',
+      'isSale': false,
+    },
+    {
+      'type': 'RENT',
+      'status': 'ACTIVE',
+      'title': '1 BHK Semi Furnished Flat',
+      'location': 'Surat • 394210',
+      'date': 'From 10 Jun 2025',
+      'price': '₹ 12,000',
+      'priceUnit': 'Month',
+      'contact': '91234 56789',
+      'name': 'Patel Meet',
+      'image': 'assets/images/flat2.jpg',
+      'isSale': false,
+    },
+    {
+      'type': 'RENT / SALE',
+      'status': 'ACTIVE',
+      'title': 'Shop for Rent / Sale',
+      'location': 'Surat • 395010',
+      'date': 'From 01 Jun 2025',
+      'price': '₹ 25,000',
+      'priceUnit': 'Month',
+      'contact': '98980 12345',
+      'name': 'Vora Hardik',
+      'image': 'assets/images/shop.jpg',
+      'isSale': false,
+    },
+    {
+      'type': 'SALE',
+      'status': 'ACTIVE',
+      'title': 'Residential Plot for Sale',
+      'location': 'Surat • 395006',
+      'area': '1200 Sq.ft',
+      'price': '₹ 26,00,000',
+      'contact': '90123 45678',
+      'name': 'Shah Dhaval',
+      'image': 'assets/images/plot.jpg',
+      'isSale': true,
+    },
+  ];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: _tabs.length, vsync: this);
+    _tabController.addListener(() {
+      if (mounted) setState(() {});
+    });
   }
 
   @override
@@ -30,59 +91,102 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTick
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final isDark = colors.isDark;
 
     return Column(
       children: [
         // Add padding to account for the transparent AppBar and status bar
-        SizedBox(height: Scaffold.of(context).appBarMaxHeight ?? (MediaQuery.of(context).padding.top + kToolbarHeight)),
-        // Tabs
-        Container(
-          color: colors.card,
-          child: TabBar(
-            controller: _tabController,
-            isScrollable: true,
-            indicatorColor: AppColors.primary,
-            labelColor: AppColors.primary,
-            unselectedLabelColor: colors.textSecondary,
-            labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14.sp),
-            tabs: const [
-              Tab(text: 'All'),
-              Tab(text: 'Rent'),
-              Tab(text: 'Seasonal'),
-              Tab(text: '2nd Hand'),
-            ],
-          ),
+        SizedBox(
+          height:
+              Scaffold.of(context).appBarMaxHeight ??
+              (MediaQuery.of(context).padding.top + kToolbarHeight),
         ),
 
-        // Filter & Search Bar
-        Padding(
-          padding: EdgeInsets.all(16.w),
+        // Filter Chips & Button
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: Row(
             children: [
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    hintText: 'Search marketplace...',
-                    prefixIcon: const Icon(Icons.search_rounded),
-                    filled: true,
-                    fillColor: isDark ? AppColors.cardDark : Colors.grey.shade100,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16.r),
-                      borderSide: BorderSide.none,
+              ...List.generate(_tabs.length, (index) {
+                final isSelected = index == _tabController.index;
+                return Padding(
+                  padding: EdgeInsets.only(right: 8.w),
+                  child: GestureDetector(
+                    onTap: () {
+                      _tabController.animateTo(index);
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16.w,
+                        vertical: 8.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: isSelected
+                            ? AppColors.primary
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(20.r),
+                        border: Border.all(
+                          color: isSelected
+                              ? AppColors.primary
+                              : (colors.isDark
+                                    ? AppColors.dividerDark
+                                    : Colors.grey.shade300),
+                        ),
+                      ),
+                      child: Text(
+                        _tabs[index],
+                        style: GoogleFonts.outfit(
+                          color: isSelected
+                              ? Colors.white
+                              : (colors.isDark
+                                    ? Colors.grey.shade300
+                                    : Colors.grey.shade700),
+                          fontWeight: isSelected
+                              ? FontWeight.w600
+                              : FontWeight.normal,
+                          fontSize: 12.sp,
+                        ),
+                      ),
                     ),
-                    contentPadding: EdgeInsets.zero,
+                  ),
+                );
+              }),
+              SizedBox(width: 8.w),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                decoration: BoxDecoration(
+                  color: colors.isDark
+                      ? AppColors.cardDark
+                      : Colors.grey.shade50,
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(
+                    color: colors.isDark
+                        ? AppColors.dividerDark
+                        : Colors.grey.shade300,
                   ),
                 ),
-              ),
-              SizedBox(width: 12.w),
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: isDark ? AppColors.cardDark : Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(16.r),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.filter_alt_outlined,
+                      size: 16.sp,
+                      color: colors.isDark
+                          ? Colors.grey.shade300
+                          : Colors.grey.shade700,
+                    ),
+                    SizedBox(width: 4.w),
+                    Text(
+                      'Filter',
+                      style: GoogleFonts.outfit(
+                        color: colors.isDark
+                            ? Colors.grey.shade300
+                            : Colors.grey.shade700,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Icon(Icons.filter_list_rounded, color: AppColors.primary),
               ),
             ],
           ),
@@ -92,12 +196,9 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTick
         Expanded(
           child: TabBarView(
             controller: _tabController,
-            children: [
-              _buildListing(colors, 'All'),
-              _buildListing(colors, 'Rent'),
-              _buildListing(colors, 'Seasonal'),
-              _buildListing(colors, '2nd Hand'),
-            ],
+            children: _tabs
+                .map((tabName) => _buildListing(colors, tabName))
+                .toList(),
           ),
         ),
       ],
@@ -105,106 +206,44 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView> with SingleTick
   }
 
   Widget _buildListing(AppColorScheme colors, String category) {
+    // Filter list by category if not 'All'
+    final filteredList = category == 'All'
+        ? _mockListings
+        : _mockListings
+              .where(
+                (item) =>
+                    item['type'] == category.toUpperCase() ||
+                    (category == 'Rent / Sale' &&
+                        item['type'] == 'RENT / SALE'),
+              )
+              .toList();
+
     return ListView.separated(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-      itemCount: 10,
+      padding: EdgeInsets.symmetric(vertical: 8.h),
+      itemCount: filteredList.length,
       separatorBuilder: (context, index) => SizedBox(height: 12.h),
       itemBuilder: (context, index) {
-        final isSponsored = index == 0 && category == 'All'; // Mock sponsored highlight
-
-        return Container(
-          padding: EdgeInsets.all(12.w),
-          decoration: BoxDecoration(
-            color: colors.card,
-            borderRadius: BorderRadius.circular(16.r),
-            border: isSponsored ? Border.all(color: AppColors.secondary, width: 2) : null,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
-              ),
-            ],
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Item Image Placeholder
-              Container(
-                width: 100.w,
-                height: 100.w,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Icon(Icons.image_outlined, color: Colors.grey, size: 40.r),
-              ),
-              SizedBox(width: 16.w),
-              
-              // Item Details
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (isSponsored)
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-                        margin: EdgeInsets.only(bottom: 4.h),
-                        decoration: BoxDecoration(
-                          color: AppColors.secondary.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Text(
-                          'Sponsored',
-                          style: GoogleFonts.outfit(
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.secondary,
-                          ),
-                        ),
-                      ),
-                    Text(
-                      '$category Item $index',
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.sp,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 4.h),
-                    Text(
-                      '₹${(index + 1) * 500}',
-                      style: GoogleFonts.outfit(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14.sp,
-                        color: AppColors.primary,
-                      ),
-                    ),
-                    SizedBox(height: 8.h),
-                    
-                    // Star Rating
-                    Row(
-                      children: [
-                        Icon(Icons.star_rounded, color: Colors.amber, size: 16.sp),
-                        Icon(Icons.star_rounded, color: Colors.amber, size: 16.sp),
-                        Icon(Icons.star_rounded, color: Colors.amber, size: 16.sp),
-                        Icon(Icons.star_rounded, color: Colors.amber, size: 16.sp),
-                        Icon(Icons.star_half_rounded, color: Colors.amber, size: 16.sp),
-                        SizedBox(width: 4.w),
-                        Text(
-                          '4.5 (24)',
-                          style: GoogleFonts.outfit(fontSize: 12.sp, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        );
+        final item = filteredList[index];
+        return _buildCard(colors, item);
       },
+    );
+  }
+
+  Widget _buildCard(AppColorScheme colors, Map<String, dynamic> item) {
+    return MarketplaceCard(
+      colors: colors,
+      type: item['type'],
+      status: item['status'],
+      title: item['title'],
+      location: item['location'],
+      area: item['area'],
+      date: item['date'],
+      price: item['price'],
+      priceUnit: item['priceUnit'] ?? '',
+      contact: item['contact'],
+      name: item['name'],
+      isSale: item['isSale'] ?? false,
+      imageUrl: item['image'],
     );
   }
 }

@@ -46,6 +46,8 @@ dependencies:
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0
   retrofit: ^4.4.1
+  phosphor_flutter: ^2.1.0
+  intl: ^0.20.2
   
 dev_dependencies:
   flutter_test:

@@ -233,7 +233,11 @@ class AppColorScheme {
   /// Primary gradient — auto-resolves light/dark variant.
   List<Color> get primaryGradient {
     return isDark
-        ? [const Color(0xFF1E3A8A), const Color(0xFF0F766E)] // Dark jewel tones
+        ? [
+            primaryVariant,
+            tealBridge,
+            secondaryVariant,
+          ] // Luminous tones for dark mode
         : [primary, tealBridge, secondary];
   }
 }

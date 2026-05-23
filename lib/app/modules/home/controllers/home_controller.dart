@@ -3,20 +3,29 @@ import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import '../../../data/models/family_member.dart';
 import '../../../data/models/business.dart';
+import '../../../data/models/announcement.dart';
+import '../../../data/models/listing.dart';
 import '../../../data/services/storage_service.dart';
 import '../../../data/services/translation_service.dart';
 import '../../../routes/app_pages.dart';
+import '../home_repository.dart';
 
 class HomeController extends GetxController {
   final _storage = Get.find<StorageService>();
+  final _homeRepo = Get.find<HomeRepository>();
   final _uuid = const Uuid();
 
   final currentIndex = 0.obs;
   final isDarkTheme = false.obs;
 
-  // Data lists — populated from API in a later task
+  // Data lists
   final familyMembers = <FamilyMember>[].obs;
   final businesses = <Business>[].obs;
+
+  // Feed Data
+  final announcements = <Announcement>[].obs;
+  final listings = <Listing>[].obs;
+  final isFeedLoading = false.obs;
 
   // Search queries
   final familySearchQuery = ''.obs;
@@ -51,11 +60,109 @@ class HomeController extends GetxController {
         .toList();
   }
 
+  List<dynamic> get combinedFeed {
+    final list = <dynamic>[...announcements, ...listings];
+    list.sort((a, b) {
+      final aDate =
+          (a.createdAt as DateTime?) ?? DateTime.fromMillisecondsSinceEpoch(0);
+      final bDate =
+          (b.createdAt as DateTime?) ?? DateTime.fromMillisecondsSinceEpoch(0);
+      return bDate.compareTo(aDate);
+    });
+    return list;
+  }
+
   @override
   void onInit() {
     super.onInit();
     isDarkTheme.value = _storage.isDarkMode;
-    // TODO: fetch family & business data from API
+    fetchFeedData();
+  }
+
+  Future<void> fetchFeedData() async {
+    isFeedLoading.value = true;
+    try {
+      final fetchedAnnouncements = await _homeRepo.getAnnouncements();
+      final fetchedListings = await _homeRepo.getListings();
+
+      if (fetchedAnnouncements.isEmpty && fetchedListings.isEmpty) {
+        // Inject Dummy Data for testing since API might not be ready
+        _injectDummyData();
+      } else {
+        announcements.assignAll(fetchedAnnouncements);
+        listings.assignAll(fetchedListings);
+      }
+    } catch (e) {
+      _injectDummyData();
+    } finally {
+      isFeedLoading.value = false;
+    }
+  }
+
+  void _injectDummyData() {
+    announcements.assignAll([
+      Announcement(
+        id: '1',
+        title: 'Samast Patidar Samaj Meeting',
+        description:
+            'Monthly gathering to discuss community developments and upcoming events. Dinner will be served.',
+        createdBy: 'Admin',
+        createdAt: DateTime.now().subtract(const Duration(hours: 2)),
+      ),
+      Announcement(
+        id: '2',
+        title: 'Education Scholarship 2026',
+        description:
+            'Applications are now open for the Gondaliya Family Education Trust scholarship for university students.',
+        createdBy: 'Admin',
+        createdAt: DateTime.now().subtract(const Duration(days: 1)),
+      ),
+    ]);
+
+    listings.assignAll([
+      Listing(
+        id: '1',
+        title: 'Shop for Rent in Varachha',
+        description:
+            'Prime location shop available for rent on the main road. Suitable for clothing or electronics store.',
+        type: 'Rent',
+        price: 25000,
+        priceUnit: 'Month',
+        postedBy: 'User1',
+        availableFrom: DateTime.now(),
+        location: const ListingLocation(city: 'Surat', pincode: '395006'),
+        contactPhone: '9876543210',
+        createdAt: DateTime.now().subtract(const Duration(hours: 5)),
+      ),
+      Listing(
+        id: '2',
+        title: 'Used Honda City 2021',
+        description:
+            'Well-maintained Honda City ZX, 1st owner, 30,000 km driven. Excellent condition.',
+        type: '2nd Hand',
+        price: 950000,
+        priceUnit: 'FIXED',
+        postedBy: 'User2',
+        availableFrom: DateTime.now(),
+        location: const ListingLocation(city: 'Surat', pincode: '395004'),
+        contactPhone: '9876543211',
+        createdAt: DateTime.now().subtract(const Duration(hours: 8)),
+      ),
+      Listing(
+        id: '3',
+        title: 'Mangoes (Kesar) Box',
+        description:
+            'Fresh organic Kesar mangoes directly from our farm in Junagadh. 10kg box.',
+        type: 'Seasonal',
+        price: 1200,
+        priceUnit: 'Box',
+        postedBy: 'User3',
+        availableFrom: DateTime.now(),
+        location: const ListingLocation(city: 'Junagadh', pincode: '362001'),
+        contactPhone: '9876543212',
+        createdAt: DateTime.now().subtract(const Duration(hours: 24)),
+      ),
+    ]);
   }
 
   void changeTab(int index) => currentIndex.value = index;

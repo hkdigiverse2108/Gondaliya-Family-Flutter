@@ -29,6 +29,22 @@ class ApiEndpoints {
   static const String chatRooms = '/chat/rooms';
   static const String chatMessages = '/chat/rooms/{id}/messages';
 
+  // Listings
+  static const String listings = '/listings';
+  static const String listing = '/listings/{id}';
+
+  // Parivar
+  static const String parivar = '/parivar';
+
+  // Feedback
+  static const String feedback = '/feedback';
+
+  // Inquiry
+  static const String inquiry = '/inquiry';
+
+  // Support
+  static const String support = '/support';
+
   /// Replace {id} placeholder in path
   static String replaceId(String path, String id) =>
       path.replaceFirst('{id}', id);

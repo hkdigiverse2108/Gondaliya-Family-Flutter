@@ -1,14 +1,15 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'tabs/home_tab_view.dart';
 import 'tabs/parivar_tab_view.dart';
 import 'tabs/marketplace_tab_view.dart';
 import 'tabs/profile_tab_view.dart';
-import '../widgets/home_dialogs.dart';
 import '../controllers/home_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 
@@ -42,73 +43,68 @@ class HomeView extends GetView<HomeController> {
             ),
             actions: [
               IconButton(
-                tooltip: 'select_language'.tr,
-                icon: Icon(Icons.language, color: colors.textPrimary),
-                onPressed: () => showLanguageDialog(context, controller),
-              ),
-              IconButton(
-                tooltip: controller.isDarkTheme.value
-                    ? 'light_mode'.tr
-                    : 'dark_mode'.tr,
+                tooltip: 'announcements'.tr,
                 icon: Icon(
-                  controller.isDarkTheme.value
-                      ? Icons.light_mode_outlined
-                      : Icons.dark_mode_outlined,
+                  PhosphorIcons.megaphone(),
                   color: colors.textPrimary,
                 ),
-                onPressed: controller.toggleTheme,
+                onPressed: () {
+                  // TODO: Navigate to announcements
+                },
               ),
               IconButton(
-                tooltip: 'logout'.tr,
-                icon: Icon(Icons.logout_rounded, color: colors.textPrimary),
-                onPressed: controller.logout,
+                tooltip: 'notifications'.tr,
+                icon: Icon(PhosphorIcons.bell(), color: colors.textPrimary),
+                onPressed: () {
+                  // TODO: Navigate to notifications
+                },
               ),
               SizedBox(width: 8.w),
             ],
           ),
           body: Stack(
             children: [
-              // Aurora Background Glows (visible on Home Tab)
-              if (controller.currentIndex.value == 0) ...[
-                Positioned(
-                  top: -80.h,
-                  left: -80.w,
-                  child: Container(
-                    width: 260.w,
-                    height: 260.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          colors.primaryVariant.withValues(
-                            alpha: isDark ? 0.08 : 0.15,
-                          ),
-                          colors.transparent,
-                        ],
-                      ),
+              // Background Gradient blobs to simulate aurora glow (visible on all tabs to maintain consistent theme)
+              Positioned(
+                top: -100.h,
+                left: -100.w,
+                child: Container(
+                  width: 300.w,
+                  height: 300.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colors.primary.withValues(
+                      alpha: isDark ? 0.25 : 0.15,
+                    ),
+                    gradient: RadialGradient(
+                      colors: [
+                        colors.primary.withValues(alpha: 0.4),
+                        colors.transparent,
+                      ],
                     ),
                   ),
                 ),
-                Positioned(
-                  top: 250.h,
-                  right: -100.w,
-                  child: Container(
-                    width: 320.w,
-                    height: 320.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          colors.secondary.withValues(
-                            alpha: isDark ? 0.06 : 0.12,
-                          ),
-                          colors.transparent,
-                        ],
-                      ),
+              ),
+              Positioned(
+                top: 200.h,
+                right: -150.w,
+                child: Container(
+                  width: 400.w,
+                  height: 400.w,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: colors.secondary.withValues(
+                      alpha: isDark ? 0.2 : 0.1,
+                    ),
+                    gradient: RadialGradient(
+                      colors: [
+                        colors.secondary.withValues(alpha: 0.35),
+                        colors.transparent,
+                      ],
                     ),
                   ),
                 ),
-              ],
+              ),
 
               // Main Views
               IndexedStack(
@@ -122,81 +118,177 @@ class HomeView extends GetView<HomeController> {
               ),
             ],
           ),
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: colors.divider, width: 1)),
-            ),
-            child: BottomNavigationBar(
-              currentIndex: controller.currentIndex.value,
-              onTap: controller.changeTab,
-              selectedItemColor: colors.accent,
-              unselectedItemColor: isDark ? Colors.white54 : Colors.black45,
-              backgroundColor: colors.card,
-              elevation: 8,
-              type: BottomNavigationBarType.fixed,
-              selectedLabelStyle: GoogleFonts.outfit(
-                fontWeight: FontWeight.bold,
-                fontSize: 12.sp,
-              ),
-              unselectedLabelStyle: GoogleFonts.outfit(fontSize: 11.sp),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined),
-                  activeIcon: Icon(Icons.home_rounded),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people_outline_rounded),
-                  activeIcon: Icon(Icons.people_rounded),
-                  label: 'Parivar',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.storefront_outlined),
-                  activeIcon: Icon(Icons.storefront_rounded),
-                  label: 'Market',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline_rounded),
-                  activeIcon: Icon(Icons.person_rounded),
-                  label: 'Profile',
-                ),
-              ],
-            ),
+          extendBody: true,
+          bottomNavigationBar: _buildBottomNav(
+            context,
+            controller,
+            colors,
+            isDark,
           ),
-          floatingActionButton: controller.currentIndex.value == 0
-              ? FloatingActionButton(
-                  onPressed: () {
-                    // TODO: Navigate to create post view
-                  },
-                  backgroundColor: colors.primary,
-                  elevation: 4,
-                  child: const Icon(Icons.edit_rounded, color: Colors.white),
-                )
-              : null,
+          // floatingActionButton: controller.currentIndex.value == 0
+          //     ? FloatingActionButton(
+          //         onPressed: () {
+          //           // TODO: Navigate to create post view
+          //         },
+          //         backgroundColor: colors.primary,
+          //         elevation: 4,
+          //         child: Icon(
+          //           PhosphorIcons.plus(PhosphorIconsStyle.bold),
+          //           color: Colors.white,
+          //         ),
+          //       )
+          //     : null,
         ),
       );
     });
   }
 
-  // Widget _buildAppBarLogo() {
-  //   return Image.asset(
-  //     'assets/images/logo.png',
-  //     height: 32.h,
-  //     width: 32.w,
-  //     errorBuilder: (context, error, stackTrace) {
-  //       return Container(
-  //         decoration: const BoxDecoration(
-  //           color: AppColors.white,
-  //           shape: BoxShape.circle,
-  //         ),
-  //         padding: EdgeInsets.all(4.w),
-  //         child: Icon(
-  //           Icons.nature_people_rounded,
-  //           size: 20.w,
-  //           color: AppColors.primary,
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  Widget _buildBottomNav(
+    BuildContext context,
+    HomeController controller,
+    AppColorScheme colors,
+    bool isDark,
+  ) {
+    return Container(
+      margin: EdgeInsets.only(
+        left: 20.w,
+        right: 20.w,
+        bottom: 20.h + MediaQuery.of(context).padding.bottom,
+      ),
+      decoration: BoxDecoration(
+        color: colors.card.withValues(alpha: 0.8),
+        borderRadius: BorderRadius.circular(30.r),
+        boxShadow: colors.neumorphicShadow(blur: 15, distance: 4),
+        border: Border.all(
+          color: Colors.white.withValues(alpha: isDark ? 0.05 : 0.2),
+          width: 1.5,
+        ),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(30.r),
+        child: BackdropFilter(
+          filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                _buildNavItem(
+                  0,
+                  PhosphorIcons.house(),
+                  PhosphorIcons.house(PhosphorIconsStyle.fill),
+                  'Home',
+                  controller,
+                  colors,
+                ),
+                _buildNavItem(
+                  1,
+                  PhosphorIcons.users(),
+                  PhosphorIcons.users(PhosphorIconsStyle.fill),
+                  'Parivar',
+                  controller,
+                  colors,
+                ),
+                _buildNavItem(
+                  2,
+                  PhosphorIcons.storefront(),
+                  PhosphorIcons.storefront(PhosphorIconsStyle.fill),
+                  'Market',
+                  controller,
+                  colors,
+                ),
+                _buildNavItem(
+                  3,
+                  PhosphorIcons.user(),
+                  PhosphorIcons.user(PhosphorIconsStyle.fill),
+                  'Profile',
+                  controller,
+                  colors,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildNavItem(
+    int index,
+    IconData icon,
+    IconData activeIcon,
+    String label,
+    HomeController controller,
+    AppColorScheme colors,
+  ) {
+    final isSelected = controller.currentIndex.value == index;
+    return GestureDetector(
+      onTap: () => controller.changeTab(index),
+      behavior: HitTestBehavior.opaque,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+        padding: EdgeInsets.symmetric(
+          horizontal: isSelected ? 16.w : 12.w,
+          vertical: 8.h,
+        ),
+        decoration: BoxDecoration(
+          color: isSelected
+              ? colors.primary.withValues(alpha: 0.1)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        child: Row(
+          children: [
+            ShaderMask(
+              shaderCallback: (bounds) {
+                if (!isSelected) {
+                  return LinearGradient(
+                    colors: [colors.textSecondary, colors.textSecondary],
+                  ).createShader(bounds);
+                }
+                return LinearGradient(
+                  colors: colors.primaryGradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ).createShader(bounds);
+              },
+              child: Icon(
+                isSelected ? activeIcon : icon,
+                color: Colors.white, // Color is defined by ShaderMask
+                size: 24.w,
+              ),
+            ),
+            AnimatedSize(
+              duration: const Duration(milliseconds: 250),
+              curve: Curves.easeOutCubic,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (isSelected) ...[
+                    SizedBox(width: 8.w),
+                    ShaderMask(
+                      shaderCallback: (bounds) => LinearGradient(
+                        colors: colors.primaryGradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ).createShader(bounds),
+                      child: Text(
+                        label,
+                        style: GoogleFonts.outfit(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }

@@ -68,7 +68,7 @@ class LoginController extends GetxController {
         }
       }
 
-      Get.offAllNamed(Routes.placeholderHome);
+      Get.offAllNamed(Routes.home);
     } else {
       Get.snackbar(
         'Error',
