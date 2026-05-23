@@ -9,6 +9,7 @@ import '../../../global_widgets/custom_button.dart';
 import '../../../data/models/business.dart';
 import '../controllers/home_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 void showBusinessFormSheet(
   BuildContext context, {
@@ -34,10 +35,10 @@ void showBusinessFormSheet(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.only(
-        left: 16.w,
-        right: 16.w,
-        top: 20.h,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20.h,
+        left: AppSizes.spacingL.w,
+        right: AppSizes.spacingL.w,
+        top: AppSizes.spacingXL.h,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSizes.spacingXL.h,
       ),
       child: SingleChildScrollView(
         child: Form(
@@ -55,9 +56,9 @@ void showBusinessFormSheet(
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: AppSizes.spacingS.h),
               const Divider(),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: nameController,
                 labelText: 'business_name'.tr,
@@ -69,7 +70,7 @@ void showBusinessFormSheet(
                     ? 'field_required'.tr
                     : null,
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: categoryController,
                 labelText: 'business_category'.tr,
@@ -82,7 +83,7 @@ void showBusinessFormSheet(
                     ? 'field_required'.tr
                     : null,
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: addressController,
                 labelText: 'business_address'.tr,
@@ -94,7 +95,7 @@ void showBusinessFormSheet(
                     ? 'field_required'.tr
                     : null,
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: contactController,
                 keyboardType: TextInputType.phone,
@@ -114,7 +115,7 @@ void showBusinessFormSheet(
                   return null;
                 },
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: descriptionController,
                 maxLines: 3,
@@ -127,10 +128,10 @@ void showBusinessFormSheet(
                     ? 'field_required'.tr
                     : null,
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSizes.spacingXL.h),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
                   gradient: LinearGradient(colors: colors.primaryGradient),
                 ),
                 child: CustomButton(

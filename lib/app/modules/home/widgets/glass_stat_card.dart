@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../global_widgets/glass_card.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 /// A frosted-glass style statistics card used on the dashboard.
 class GlassStatCard extends StatelessWidget {
@@ -29,8 +30,8 @@ class GlassStatCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: GlassCard(
-        borderRadius: 20.r,
-        padding: EdgeInsets.all(16.w),
+        borderRadius: AppSizes.radiusXL.r,
+        padding: EdgeInsets.all(AppSizes.spacingL.w),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -38,7 +39,7 @@ class GlassStatCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: EdgeInsets.all(8.w),
+                  padding: EdgeInsets.all(AppSizes.spacingS.w),
                   decoration: BoxDecoration(
                     color: accentColor.withValues(alpha: 0.15),
                     borderRadius: BorderRadius.circular(10.r),
@@ -47,8 +48,8 @@ class GlassStatCard extends StatelessWidget {
                 ),
                 // Tiny glowing element
                 Container(
-                  width: 8.w,
-                  height: 8.w,
+                  width: AppSizes.spacingS.w,
+                  height: AppSizes.spacingS.w,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: accentColor,
@@ -57,13 +58,13 @@ class GlassStatCard extends StatelessWidget {
                         color: accentColor.withValues(alpha: 0.8),
                         blurRadius: 6,
                         spreadRadius: 1,
-                      )
+                      ),
                     ],
                   ),
                 ),
               ],
             ),
-            SizedBox(height: 16.h),
+            SizedBox(height: AppSizes.spacingL.h),
             Text(
               value,
               style: GoogleFonts.outfit(
@@ -72,13 +73,13 @@ class GlassStatCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 4.h),
+            SizedBox(height: AppSizes.spacingXS.h),
             Text(
               title,
               style: GoogleFonts.outfit(
                 color: colors.textSecondary,
                 fontWeight: FontWeight.w500,
-                fontSize: 12.sp,
+                fontSize: AppSizes.fontSizeBodySmall.sp,
               ),
             ),
           ],

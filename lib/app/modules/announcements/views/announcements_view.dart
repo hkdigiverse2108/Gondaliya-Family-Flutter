@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/values/colors.dart';
 import '../controllers/announcements_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class AnnouncementsView extends GetView<AnnouncementsController> {
   const AnnouncementsView({super.key});
@@ -21,19 +22,23 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
       appBar: GlassAppBar(titleText: 'Announcements', centerTitle: true),
       body: ListView.separated(
         padding: EdgeInsets.only(
-          top: MediaQuery.of(context).padding.top + kToolbarHeight + 16.h,
-          left: 16.w,
-          right: 16.w,
-          bottom: 16.h,
+          top:
+              MediaQuery.of(context).padding.top +
+              kToolbarHeight +
+              AppSizes.spacingL.h,
+          left: AppSizes.spacingL.w,
+          right: AppSizes.spacingL.w,
+          bottom: AppSizes.spacingL.h,
         ),
         itemCount: 10,
-        separatorBuilder: (context, index) => SizedBox(height: 16.h),
+        separatorBuilder: (context, index) =>
+            SizedBox(height: AppSizes.spacingL.h),
         itemBuilder: (context, index) {
           final hasImage = index % 2 == 0;
           return Container(
             decoration: BoxDecoration(
               color: colors.card,
-              borderRadius: BorderRadius.circular(16.r),
+              borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.05),
@@ -47,19 +52,19 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
               children: [
                 // Header
                 Padding(
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(AppSizes.spacingL.w),
                   child: Row(
                     children: [
                       CircleAvatar(
                         backgroundColor: AppColors.primary,
-                        radius: 20.r,
+                        radius: AppSizes.radiusXL.r,
                         child: Icon(
                           Icons.campaign_rounded,
                           color: Colors.white,
-                          size: 24.r,
+                          size: AppSizes.radiusXXL.r,
                         ),
                       ),
-                      SizedBox(width: 12.w),
+                      SizedBox(width: AppSizes.spacingM.w),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,13 +73,13 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
                               'Admin / Committee',
                               style: GoogleFonts.outfit(
                                 fontWeight: FontWeight.bold,
-                                fontSize: 14.sp,
+                                fontSize: AppSizes.fontSizeBodyMedium.sp,
                               ),
                             ),
                             Text(
                               '2 hours ago',
                               style: GoogleFonts.outfit(
-                                fontSize: 12.sp,
+                                fontSize: AppSizes.fontSizeBodySmall.sp,
                                 color: Colors.grey,
                               ),
                             ),
@@ -87,13 +92,16 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
 
                 // Content
                 Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16.w,
-                  ).copyWith(bottom: hasImage ? 12.h : 16.h),
+                  padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w)
+                      .copyWith(
+                        bottom: hasImage
+                            ? AppSizes.spacingM.h
+                            : AppSizes.spacingL.h,
+                      ),
                   child: Text(
                     'This is an important announcement regarding the upcoming family gathering. Please make sure to RSVP by the end of the week!',
                     style: GoogleFonts.outfit(
-                      fontSize: 14.sp,
+                      fontSize: AppSizes.fontSizeBodyMedium.sp,
                       color: isDark ? Colors.white70 : Colors.black87,
                     ),
                   ),
@@ -107,8 +115,8 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
                     decoration: BoxDecoration(
                       color: Colors.grey.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(16.r),
-                        bottomRight: Radius.circular(16.r),
+                        bottomLeft: Radius.circular(AppSizes.radiusL.r),
+                        bottomRight: Radius.circular(AppSizes.radiusL.r),
                       ),
                     ),
                     child: Icon(

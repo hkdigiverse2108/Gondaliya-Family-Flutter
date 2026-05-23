@@ -62,7 +62,9 @@ class FamilyMember extends Equatable {
       firstName: json['firstName'] as String? ?? '',
       middleName: json['middleName'] as String? ?? '',
       lastName: json['lastName'] as String? ?? '',
-      profilePhoto: json['profilePhoto'] == 'null' ? null : json['profilePhoto'] as String?,
+      profilePhoto: json['profilePhoto'] == 'null'
+          ? null
+          : json['profilePhoto'] as String?,
       relation: json['relation'] as String? ?? '',
       dob: json['dob'] as String? ?? '',
       education: json['education'] as String? ?? '',
@@ -71,7 +73,8 @@ class FamilyMember extends Equatable {
       bloodGroup: json['bloodGroup'] as String? ?? '',
       skills: json['skills'] as String?,
       phoneNumber: json['phoneNumber'] as String? ?? '',
-      workDetails: json['workDetails'] != null && json['workDetails'].toString() != '{}'
+      workDetails:
+          json['workDetails'] != null && json['workDetails'].toString() != '{}'
           ? WorkDetails.fromJson(json['workDetails'] as Map<String, dynamic>)
           : null,
       createdAt: json['createdAt'] != null

@@ -41,30 +41,31 @@ class AppTheme {
           color: AppColors.white,
         ),
       ),
-      textTheme: GoogleFonts.outfitTextTheme(ThemeData.light().textTheme).copyWith(
-        titleLarge: GoogleFonts.outfit(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textLightPrimary,
-        ),
-        titleMedium: GoogleFonts.outfit(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textLightPrimary,
-        ),
-        bodyLarge: GoogleFonts.outfit(
-          fontSize: 16,
-          color: AppColors.textLightPrimary,
-        ),
-        bodyMedium: GoogleFonts.outfit(
-          fontSize: 14,
-          color: AppColors.textLightSecondary,
-        ),
-        bodySmall: GoogleFonts.outfit(
-          fontSize: 12,
-          color: AppColors.textLightSecondary,
-        ),
-      ),
+      textTheme: GoogleFonts.outfitTextTheme(ThemeData.light().textTheme)
+          .copyWith(
+            titleLarge: GoogleFonts.outfit(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textLightPrimary,
+            ),
+            titleMedium: GoogleFonts.outfit(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textLightPrimary,
+            ),
+            bodyLarge: GoogleFonts.outfit(
+              fontSize: 16,
+              color: AppColors.textLightPrimary,
+            ),
+            bodyMedium: GoogleFonts.outfit(
+              fontSize: 14,
+              color: AppColors.textLightSecondary,
+            ),
+            bodySmall: GoogleFonts.outfit(
+              fontSize: 12,
+              color: AppColors.textLightSecondary,
+            ),
+          ),
       dividerTheme: const DividerThemeData(
         color: AppColors.dividerLight,
         thickness: 1,
@@ -75,7 +76,8 @@ class AppTheme {
           return Colors.grey.shade400;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return AppColors.secondary.withValues(alpha: 0.4);
+          if (states.contains(WidgetState.selected))
+            return AppColors.secondary.withValues(alpha: 0.4);
           return Colors.grey.shade300;
         }),
       ),
@@ -139,7 +141,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.white,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.dividerLight),
@@ -208,41 +213,44 @@ class AppTheme {
           color: AppColors.white,
         ),
       ),
-      textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme).copyWith(
-        titleLarge: GoogleFonts.outfit(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textDarkPrimary,
-        ),
-        titleMedium: GoogleFonts.outfit(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-          color: AppColors.textDarkPrimary,
-        ),
-        bodyLarge: GoogleFonts.outfit(
-          fontSize: 16,
-          color: AppColors.textDarkPrimary,
-        ),
-        bodyMedium: GoogleFonts.outfit(
-          fontSize: 14,
-          color: AppColors.textDarkSecondary,
-        ),
-        bodySmall: GoogleFonts.outfit(
-          fontSize: 12,
-          color: AppColors.textDarkSecondary,
-        ),
-      ),
+      textTheme: GoogleFonts.outfitTextTheme(ThemeData.dark().textTheme)
+          .copyWith(
+            titleLarge: GoogleFonts.outfit(
+              fontSize: 22,
+              fontWeight: FontWeight.w600,
+              color: AppColors.textDarkPrimary,
+            ),
+            titleMedium: GoogleFonts.outfit(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: AppColors.textDarkPrimary,
+            ),
+            bodyLarge: GoogleFonts.outfit(
+              fontSize: 16,
+              color: AppColors.textDarkPrimary,
+            ),
+            bodyMedium: GoogleFonts.outfit(
+              fontSize: 14,
+              color: AppColors.textDarkSecondary,
+            ),
+            bodySmall: GoogleFonts.outfit(
+              fontSize: 12,
+              color: AppColors.textDarkSecondary,
+            ),
+          ),
       dividerTheme: const DividerThemeData(
         color: AppColors.dividerDark,
         thickness: 1,
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return AppColors.secondaryLight;
+          if (states.contains(WidgetState.selected))
+            return AppColors.secondaryLight;
           return Colors.grey.shade600;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected)) return AppColors.secondary.withValues(alpha: 0.5);
+          if (states.contains(WidgetState.selected))
+            return AppColors.secondary.withValues(alpha: 0.5);
           return AppColors.dividerDark;
         }),
       ),
@@ -306,7 +314,10 @@ class AppTheme {
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.cardDark,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: const BorderSide(color: AppColors.dividerDark),
@@ -317,7 +328,10 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: AppColors.secondaryLight, width: 1.5),
+          borderSide: const BorderSide(
+            color: AppColors.secondaryLight,
+            width: 1.5,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),

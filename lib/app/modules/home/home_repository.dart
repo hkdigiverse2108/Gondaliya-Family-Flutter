@@ -16,7 +16,9 @@ class HomeRepository {
 
       if (response.success && response.data != null) {
         final List<dynamic> dataList = response.data!['data'] ?? [];
-        return dataList.map((e) => Announcement.fromJson(e as Map<String, dynamic>)).toList();
+        return dataList
+            .map((e) => Announcement.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
       return [];
     } catch (e) {
@@ -32,7 +34,9 @@ class HomeRepository {
 
       if (response.success && response.data != null) {
         final List<dynamic> dataList = response.data!['data'] ?? [];
-        return dataList.map((e) => Listing.fromJson(e as Map<String, dynamic>)).toList();
+        return dataList
+            .map((e) => Listing.fromJson(e as Map<String, dynamic>))
+            .toList();
       }
       return [];
     } catch (e) {

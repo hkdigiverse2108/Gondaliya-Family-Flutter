@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/theme/app_color_scheme.dart';
 import '../../../../../core/values/colors.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class MarketplaceCard extends StatelessWidget {
   final AppColorScheme colors;
@@ -52,10 +53,10 @@ class MarketplaceCard extends StatelessWidget {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16.w),
+      margin: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
         border: isDark
             ? Border.all(color: AppColors.dividerDark)
             : Border.all(color: Colors.grey.shade200),
@@ -91,10 +92,10 @@ class MarketplaceCard extends StatelessWidget {
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) =>
                                     Icon(
-                                  Icons.image_outlined,
-                                  color: Colors.grey.shade400,
-                                  size: 30.sp,
-                                ),
+                                      Icons.image_outlined,
+                                      color: Colors.grey.shade400,
+                                      size: 30.sp,
+                                    ),
                               )
                             : Icon(
                                 Icons.image_outlined,
@@ -119,7 +120,7 @@ class MarketplaceCard extends StatelessWidget {
                           type.toUpperCase(),
                           style: GoogleFonts.outfit(
                             color: Colors.white,
-                            fontSize: 8.sp,
+                            fontSize: AppSizes.fontSizeNano.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -127,7 +128,7 @@ class MarketplaceCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: AppSizes.spacingM.w),
                 // Details
                 Expanded(
                   child: Column(
@@ -146,7 +147,7 @@ class MarketplaceCard extends StatelessWidget {
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              SizedBox(width: 4.w),
+                              SizedBox(width: AppSizes.spacingXS.w),
                               Text(
                                 status.toUpperCase(),
                                 style: GoogleFonts.outfit(
@@ -166,12 +167,12 @@ class MarketplaceCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 4.h),
+                      SizedBox(height: AppSizes.spacingXS.h),
                       Text(
                         title,
                         style: GoogleFonts.outfit(
                           fontWeight: FontWeight.bold,
-                          fontSize: 13.sp,
+                          fontSize: AppSizes.fontSizeInputHint.sp,
                           color: isDark ? Colors.white : Colors.black87,
                         ),
                         maxLines: 2,
@@ -187,14 +188,20 @@ class MarketplaceCard extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                    Icon(Icons.location_on_outlined, size: 12.sp, color: AppColors.primary),
-                                    SizedBox(width: 4.w),
+                                    Icon(
+                                      Icons.location_on_outlined,
+                                      size: AppSizes.fontSizeBodySmall.sp,
+                                      color: AppColors.primary,
+                                    ),
+                                    SizedBox(width: AppSizes.spacingXS.w),
                                     Expanded(
                                       child: Text(
                                         location,
                                         style: GoogleFonts.outfit(
-                                          fontSize: 10.sp,
-                                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                          fontSize: AppSizes.fontSizeMicro.sp,
+                                          color: isDark
+                                              ? Colors.grey.shade400
+                                              : Colors.grey.shade600,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
@@ -202,17 +209,23 @@ class MarketplaceCard extends StatelessWidget {
                                     ),
                                   ],
                                 ),
-                                SizedBox(height: 4.h),
+                                SizedBox(height: AppSizes.spacingXS.h),
                                 if (isSale) ...[
                                   Row(
                                     children: [
-                                      Icon(Icons.crop_free, size: 12.sp, color: AppColors.success),
-                                      SizedBox(width: 4.w),
+                                      Icon(
+                                        Icons.crop_free,
+                                        size: AppSizes.fontSizeBodySmall.sp,
+                                        color: AppColors.success,
+                                      ),
+                                      SizedBox(width: AppSizes.spacingXS.w),
                                       Text(
                                         area ?? '',
                                         style: GoogleFonts.outfit(
-                                          fontSize: 10.sp,
-                                          color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                          fontSize: AppSizes.fontSizeMicro.sp,
+                                          color: isDark
+                                              ? Colors.grey.shade400
+                                              : Colors.grey.shade600,
                                         ),
                                       ),
                                     ],
@@ -220,14 +233,20 @@ class MarketplaceCard extends StatelessWidget {
                                 ] else ...[
                                   Row(
                                     children: [
-                                      Icon(Icons.calendar_today_outlined, size: 12.sp, color: Colors.grey.shade600),
-                                      SizedBox(width: 4.w),
+                                      Icon(
+                                        Icons.calendar_today_outlined,
+                                        size: AppSizes.fontSizeBodySmall.sp,
+                                        color: Colors.grey.shade600,
+                                      ),
+                                      SizedBox(width: AppSizes.spacingXS.w),
                                       Expanded(
                                         child: Text(
                                           date ?? '',
                                           style: GoogleFonts.outfit(
-                                            fontSize: 10.sp,
-                                            color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+                                            fontSize: AppSizes.fontSizeMicro.sp,
+                                            color: isDark
+                                                ? Colors.grey.shade400
+                                                : Colors.grey.shade600,
                                           ),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
@@ -242,8 +261,8 @@ class MarketplaceCard extends StatelessWidget {
                           if (isSale) ...[
                             Container(
                               padding: EdgeInsets.symmetric(
-                                horizontal: 8.w,
-                                vertical: 4.h,
+                                horizontal: AppSizes.spacingS.w,
+                                vertical: AppSizes.spacingXS.h,
                               ),
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
@@ -255,7 +274,7 @@ class MarketplaceCard extends StatelessWidget {
                                 price,
                                 style: GoogleFonts.outfit(
                                   color: Colors.white,
-                                  fontSize: 12.sp,
+                                  fontSize: AppSizes.fontSizeBodySmall.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
@@ -268,8 +287,10 @@ class MarketplaceCard extends StatelessWidget {
                                   price,
                                   style: GoogleFonts.outfit(
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 14.sp,
-                                    color: isDark ? Colors.white : Colors.black87,
+                                    fontSize: AppSizes.fontSizeBodyMedium.sp,
+                                    color: isDark
+                                        ? Colors.white
+                                        : Colors.black87,
                                   ),
                                 ),
                                 Text(
@@ -295,7 +316,10 @@ class MarketplaceCard extends StatelessWidget {
             color: isDark ? AppColors.dividerDark : Colors.grey.shade200,
           ),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: 10.w,
+              vertical: AppSizes.spacingS.h,
+            ),
             child: Row(
               children: [
                 if (!isSale) ...[
@@ -304,53 +328,99 @@ class MarketplaceCard extends StatelessWidget {
                     child: Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.all(4.w),
+                          padding: EdgeInsets.all(AppSizes.spacingXS.w),
                           decoration: BoxDecoration(
                             color: AppColors.primary.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
-                          child: Icon(Icons.local_offer_outlined, size: 12.sp, color: AppColors.primary),
+                          child: Icon(
+                            Icons.local_offer_outlined,
+                            size: AppSizes.fontSizeBodySmall.sp,
+                            color: AppColors.primary,
+                          ),
                         ),
-                        SizedBox(width: 4.w),
+                        SizedBox(width: AppSizes.spacingXS.w),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Price Unit', style: GoogleFonts.outfit(fontSize: 8.sp, color: Colors.grey)),
-                              Text(priceUnit, style: GoogleFonts.outfit(fontSize: 10.sp, fontWeight: FontWeight.bold, color: isDark ? Colors.white : Colors.black87)),
+                              Text(
+                                'Price Unit',
+                                style: GoogleFonts.outfit(
+                                  fontSize: AppSizes.fontSizeNano.sp,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                              Text(
+                                priceUnit,
+                                style: GoogleFonts.outfit(
+                                  fontSize: AppSizes.fontSizeMicro.sp,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? Colors.white : Colors.black87,
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Container(width: 1, height: 16.h, color: isDark ? AppColors.dividerDark : Colors.grey.shade200),
+                  Container(
+                    width: 1,
+                    height: AppSizes.spacingL.h,
+                    color: isDark
+                        ? AppColors.dividerDark
+                        : Colors.grey.shade200,
+                  ),
                   SizedBox(width: 6.w),
                 ],
                 Expanded(
                   flex: 5,
                   child: Row(
-                    mainAxisAlignment: isSale ? MainAxisAlignment.center : MainAxisAlignment.start,
+                    mainAxisAlignment: isSale
+                        ? MainAxisAlignment.center
+                        : MainAxisAlignment.start,
                     children: [
-                      Icon(Icons.call_outlined, size: 14.sp, color: AppColors.success),
-                      SizedBox(width: 4.w),
-                      Text(contact, style: GoogleFonts.outfit(fontSize: 10.sp, color: isDark ? Colors.white : Colors.black87)),
+                      Icon(
+                        Icons.call_outlined,
+                        size: AppSizes.fontSizeBodyMedium.sp,
+                        color: AppColors.success,
+                      ),
+                      SizedBox(width: AppSizes.spacingXS.w),
+                      Text(
+                        contact,
+                        style: GoogleFonts.outfit(
+                          fontSize: AppSizes.fontSizeMicro.sp,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
                     ],
                   ),
                 ),
-                Container(width: 1, height: 16.h, color: isDark ? AppColors.dividerDark : Colors.grey.shade200),
+                Container(
+                  width: 1,
+                  height: AppSizes.spacingL.h,
+                  color: isDark ? AppColors.dividerDark : Colors.grey.shade200,
+                ),
                 SizedBox(width: 6.w),
                 Expanded(
                   flex: 5,
                   child: Row(
-                    mainAxisAlignment: isSale ? MainAxisAlignment.center : MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.person_outline, size: 14.sp, color: AppColors.primary),
-                      SizedBox(width: 4.w),
+                      Icon(
+                        Icons.person_outline,
+                        size: AppSizes.fontSizeBodyMedium.sp,
+                        color: AppColors.primary,
+                      ),
+                      SizedBox(width: AppSizes.spacingXS.w),
                       Expanded(
                         child: Text(
                           name,
-                          style: GoogleFonts.outfit(fontSize: 10.sp, color: isDark ? Colors.white : Colors.black87),
+                          style: GoogleFonts.outfit(
+                            fontSize: AppSizes.fontSizeMicro.sp,
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),

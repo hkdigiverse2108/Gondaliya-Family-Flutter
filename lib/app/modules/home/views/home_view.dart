@@ -12,6 +12,7 @@ import 'tabs/marketplace_tab_view.dart';
 import 'tabs/profile_tab_view.dart';
 import '../controllers/home_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class HomeView extends GetView<HomeController> {
   const HomeView({super.key});
@@ -59,7 +60,7 @@ class HomeView extends GetView<HomeController> {
                   // TODO: Navigate to notifications
                 },
               ),
-              SizedBox(width: 8.w),
+              SizedBox(width: AppSizes.spacingS.w),
             ],
           ),
           body: Stack(
@@ -151,9 +152,9 @@ class HomeView extends GetView<HomeController> {
   ) {
     return Container(
       margin: EdgeInsets.only(
-        left: 20.w,
-        right: 20.w,
-        bottom: 20.h + MediaQuery.of(context).padding.bottom,
+        left: AppSizes.spacingXL.w,
+        right: AppSizes.spacingXL.w,
+        bottom: AppSizes.spacingXL.h + MediaQuery.of(context).padding.bottom,
       ),
       decoration: BoxDecoration(
         color: colors.card.withValues(alpha: 0.8),
@@ -169,7 +170,10 @@ class HomeView extends GetView<HomeController> {
         child: BackdropFilter(
           filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.spacingS.w,
+              vertical: AppSizes.spacingS.h,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -229,14 +233,14 @@ class HomeView extends GetView<HomeController> {
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOutCubic,
         padding: EdgeInsets.symmetric(
-          horizontal: isSelected ? 16.w : 12.w,
-          vertical: 8.h,
+          horizontal: isSelected ? AppSizes.spacingL.w : AppSizes.spacingM.w,
+          vertical: AppSizes.spacingS.h,
         ),
         decoration: BoxDecoration(
           color: isSelected
               ? colors.primary.withValues(alpha: 0.1)
               : Colors.transparent,
-          borderRadius: BorderRadius.circular(20.r),
+          borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
         ),
         child: Row(
           children: [
@@ -256,7 +260,7 @@ class HomeView extends GetView<HomeController> {
               child: Icon(
                 isSelected ? activeIcon : icon,
                 color: Colors.white, // Color is defined by ShaderMask
-                size: 24.w,
+                size: AppSizes.spacingXXL.w,
               ),
             ),
             AnimatedSize(
@@ -266,7 +270,7 @@ class HomeView extends GetView<HomeController> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   if (isSelected) ...[
-                    SizedBox(width: 8.w),
+                    SizedBox(width: AppSizes.spacingS.w),
                     ShaderMask(
                       shaderCallback: (bounds) => LinearGradient(
                         colors: colors.primaryGradient,
@@ -278,7 +282,7 @@ class HomeView extends GetView<HomeController> {
                         style: GoogleFonts.outfit(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 12.sp,
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
                         ),
                       ),
                     ),

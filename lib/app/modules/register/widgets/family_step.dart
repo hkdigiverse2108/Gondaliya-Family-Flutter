@@ -8,6 +8,7 @@ import '../../../global_widgets/generation_avatar.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class FamilyStep extends StatelessWidget {
   final RegisterController controller;
@@ -44,14 +45,17 @@ class FamilyStep extends StatelessWidget {
               label: Text(
                 'add'.tr,
                 style: GoogleFonts.outfit(
-                  fontSize: 12.sp,
+                  fontSize: AppSizes.fontSizeBodySmall.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.secondary,
                 foregroundColor: AppColors.white,
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 14.w,
+                  vertical: AppSizes.spacingS.h,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -66,7 +70,10 @@ class FamilyStep extends StatelessWidget {
         Obx(() {
           if (controller.familyMembers.isEmpty) {
             return NeomorphicCard(
-              padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
+              padding: EdgeInsets.symmetric(
+                vertical: AppSizes.spacing4XL.h,
+                horizontal: AppSizes.spacingL.w,
+              ),
               child: Center(
                 child: Column(
                   children: [
@@ -77,7 +84,7 @@ class FamilyStep extends StatelessWidget {
                           ? AppColors.textDarkSecondary
                           : AppColors.textLightSecondary,
                     ),
-                    SizedBox(height: 12.h),
+                    SizedBox(height: AppSizes.spacingM.h),
                     Text(
                       'no_members_yet'.tr,
                       style: GoogleFonts.outfit(
@@ -106,7 +113,7 @@ class FamilyStep extends StatelessWidget {
               );
 
               return NeomorphicCard(
-                padding: EdgeInsets.all(12.w),
+                padding: EdgeInsets.all(AppSizes.spacingM.w),
                 child: Row(
                   children: [
                     GenerationAvatar(
@@ -114,7 +121,7 @@ class FamilyStep extends StatelessWidget {
                       color: genColor,
                       radius: 20,
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,40 +130,42 @@ class FamilyStep extends StatelessWidget {
                             '${member.firstName} ${member.lastName}',
                             style: GoogleFonts.outfit(
                               fontWeight: FontWeight.bold,
-                              fontSize: 15.sp,
+                              fontSize: AppSizes.fontSizeInputText.sp,
                               color: isDark
                                   ? AppColors.white
                                   : AppColors.textLightPrimary,
                             ),
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: AppSizes.spacingXS.h),
                           Row(
                             children: [
                               Container(
                                 padding: EdgeInsets.symmetric(
-                                  horizontal: 8.w,
-                                  vertical: 2.h,
+                                  horizontal: AppSizes.spacingS.w,
+                                  vertical: AppSizes.spacingXXS.h,
                                 ),
                                 decoration: BoxDecoration(
                                   color: genColor.withValues(alpha: 0.15),
-                                  borderRadius: BorderRadius.circular(12.r),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.radiusM.r,
+                                  ),
                                 ),
                                 child: Text(
                                   member.relation,
                                   style: GoogleFonts.outfit(
                                     color: genColor,
-                                    fontSize: 10.sp,
+                                    fontSize: AppSizes.fontSizeMicro.sp,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
                               ),
-                              SizedBox(width: 8.w),
+                              SizedBox(width: AppSizes.spacingS.w),
                               Expanded(
                                 child: Text(
                                   '${member.dob} • Blood: ${member.bloodGroup}',
                                   overflow: TextOverflow.ellipsis,
                                   style: GoogleFonts.outfit(
-                                    fontSize: 11.sp,
+                                    fontSize: AppSizes.fontSizeCaption.sp,
                                     color: isDark
                                         ? AppColors.textDarkSecondary
                                         : AppColors.textLightSecondary,

@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/values/colors.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class ParivarTabView extends StatefulWidget {
   const ParivarTabView({super.key});
@@ -12,7 +13,8 @@ class ParivarTabView extends StatefulWidget {
   State<ParivarTabView> createState() => _ParivarTabViewState();
 }
 
-class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProviderStateMixin {
+class _ParivarTabViewState extends State<ParivarTabView>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -35,7 +37,11 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
     return Column(
       children: [
         // Add padding to account for the transparent AppBar and status bar
-        SizedBox(height: Scaffold.of(context).appBarMaxHeight ?? (MediaQuery.of(context).padding.top + kToolbarHeight)),
+        SizedBox(
+          height:
+              Scaffold.of(context).appBarMaxHeight ??
+              (MediaQuery.of(context).padding.top + kToolbarHeight),
+        ),
         // Village Tabs
         Container(
           color: colors.card,
@@ -44,7 +50,10 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
             indicatorColor: AppColors.primary,
             labelColor: AppColors.primary,
             unselectedLabelColor: colors.textSecondary,
-            labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 14.sp),
+            labelStyle: GoogleFonts.outfit(
+              fontWeight: FontWeight.bold,
+              fontSize: AppSizes.fontSizeBodyMedium.sp,
+            ),
             tabs: const [
               Tab(text: 'Village 1'),
               Tab(text: 'Village 2'),
@@ -55,7 +64,7 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
 
         // Search Bar
         Padding(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(AppSizes.spacingL.w),
           child: TextField(
             decoration: InputDecoration(
               hintText: 'Search by Name, Profession, or City...',
@@ -63,7 +72,7 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
               filled: true,
               fillColor: isDark ? AppColors.cardDark : Colors.grey.shade100,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
                 borderSide: BorderSide.none,
               ),
             ),
@@ -87,15 +96,19 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
 
   Widget _buildMemberList(AppColorScheme colors, String villageName) {
     return ListView.separated(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.spacingL.w,
+        vertical: AppSizes.spacingS.h,
+      ),
       itemCount: 10,
-      separatorBuilder: (context, index) => SizedBox(height: 12.h),
+      separatorBuilder: (context, index) =>
+          SizedBox(height: AppSizes.spacingM.h),
       itemBuilder: (context, index) {
         return Container(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(AppSizes.spacingL.w),
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
@@ -109,9 +122,13 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
               CircleAvatar(
                 radius: 28.r,
                 backgroundColor: AppColors.primaryLight.withValues(alpha: 0.2),
-                child: Icon(Icons.person_rounded, color: AppColors.primary, size: 32.r),
+                child: Icon(
+                  Icons.person_rounded,
+                  color: AppColors.primary,
+                  size: AppSizes.radius3XL.r,
+                ),
               ),
-              SizedBox(width: 16.w),
+              SizedBox(width: AppSizes.spacingL.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,28 +137,42 @@ class _ParivarTabViewState extends State<ParivarTabView> with SingleTickerProvid
                       'Member Name $index',
                       style: GoogleFonts.outfit(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16.sp,
+                        fontSize: AppSizes.fontSizeBodyLarge.sp,
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: AppSizes.spacingXS.h),
                     Row(
                       children: [
-                        Icon(Icons.work_outline, size: 14.sp, color: Colors.grey),
-                        SizedBox(width: 4.w),
+                        Icon(
+                          Icons.work_outline,
+                          size: AppSizes.fontSizeBodyMedium.sp,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: AppSizes.spacingXS.w),
                         Text(
                           'Profession $index',
-                          style: GoogleFonts.outfit(fontSize: 12.sp, color: Colors.grey),
+                          style: GoogleFonts.outfit(
+                            fontSize: AppSizes.fontSizeBodySmall.sp,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 2.h),
+                    SizedBox(height: AppSizes.spacingXXS.h),
                     Row(
                       children: [
-                        Icon(Icons.location_on_outlined, size: 14.sp, color: Colors.grey),
-                        SizedBox(width: 4.w),
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: AppSizes.fontSizeBodyMedium.sp,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(width: AppSizes.spacingXS.w),
                         Text(
                           '$villageName - City',
-                          style: GoogleFonts.outfit(fontSize: 12.sp, color: Colors.grey),
+                          style: GoogleFonts.outfit(
+                            fontSize: AppSizes.fontSizeBodySmall.sp,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),

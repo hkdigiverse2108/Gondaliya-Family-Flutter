@@ -7,6 +7,7 @@ import '../../../../routes/app_pages.dart';
 import '../../../../global_widgets/neomorphic_button.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import '../../controllers/home_controller.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class ProfileTabView extends StatelessWidget {
   const ProfileTabView({super.key});
@@ -29,13 +30,16 @@ class ProfileTabView extends StatelessWidget {
 
           // Header / Avatar Section
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.spacingXL.w,
+              vertical: AppSizes.spacingXXL.h,
+            ),
             decoration: BoxDecoration(
               color: colors.card,
               boxShadow: colors.neumorphicShadow(blur: 15, distance: 4),
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(32.r),
-                bottomRight: Radius.circular(32.r),
+                bottomLeft: Radius.circular(AppSizes.radius3XL.r),
+                bottomRight: Radius.circular(AppSizes.radius3XL.r),
               ),
             ),
             child: Column(
@@ -62,7 +66,7 @@ class ProfileTabView extends StatelessWidget {
                             ),
                           ),
                           child: Container(
-                            margin: EdgeInsets.all(4.w),
+                            margin: EdgeInsets.all(AppSizes.spacingXS.w),
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               gradient: LinearGradient(
@@ -84,7 +88,7 @@ class ProfileTabView extends StatelessWidget {
                           ),
                         ),
                         Container(
-                          padding: EdgeInsets.all(4.w),
+                          padding: EdgeInsets.all(AppSizes.spacingXS.w),
                           decoration: BoxDecoration(
                             color: colors.card,
                             shape: BoxShape.circle,
@@ -108,7 +112,7 @@ class ProfileTabView extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(width: 20.w),
+                    SizedBox(width: AppSizes.spacingXL.w),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -116,28 +120,30 @@ class ProfileTabView extends StatelessWidget {
                           Text(
                             'John Doe',
                             style: GoogleFonts.outfit(
-                              fontSize: 22.sp,
+                              fontSize: AppSizes.fontSizeTitleLarge.sp,
                               fontWeight: FontWeight.bold,
                               color: colors.textPrimary,
                             ),
                           ),
-                          SizedBox(height: 4.h),
+                          SizedBox(height: AppSizes.spacingXS.h),
                           Text(
                             '+91 98765 43210',
                             style: GoogleFonts.outfit(
-                              fontSize: 14.sp,
+                              fontSize: AppSizes.fontSizeBodyMedium.sp,
                               color: colors.textSecondary,
                             ),
                           ),
-                          SizedBox(height: 8.h),
+                          SizedBox(height: AppSizes.spacingS.h),
                           Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 10.w,
-                              vertical: 4.h,
+                              vertical: AppSizes.spacingXS.h,
                             ),
                             decoration: BoxDecoration(
                               color: colors.primary.withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(12.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusM.r,
+                              ),
                               border: Border.all(
                                 color: colors.primary.withValues(alpha: 0.2),
                               ),
@@ -145,7 +151,7 @@ class ProfileTabView extends StatelessWidget {
                             child: Text(
                               'Family ID: #GF-1042',
                               style: GoogleFonts.outfit(
-                                fontSize: 12.sp,
+                                fontSize: AppSizes.fontSizeBodySmall.sp,
                                 fontWeight: FontWeight.w600,
                                 color: colors.primary,
                               ),
@@ -156,7 +162,7 @@ class ProfileTabView extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: AppSizes.spacingXXL.h),
                 Row(
                   children: [
                     Expanded(
@@ -167,7 +173,7 @@ class ProfileTabView extends StatelessWidget {
                         colors,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: _buildProfileStat(
                         'Members',
@@ -178,7 +184,7 @@ class ProfileTabView extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: AppSizes.spacingXL.h),
                 NeomorphicButton(
                   text: 'Edit Profile',
                   icon: PhosphorIcons.userList(),
@@ -191,24 +197,24 @@ class ProfileTabView extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSizes.spacingXXL.h),
 
           // Menu Sections
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingXL.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'Manage',
                   style: GoogleFonts.outfit(
-                    fontSize: 13.sp,
+                    fontSize: AppSizes.fontSizeInputHint.sp,
                     fontWeight: FontWeight.bold,
                     color: colors.textSecondary,
                     letterSpacing: 1.2,
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
 
                 // My Business Option
                 _buildMenuOption(
@@ -219,17 +225,17 @@ class ProfileTabView extends StatelessWidget {
                   onTap: () => Get.toNamed(Routes.myBusiness),
                 ),
 
-                SizedBox(height: 24.h),
+                SizedBox(height: AppSizes.spacingXXL.h),
                 Text(
                   'Preferences',
                   style: GoogleFonts.outfit(
-                    fontSize: 13.sp,
+                    fontSize: AppSizes.fontSizeInputHint.sp,
                     fontWeight: FontWeight.bold,
                     color: colors.textSecondary,
                     letterSpacing: 1.2,
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
 
                 Obx(
                   () => _buildMenuOption(
@@ -262,17 +268,17 @@ class ProfileTabView extends StatelessWidget {
                   },
                 ),
 
-                SizedBox(height: 24.h),
+                SizedBox(height: AppSizes.spacingXXL.h),
                 Text(
                   'Support & About',
                   style: GoogleFonts.outfit(
-                    fontSize: 13.sp,
+                    fontSize: AppSizes.fontSizeInputHint.sp,
                     fontWeight: FontWeight.bold,
                     color: colors.textSecondary,
                     letterSpacing: 1.2,
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
 
                 _buildMenuOption(
                   icon: PhosphorIcons.lifebuoy(),
@@ -293,7 +299,7 @@ class ProfileTabView extends StatelessWidget {
                   },
                 ),
 
-                SizedBox(height: 24.h),
+                SizedBox(height: AppSizes.spacingXXL.h),
 
                 _buildMenuOption(
                   icon: PhosphorIcons.signOut(),
@@ -329,25 +335,32 @@ class ProfileTabView extends StatelessWidget {
         margin: EdgeInsets.only(bottom: 10.h),
         decoration: BoxDecoration(
           color: colors.card,
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
           boxShadow: colors.neumorphicInsetShadow(),
         ),
         child: ListTile(
-          contentPadding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 0.h),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: AppSizes.spacingL.w,
+            vertical: 0.h,
+          ),
           minVerticalPadding: 0,
           leading: Container(
-            padding: EdgeInsets.all(8.w),
+            padding: EdgeInsets.all(AppSizes.spacingS.w),
             decoration: BoxDecoration(
               color: (iconColor ?? colors.primary).withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: iconColor ?? colors.primary, size: 20.r),
+            child: Icon(
+              icon,
+              color: iconColor ?? colors.primary,
+              size: AppSizes.radiusXL.r,
+            ),
           ),
           title: Text(
             title,
             style: GoogleFonts.outfit(
               fontWeight: FontWeight.w600,
-              fontSize: 15.sp,
+              fontSize: AppSizes.fontSizeInputText.sp,
               color: titleColor ?? colors.textPrimary,
             ),
           ),
@@ -355,7 +368,7 @@ class ProfileTabView extends StatelessWidget {
               ? Text(
                   subtitle,
                   style: GoogleFonts.outfit(
-                    fontSize: 11.sp,
+                    fontSize: AppSizes.fontSizeCaption.sp,
                     color: colors.textSecondary,
                   ),
                 )
@@ -379,10 +392,13 @@ class ProfileTabView extends StatelessWidget {
     AppColorScheme colors,
   ) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSizes.spacingL.w,
+        vertical: AppSizes.spacingM.h,
+      ),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
         border: Border.all(
           color: colors.primary.withValues(alpha: 0.1),
           width: 1,
@@ -392,14 +408,14 @@ class ProfileTabView extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(8.w),
+            padding: EdgeInsets.all(AppSizes.spacingS.w),
             decoration: BoxDecoration(
               color: colors.primary.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: Icon(icon, color: colors.primary, size: 20.r),
+            child: Icon(icon, color: colors.primary, size: AppSizes.radiusXL.r),
           ),
-          SizedBox(width: 12.w),
+          SizedBox(width: AppSizes.spacingM.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -407,7 +423,7 @@ class ProfileTabView extends StatelessWidget {
                 Text(
                   value,
                   style: GoogleFonts.outfit(
-                    fontSize: 16.sp,
+                    fontSize: AppSizes.fontSizeBodyLarge.sp,
                     fontWeight: FontWeight.bold,
                     color: colors.textPrimary,
                   ),
@@ -415,7 +431,7 @@ class ProfileTabView extends StatelessWidget {
                 Text(
                   label,
                   style: GoogleFonts.outfit(
-                    fontSize: 11.sp,
+                    fontSize: AppSizes.fontSizeCaption.sp,
                     fontWeight: FontWeight.w500,
                     color: colors.textSecondary,
                   ),

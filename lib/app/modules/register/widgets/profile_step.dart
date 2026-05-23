@@ -13,6 +13,7 @@ import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class ProfileStep extends StatelessWidget {
   final RegisterController controller;
@@ -27,7 +28,7 @@ class ProfileStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         NeomorphicCard(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(AppSizes.spacingL.w),
           child: Form(
             key: controller.profileFormKey,
             child: Column(
@@ -133,7 +134,7 @@ class ProfileStep extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(height: 12.w),
+                SizedBox(height: AppSizes.spacingM.w),
                 Obx(
                   () => NeomorphicDropdownField<String>(
                     value: controller.isMarried.value,
@@ -192,7 +193,7 @@ class ProfileStep extends StatelessWidget {
                             : null,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: NeomorphicTextField(
                         controller: controller.currentStateController,
@@ -289,7 +290,7 @@ class ProfileStep extends StatelessWidget {
                             : null,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: NeomorphicTextField(
                         controller: controller.districtController,
@@ -327,7 +328,7 @@ class ProfileStep extends StatelessWidget {
                         labelText: 'Native Taluka',
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: NeomorphicTextField(
                         controller: controller.nativeDistrictController,

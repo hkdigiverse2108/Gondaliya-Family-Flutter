@@ -6,7 +6,7 @@ import '../../../routes/app_pages.dart';
 
 class PlaceholderHomeController extends GetxController {
   final StorageService _storage = Get.find<StorageService>();
-  
+
   final Rx<UserModel?> user = Rx<UserModel?>(null);
   final isDarkTheme = false.obs;
 

@@ -9,6 +9,7 @@ import '../controllers/register_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import '../../../data/models/enums.dart';
 import '../../../global_widgets/neomorphic_dropdown_field.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 void showAddFamilySheet(BuildContext context, RegisterController controller) {
   final formKey = GlobalKey<FormState>();
@@ -33,10 +34,11 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: EdgeInsets.only(
-          left: 16.w,
-          right: 16.w,
-          top: 20.h,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20.h,
+          left: AppSizes.spacingL.w,
+          right: AppSizes.spacingL.w,
+          top: AppSizes.spacingXL.h,
+          bottom:
+              MediaQuery.of(context).viewInsets.bottom + AppSizes.spacingXL.h,
         ),
         child: SingleChildScrollView(
           child: Form(
@@ -56,9 +58,9 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: AppSizes.spacingS.h),
                 const Divider(),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: nameCtrl,
                   labelText: 'first_name'.tr,
@@ -70,7 +72,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                       ? 'field_required'.tr
                       : null,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: middleNameCtrl,
                   labelText: 'middle_name'.tr,
@@ -79,7 +81,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     color: colors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: surnameCtrl,
                   labelText: 'last_name'.tr,
@@ -91,7 +93,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                       ? 'field_required'.tr
                       : null,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 Row(
                   children: [
                     Expanded(
@@ -119,7 +121,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     ),
                   ],
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: phoneCtrl,
                   labelText: 'phone_number'.tr,
@@ -135,7 +137,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     return null;
                   },
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 Obx(
                   () => NeomorphicDropdownField<String>(
                     value: isMarriedVal.value,
@@ -155,7 +157,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     },
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: eduCtrl,
                   labelText: 'education'.tr,
@@ -164,7 +166,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     color: colors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 Row(
                   children: [
                     Expanded(
@@ -190,7 +192,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                         ),
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: InkWell(
                         onTap: () async {
@@ -220,7 +222,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
+                SizedBox(height: AppSizes.spacingXL.h),
                 NeomorphicButton(
                   text: 'add'.tr,
                   isGradient: true,

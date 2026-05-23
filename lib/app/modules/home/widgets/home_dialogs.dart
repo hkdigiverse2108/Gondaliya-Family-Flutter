@@ -5,11 +5,14 @@ import 'package:get/get.dart';
 import '../../../../core/values/colors.dart';
 import '../../../data/services/translation_service.dart';
 import '../controllers/home_controller.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 void showLanguageDialog(BuildContext context, HomeController controller) {
   Get.dialog(
     AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
+      ),
       title: Text(
         'select_language'.tr,
         style: GoogleFonts.outfit(fontWeight: FontWeight.bold),
@@ -19,9 +22,15 @@ void showLanguageDialog(BuildContext context, HomeController controller) {
         children: [
           ListTile(
             title: Text('english'.tr, style: GoogleFonts.outfit()),
-            leading: const Icon(Icons.abc_rounded, color: AppColors.primaryLight),
+            leading: const Icon(
+              Icons.abc_rounded,
+              color: AppColors.primaryLight,
+            ),
             trailing: !TranslationService.isGujarati
-                ? const Icon(Icons.check_circle_rounded, color: AppColors.secondary)
+                ? const Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.secondary,
+                  )
                 : null,
             onTap: () {
               controller.changeLanguage('en');
@@ -30,9 +39,15 @@ void showLanguageDialog(BuildContext context, HomeController controller) {
           ),
           ListTile(
             title: Text('gujarati'.tr, style: GoogleFonts.outfit()),
-            leading: const Icon(Icons.font_download_rounded, color: AppColors.primaryLight),
+            leading: const Icon(
+              Icons.font_download_rounded,
+              color: AppColors.primaryLight,
+            ),
             trailing: TranslationService.isGujarati
-                ? const Icon(Icons.check_circle_rounded, color: AppColors.secondary)
+                ? const Icon(
+                    Icons.check_circle_rounded,
+                    color: AppColors.secondary,
+                  )
                 : null,
             onTap: () {
               controller.changeLanguage('gu');
@@ -45,17 +60,23 @@ void showLanguageDialog(BuildContext context, HomeController controller) {
   );
 }
 
-void showDeleteConfirmation(BuildContext context, {
+void showDeleteConfirmation(
+  BuildContext context, {
   required HomeController controller,
   required bool isMember,
   required String id,
 }) {
   Get.dialog(
     AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
+      ),
       title: Text(
         'delete'.tr,
-        style: GoogleFonts.outfit(fontWeight: FontWeight.bold, color: AppColors.error),
+        style: GoogleFonts.outfit(
+          fontWeight: FontWeight.bold,
+          color: AppColors.error,
+        ),
       ),
       content: Text(
         isMember ? 'delete_member_confirm'.tr : 'delete_business_confirm'.tr,
@@ -66,7 +87,10 @@ void showDeleteConfirmation(BuildContext context, {
           onPressed: () => Get.back(),
           child: Text(
             'cancel'.tr,
-            style: GoogleFonts.outfit(color: Colors.grey, fontWeight: FontWeight.bold),
+            style: GoogleFonts.outfit(
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
         ElevatedButton(
@@ -87,7 +111,9 @@ void showDeleteConfirmation(BuildContext context, {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.error,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.r),
+            ),
           ),
           child: Text(
             'delete'.tr,

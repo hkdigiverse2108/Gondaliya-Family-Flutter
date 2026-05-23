@@ -15,7 +15,9 @@ class WorkDetails extends Equatable {
     return WorkDetails(
       hasOwnBusiness: json['hasOwnBusiness'] as bool? ?? false,
       businessDetails: json['businessDetails'] != null
-          ? BusinessDetails.fromJson(json['businessDetails'] as Map<String, dynamic>)
+          ? BusinessDetails.fromJson(
+              json['businessDetails'] as Map<String, dynamic>,
+            )
           : null,
       jobDetails: json['jobDetails'] != null
           ? JobDetails.fromJson(json['jobDetails'] as Map<String, dynamic>)
@@ -61,7 +63,8 @@ class BusinessDetails extends Equatable {
       businessName: json['businessName'] as String? ?? '',
       ownerName: json['ownerName'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      locations: (json['locations'] as List<dynamic>?)
+      locations:
+          (json['locations'] as List<dynamic>?)
               ?.map((e) => BusinessLocation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
@@ -85,14 +88,14 @@ class BusinessDetails extends Equatable {
 
   @override
   List<Object?> get props => [
-        category,
-        subCategory,
-        businessName,
-        ownerName,
-        description,
-        locations,
-        contactInfo,
-      ];
+    category,
+    subCategory,
+    businessName,
+    ownerName,
+    description,
+    locations,
+    contactInfo,
+  ];
 }
 
 class BusinessLocation extends Equatable {
@@ -131,7 +134,13 @@ class BusinessLocation extends Equatable {
   }
 
   @override
-  List<Object?> get props => [shopAddress, areaCity, state, pincode, googleMapLink];
+  List<Object?> get props => [
+    shopAddress,
+    areaCity,
+    state,
+    pincode,
+    googleMapLink,
+  ];
 }
 
 class ContactInfo extends Equatable {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../core/values/colors.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class GenerationAvatar extends StatelessWidget {
   final String name;
@@ -18,10 +19,10 @@ class GenerationAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(2.w),
+      padding: EdgeInsets.all(AppSizes.spacingXXS.w),
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: color, width: 2.w),
+        border: Border.all(color: color, width: AppSizes.spacingXXS.w),
       ),
       child: CircleAvatar(
         radius: radius.r,

@@ -9,6 +9,7 @@ import '../../../global_widgets/custom_button.dart';
 import '../../../data/models/family_member.dart';
 import '../controllers/home_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 void showFamilyMemberFormSheet(
   BuildContext context, {
@@ -41,10 +42,10 @@ void showFamilyMemberFormSheet(
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       ),
       padding: EdgeInsets.only(
-        left: 16.w,
-        right: 16.w,
-        top: 20.h,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 20.h,
+        left: AppSizes.spacingL.w,
+        right: AppSizes.spacingL.w,
+        top: AppSizes.spacingXL.h,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSizes.spacingXL.h,
       ),
       child: SingleChildScrollView(
         child: Form(
@@ -62,9 +63,9 @@ void showFamilyMemberFormSheet(
                 ),
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: 8.h),
+              SizedBox(height: AppSizes.spacingS.h),
               const Divider(),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: nameController,
                 labelText: 'full_name'.tr,
@@ -76,7 +77,7 @@ void showFamilyMemberFormSheet(
                     ? 'field_required'.tr
                     : null,
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               Row(
                 children: [
                   Expanded(
@@ -90,7 +91,7 @@ void showFamilyMemberFormSheet(
                       ),
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSizes.spacingM.w),
                   Expanded(
                     flex: 3,
                     child: CustomTextField(
@@ -109,7 +110,7 @@ void showFamilyMemberFormSheet(
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: phoneController,
                 keyboardType: TextInputType.phone,
@@ -126,7 +127,7 @@ void showFamilyMemberFormSheet(
                   return null;
                 },
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               Row(
                 children: [
                   Expanded(
@@ -140,7 +141,7 @@ void showFamilyMemberFormSheet(
                       hintText: 'DD/MM/YYYY',
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSizes.spacingM.w),
                   Expanded(
                     child: CustomTextField(
                       controller: eduController,
@@ -153,7 +154,7 @@ void showFamilyMemberFormSheet(
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               Row(
                 children: [
                   Expanded(
@@ -166,7 +167,7 @@ void showFamilyMemberFormSheet(
                       ),
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSizes.spacingM.w),
                   Expanded(
                     child: CustomTextField(
                       controller: bloodController,
@@ -180,22 +181,19 @@ void showFamilyMemberFormSheet(
                   ),
                 ],
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               CustomTextField(
                 controller: skillController,
                 labelText: 'skill'.tr,
-                prefixIcon: Icon(
-                  Icons.bolt_rounded,
-                  color: colors.textPrimary,
-                ),
+                prefixIcon: Icon(Icons.bolt_rounded, color: colors.textPrimary),
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               Obx(
                 () => SwitchListTile(
                   title: Text(
                     'married'.tr,
                     style: GoogleFonts.outfit(
-                      fontSize: 14.sp,
+                      fontSize: AppSizes.fontSizeBodyMedium.sp,
                       color: colors.textPrimary,
                     ),
                   ),
@@ -204,10 +202,10 @@ void showFamilyMemberFormSheet(
                   contentPadding: EdgeInsets.zero,
                 ),
               ),
-              SizedBox(height: 20.h),
+              SizedBox(height: AppSizes.spacingXL.h),
               Container(
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
                   gradient: LinearGradient(colors: colors.primaryGradient),
                 ),
                 child: CustomButton(

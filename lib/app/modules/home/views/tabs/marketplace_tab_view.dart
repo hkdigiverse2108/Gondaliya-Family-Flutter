@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/theme/app_color_scheme.dart';
 import '../../../../../core/values/colors.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class MarketplaceTabView extends StatefulWidget {
   const MarketplaceTabView({super.key});
@@ -92,116 +93,127 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return Column(
-      children: [
-        // Add padding to account for the transparent AppBar and status bar
-        SizedBox(
-          height:
-              Scaffold.of(context).appBarMaxHeight ??
-              (MediaQuery.of(context).padding.top + kToolbarHeight),
-        ),
+    return SafeArea(
+      top: false,
+      child: Column(
+        children: [
+          // Add padding to account for the transparent AppBar and status bar
+          SizedBox(
+            height:
+                Scaffold.of(context).appBarMaxHeight ??
+                (MediaQuery.of(context).padding.top + kToolbarHeight),
+          ),
 
-        // Filter Chips & Button
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-          child: Row(
-            children: [
-              ...List.generate(_tabs.length, (index) {
-                final isSelected = index == _tabController.index;
-                return Padding(
-                  padding: EdgeInsets.only(right: 8.w),
-                  child: GestureDetector(
-                    onTap: () {
-                      _tabController.animateTo(index);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16.w,
-                        vertical: 8.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? AppColors.primary
-                            : Colors.transparent,
-                        borderRadius: BorderRadius.circular(20.r),
-                        border: Border.all(
+          // Filter Chips & Button
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.spacingL.w,
+              vertical: AppSizes.spacingS.h,
+            ),
+            child: Row(
+              children: [
+                ...List.generate(_tabs.length, (index) {
+                  final isSelected = index == _tabController.index;
+                  return Padding(
+                    padding: EdgeInsets.only(right: AppSizes.spacingS.w),
+                    child: GestureDetector(
+                      onTap: () {
+                        _tabController.animateTo(index);
+                      },
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: AppSizes.spacingL.w,
+                          vertical: AppSizes.spacingS.h,
+                        ),
+                        decoration: BoxDecoration(
                           color: isSelected
                               ? AppColors.primary
-                              : (colors.isDark
-                                    ? AppColors.dividerDark
-                                    : Colors.grey.shade300),
+                              : Colors.transparent,
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusXL.r,
+                          ),
+                          border: Border.all(
+                            color: isSelected
+                                ? AppColors.primary
+                                : (colors.isDark
+                                      ? AppColors.dividerDark
+                                      : Colors.grey.shade300),
+                          ),
                         ),
-                      ),
-                      child: Text(
-                        _tabs[index],
-                        style: GoogleFonts.outfit(
-                          color: isSelected
-                              ? Colors.white
-                              : (colors.isDark
-                                    ? Colors.grey.shade300
-                                    : Colors.grey.shade700),
-                          fontWeight: isSelected
-                              ? FontWeight.w600
-                              : FontWeight.normal,
-                          fontSize: 12.sp,
+                        child: Text(
+                          _tabs[index],
+                          style: GoogleFonts.outfit(
+                            color: isSelected
+                                ? Colors.white
+                                : (colors.isDark
+                                      ? Colors.grey.shade300
+                                      : Colors.grey.shade700),
+                            fontWeight: isSelected
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                            fontSize: AppSizes.fontSizeBodySmall.sp,
+                          ),
                         ),
                       ),
                     ),
+                  );
+                }),
+                SizedBox(width: AppSizes.spacingS.w),
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 14.w,
+                    vertical: AppSizes.spacingS.h,
                   ),
-                );
-              }),
-              SizedBox(width: 8.w),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8.h),
-                decoration: BoxDecoration(
-                  color: colors.isDark
-                      ? AppColors.cardDark
-                      : Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(20.r),
-                  border: Border.all(
+                  decoration: BoxDecoration(
                     color: colors.isDark
-                        ? AppColors.dividerDark
-                        : Colors.grey.shade300,
-                  ),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.filter_alt_outlined,
-                      size: 16.sp,
+                        ? AppColors.cardDark
+                        : Colors.grey.shade50,
+                    borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
+                    border: Border.all(
                       color: colors.isDark
-                          ? Colors.grey.shade300
-                          : Colors.grey.shade700,
+                          ? AppColors.dividerDark
+                          : Colors.grey.shade300,
                     ),
-                    SizedBox(width: 4.w),
-                    Text(
-                      'Filter',
-                      style: GoogleFonts.outfit(
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.filter_alt_outlined,
+                        size: AppSizes.fontSizeBodyLarge.sp,
                         color: colors.isDark
                             ? Colors.grey.shade300
                             : Colors.grey.shade700,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
                       ),
-                    ),
-                  ],
+                      SizedBox(width: AppSizes.spacingXS.w),
+                      Text(
+                        'Filter',
+                        style: GoogleFonts.outfit(
+                          color: colors.isDark
+                              ? Colors.grey.shade300
+                              : Colors.grey.shade700,
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
 
-        // Tab Views (List of Items)
-        Expanded(
-          child: TabBarView(
-            controller: _tabController,
-            children: _tabs
-                .map((tabName) => _buildListing(colors, tabName))
-                .toList(),
+          // Tab Views (List of Items)
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+              children: _tabs
+                  .map((tabName) => _buildListing(colors, tabName))
+                  .toList(),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 
@@ -219,9 +231,10 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
               .toList();
 
     return ListView.separated(
-      padding: EdgeInsets.symmetric(vertical: 8.h),
+      padding: EdgeInsets.symmetric(vertical: AppSizes.spacingS.h),
       itemCount: filteredList.length,
-      separatorBuilder: (context, index) => SizedBox(height: 12.h),
+      separatorBuilder: (context, index) =>
+          SizedBox(height: AppSizes.spacingM.h),
       itemBuilder: (context, index) {
         final item = filteredList[index];
         return _buildCard(colors, item);

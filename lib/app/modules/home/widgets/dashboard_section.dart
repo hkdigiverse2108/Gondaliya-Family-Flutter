@@ -7,6 +7,7 @@ import '../../../../core/values/colors.dart';
 import 'glass_stat_card.dart';
 import 'action_row.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 /// The full dashboard section containing the header banner, stats row,
 /// and quick-action items.
@@ -31,14 +32,14 @@ class DashboardSection extends StatelessWidget {
     final colors = context.appColors;
 
     return SingleChildScrollView(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSizes.spacingL.w),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           // Dynamic overlapping header banner
           Container(
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(24.r),
+              borderRadius: BorderRadius.circular(AppSizes.radiusXXL.r),
               gradient: LinearGradient(
                 colors: colors.primaryGradient,
                 begin: Alignment.topLeft,
@@ -52,7 +53,10 @@ class DashboardSection extends StatelessWidget {
                 ),
               ],
             ),
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.spacingXL.w,
+              vertical: AppSizes.spacingXXL.h,
+            ),
             child: Row(
               children: [
                 Expanded(
@@ -64,7 +68,7 @@ class DashboardSection extends StatelessWidget {
                         style: GoogleFonts.outfit(
                           color: AppColors.white,
                           fontWeight: FontWeight.bold,
-                          fontSize: 22.sp,
+                          fontSize: AppSizes.fontSizeTitleLarge.sp,
                           letterSpacing: -0.5,
                         ),
                       ),
@@ -74,13 +78,13 @@ class DashboardSection extends StatelessWidget {
                         style: GoogleFonts.outfit(
                           color: AppColors.white.withValues(alpha: 0.9),
                           fontStyle: FontStyle.italic,
-                          fontSize: 12.sp,
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
                         ),
                       ),
                     ],
                   ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: AppSizes.spacingM.w),
                 Image.asset(
                   'assets/images/logo.png',
                   height: 70.h,
@@ -104,7 +108,7 @@ class DashboardSection extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSizes.spacingXXL.h),
 
           // Stats row using frosted glass cards
           Row(
@@ -118,7 +122,7 @@ class DashboardSection extends StatelessWidget {
                   onTap: () => changeTab(1),
                 ),
               ),
-              SizedBox(width: 16.w),
+              SizedBox(width: AppSizes.spacingL.w),
               Expanded(
                 child: GlassStatCard(
                   title: 'total_businesses'.tr,
@@ -137,11 +141,11 @@ class DashboardSection extends StatelessWidget {
             'quick_actions'.tr,
             style: GoogleFonts.outfit(
               fontWeight: FontWeight.bold,
-              fontSize: 16.sp,
+              fontSize: AppSizes.fontSizeBodyLarge.sp,
               color: colors.textPrimary,
             ),
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSizes.spacingM.h),
 
           // Re-styled Action items
           ActionRow(
@@ -156,7 +160,7 @@ class DashboardSection extends StatelessWidget {
               });
             },
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: AppSizes.spacingM.h),
           ActionRow(
             title: 'add_business'.tr,
             subtitle: 'Register family-run businesses',

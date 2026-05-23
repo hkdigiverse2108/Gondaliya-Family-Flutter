@@ -23,15 +23,15 @@ class Feedback extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        type,
-        message,
-        status,
-        adminNote,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    userId,
+    type,
+    message,
+    status,
+    adminNote,
+    createdAt,
+    updatedAt,
+  ];
 
   factory Feedback.fromJson(Map<String, dynamic> json) {
     return Feedback(
@@ -63,4 +63,3 @@ class Feedback extends Equatable {
     };
   }
 }
-

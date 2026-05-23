@@ -9,9 +9,6 @@ class HomeBinding extends Bindings {
     Get.lazyPut<HomeRepository>(
       () => HomeRepository(Get.find<DioApiService>()),
     );
-    Get.lazyPut<HomeController>(
-      () => HomeController(),
-    );
+    Get.lazyPut<HomeController>(() => HomeController());
   }
 }
-

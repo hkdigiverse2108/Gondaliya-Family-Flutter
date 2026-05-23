@@ -9,6 +9,7 @@ import 'package:gondalia_family/app/global_widgets/neomorphic_text_field.dart';
 import '../../widgets/verified_businesses_section.dart';
 import '../../widgets/marketplace_section.dart';
 import '../../widgets/community_square_section.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class HomeTabView extends StatelessWidget {
   const HomeTabView({super.key});
@@ -17,63 +18,64 @@ class HomeTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Add padding to account for the transparent AppBar and status bar
-          SizedBox(
-            height:
-                Scaffold.of(context).appBarMaxHeight ??
-                (MediaQuery.of(context).padding.top + kToolbarHeight),
-          ),
+    return SafeArea(
+      top: false,
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Add padding to account for the transparent AppBar and status bar
+            SizedBox(
+              height:
+                  Scaffold.of(context).appBarMaxHeight ??
+                  (MediaQuery.of(context).padding.top + kToolbarHeight),
+            ),
 
-          // Total Data Counters
-          // _buildStatsCounters(colors),
-          // SizedBox(height: 16.h),
+            // Total Data Counters
+            // _buildStatsCounters(colors),
+            // SizedBox(height: AppSizes.spacingL.h),
 
-          // Search Bar
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: NeomorphicTextField(
-              hintText: 'Search in Gondaliya Family...',
-              prefixIcon: Icon(
-                PhosphorIcons.magnifyingGlass(),
-                color: colors.accent,
+            // Search Bar
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
+              child: NeomorphicTextField(
+                hintText: 'Search in Gondaliya Family...',
+                prefixIcon: Icon(
+                  PhosphorIcons.magnifyingGlass(),
+                  color: colors.accent,
+                ),
               ),
             ),
-          ),
 
-          SizedBox(height: 16.h),
+            SizedBox(height: AppSizes.spacingL.h),
 
-          _buildStoriesSection(colors),
+            _buildStoriesSection(colors),
 
-          SizedBox(height: 18.h),
+            SizedBox(height: 18.h),
 
-          _buildSectionHeader('Verified Businesses', 'See all', colors),
-          SizedBox(height: 12.h),
-          VerifiedBusinessesSection(colors: colors),
+            _buildSectionHeader('Verified Businesses', 'See all', colors),
+            SizedBox(height: AppSizes.spacingM.h),
+            VerifiedBusinessesSection(colors: colors),
 
-          SizedBox(height: 24.h),
+            SizedBox(height: AppSizes.spacingXXL.h),
 
-          _buildSectionHeader('Hot on the Marketplace', 'See all', colors),
-          SizedBox(height: 12.h),
-          MarketplaceSection(colors: colors),
+            _buildSectionHeader('Hot on the Marketplace', 'See all', colors),
+            SizedBox(height: AppSizes.spacingM.h),
+            MarketplaceSection(colors: colors),
 
-          _buildSectionHeader('The Community Square', 'See all', colors),
-          SizedBox(height: 12.h),
-          CommunitySquareSection(colors: colors),
-
-          SizedBox(height: 80.h), // Padding for bottom nav and FAB
-        ],
+            _buildSectionHeader('The Community Square', 'See all', colors),
+            SizedBox(height: AppSizes.spacingM.h),
+            CommunitySquareSection(colors: colors),
+          ],
+        ),
       ),
     );
   }
 
   // Widget _buildStatsCounters(AppColorScheme colors) {
   //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+  //     padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w, vertical: AppSizes.spacingS.h),
   //     child: Row(
   //       children: [
   //         Expanded(
@@ -84,7 +86,7 @@ class HomeTabView extends StatelessWidget {
   //             colors,
   //           ),
   //         ),
-  //         SizedBox(width: 12.w),
+  //         SizedBox(width: AppSizes.spacingM.w),
   //         Expanded(
   //           child: _buildStatCard(
   //             'Businesses',
@@ -105,10 +107,10 @@ class HomeTabView extends StatelessWidget {
   //   AppColorScheme colors,
   // ) {
   //   return Container(
-  //     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+  //     padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w, vertical: AppSizes.spacingM.h),
   //     decoration: BoxDecoration(
   //       color: colors.card,
-  //       borderRadius: BorderRadius.circular(16.r),
+  //       borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
   //       border: Border.all(
   //         color: colors.primary.withValues(alpha: 0.1),
   //         width: 1,
@@ -118,7 +120,7 @@ class HomeTabView extends StatelessWidget {
   //     child: Row(
   //       children: [
   //         Container(
-  //           padding: EdgeInsets.all(8.w),
+  //           padding: EdgeInsets.all(AppSizes.spacingS.w),
   //           decoration: BoxDecoration(
   //             color: colors.primary.withValues(alpha: 0.1),
   //             shape: BoxShape.circle,
@@ -129,10 +131,10 @@ class HomeTabView extends StatelessWidget {
   //               begin: Alignment.topLeft,
   //               end: Alignment.bottomRight,
   //             ).createShader(bounds),
-  //             child: Icon(icon, color: Colors.white, size: 24.w),
+  //             child: Icon(icon, color: Colors.white, size: AppSizes.spacingXXL.w),
   //           ),
   //         ),
-  //         SizedBox(width: 12.w),
+  //         SizedBox(width: AppSizes.spacingM.w),
   //         Expanded(
   //           child: Column(
   //             crossAxisAlignment: CrossAxisAlignment.start,
@@ -148,7 +150,7 @@ class HomeTabView extends StatelessWidget {
   //               Text(
   //                 label,
   //                 style: GoogleFonts.outfit(
-  //                   fontSize: 11.sp,
+  //                   fontSize: AppSizes.fontSizeCaption.sp,
   //                   fontWeight: FontWeight.w500,
   //                   color: colors.textSecondary,
   //                 ),
@@ -216,7 +218,7 @@ class HomeTabView extends StatelessWidget {
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
         itemCount: categories.length,
         itemBuilder: (context, index) {
           final categoryName = categories[index];
@@ -227,7 +229,7 @@ class HomeTabView extends StatelessWidget {
               // TODO: Navigate or filter by category
             },
             child: Padding(
-              padding: EdgeInsets.only(right: 20.w),
+              padding: EdgeInsets.only(right: AppSizes.spacingXL.w),
               child: SizedBox(
                 width: 70.w,
                 child: Column(
@@ -258,11 +260,11 @@ class HomeTabView extends StatelessWidget {
                         ),
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: AppSizes.spacingXS.h),
                     Text(
                       categoryName,
                       style: GoogleFonts.outfit(
-                        fontSize: 10.sp,
+                        fontSize: AppSizes.fontSizeMicro.sp,
                         fontWeight: FontWeight.w600,
                         color: colors.textPrimary,
                       ),
@@ -286,7 +288,7 @@ class HomeTabView extends StatelessWidget {
     AppColorScheme colors,
   ) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -303,7 +305,7 @@ class HomeTabView extends StatelessWidget {
             child: Text(
               actionText,
               style: GoogleFonts.outfit(
-                fontSize: 14.sp,
+                fontSize: AppSizes.fontSizeBodyMedium.sp,
                 fontWeight: FontWeight.w600,
                 color: colors.accent,
               ),

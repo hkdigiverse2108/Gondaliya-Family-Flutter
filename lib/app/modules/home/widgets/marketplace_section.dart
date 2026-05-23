@@ -7,6 +7,7 @@ import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/utils/time_utils.dart';
 import '../controllers/home_controller.dart';
 import 'marketplace_card.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class MarketplaceSection extends StatelessWidget {
   final AppColorScheme colors;
@@ -21,7 +22,10 @@ class MarketplaceSection extends StatelessWidget {
 
         if (listings.isEmpty) {
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.spacingL.w,
+              vertical: AppSizes.spacingXL.h,
+            ),
             child: Center(
               child: Text(
                 'No marketplace listings yet.',
@@ -42,7 +46,7 @@ class MarketplaceSection extends StatelessWidget {
                 "${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}";
 
             return Padding(
-              padding: EdgeInsets.only(bottom: 16.h),
+              padding: EdgeInsets.only(bottom: AppSizes.spacingL.h),
               child: MarketplaceCard(
                 colors: colors,
                 type: l.type,

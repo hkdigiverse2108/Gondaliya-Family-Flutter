@@ -7,6 +7,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/utils/time_utils.dart';
 import '../controllers/home_controller.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class CommunitySquareSection extends StatelessWidget {
   final AppColorScheme colors;
@@ -21,7 +22,10 @@ class CommunitySquareSection extends StatelessWidget {
 
         if (announcements.isEmpty) {
           return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.h),
+            padding: EdgeInsets.symmetric(
+              horizontal: AppSizes.spacingL.w,
+              vertical: AppSizes.spacingXL.h,
+            ),
             child: Center(
               child: Text(
                 'No community updates yet.',
@@ -34,16 +38,16 @@ class CommunitySquareSection extends StatelessWidget {
         return ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
           itemCount: announcements.length,
           itemBuilder: (context, index) {
             final a = announcements[index];
             return Container(
-              margin: EdgeInsets.only(bottom: 12.h),
-              padding: EdgeInsets.all(16.w),
+              margin: EdgeInsets.only(bottom: AppSizes.spacingM.h),
+              padding: EdgeInsets.all(AppSizes.spacingL.w),
               decoration: BoxDecoration(
                 color: colors.card,
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
                 boxShadow: colors.neumorphicInsetShadow(blur: 4, distance: 2),
                 border: Border.all(
                   color: colors.primary.withValues(alpha: 0.05),
@@ -54,15 +58,15 @@ class CommunitySquareSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   CircleAvatar(
-                    radius: 16.r,
+                    radius: AppSizes.radiusL.r,
                     backgroundColor: colors.accent.withValues(alpha: 0.1),
                     child: Icon(
                       PhosphorIcons.megaphone(),
                       color: colors.accent,
-                      size: 16.r,
+                      size: AppSizes.radiusL.r,
                     ),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSizes.spacingM.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,27 +74,27 @@ class CommunitySquareSection extends StatelessWidget {
                         Text(
                           a.title,
                           style: GoogleFonts.outfit(
-                            fontSize: 14.sp,
+                            fontSize: AppSizes.fontSizeBodyMedium.sp,
                             fontWeight: FontWeight.bold,
                             color: colors.textPrimary,
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: AppSizes.spacingXS.h),
                         Text(
                           a.description,
                           style: GoogleFonts.outfit(
-                            fontSize: 13.sp,
+                            fontSize: AppSizes.fontSizeInputHint.sp,
                             color: colors.textSecondary,
                             height: 1.4,
                           ),
                         ),
-                        SizedBox(height: 8.h),
+                        SizedBox(height: AppSizes.spacingS.h),
                         Row(
                           children: [
                             Text(
                               TimeUtils.getTimeAgo(a.createdAt),
                               style: GoogleFonts.outfit(
-                                fontSize: 11.sp,
+                                fontSize: AppSizes.fontSizeCaption.sp,
                                 color: colors.textSecondary,
                               ),
                             ),
@@ -98,7 +102,7 @@ class CommunitySquareSection extends StatelessWidget {
                             Text(
                               'View',
                               style: GoogleFonts.outfit(
-                                fontSize: 12.sp,
+                                fontSize: AppSizes.fontSizeBodySmall.sp,
                                 fontWeight: FontWeight.bold,
                                 color: colors.primary,
                               ),

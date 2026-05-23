@@ -13,17 +13,24 @@ class AppSizes {
   // Typography - Headings & Body
   static const double fontSizeTitleLarge = 22.0;
   static const double fontSizeTitleMedium = 16.0;
+  static const double fontSizeTitleSmall = 14.0;
   static const double fontSizeBodyLarge = 16.0;
   static const double fontSizeBodyMedium = 14.0;
+  static const double fontSizeBodySmall = 12.0;
   static const double fontSizeCaption = 11.0;
+  static const double fontSizeMicro = 10.0;
+  static const double fontSizeNano = 8.0;
 
   // Layout & Spacing
+  static const double spacingXXS = 2.0;
   static const double spacingXS = 4.0;
   static const double spacingS = 8.0;
   static const double spacingM = 12.0;
   static const double spacingL = 16.0;
   static const double spacingXL = 20.0;
   static const double spacingXXL = 24.0;
+  static const double spacing3XL = 32.0;
+  static const double spacing4XL = 40.0;
 
   // Border Radii
   static const double radiusXS = 4.0;
@@ -32,4 +39,5 @@ class AppSizes {
   static const double radiusL = 16.0;
   static const double radiusXL = 20.0;
   static const double radiusXXL = 24.0;
+  static const double radius3XL = 32.0;
 }

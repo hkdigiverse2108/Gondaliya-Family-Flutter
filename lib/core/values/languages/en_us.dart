@@ -125,7 +125,8 @@ const Map<String, String> enUs = {
   'last_name': 'Last Name',
   'marital_status': 'Marital Status',
   'welcome': 'Welcome!',
-  'welcome_desc': 'Thank you for registering. The full application features will be available soon. Here is a summary of the data you have submitted:',
+  'welcome_desc':
+      'Thank you for registering. The full application features will be available soon. Here is a summary of the data you have submitted:',
   'personal_info': 'Personal Information',
   'occupation_details': 'Occupation Details',
   'has_own_business': 'Has Own Business',

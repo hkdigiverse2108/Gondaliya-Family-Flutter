@@ -111,7 +111,6 @@ class RegisterController extends GetxController {
     });
   }
 
-
   // --- Stepper ---
   void nextStep() {
     if (currentStep.value == 0) {

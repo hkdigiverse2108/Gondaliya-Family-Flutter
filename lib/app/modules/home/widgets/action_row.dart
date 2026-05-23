@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../global_widgets/glass_card.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 /// A tappable action row with icon, title, subtitle, and a chevron indicator.
 class ActionRow extends StatelessWidget {
@@ -31,22 +32,21 @@ class ActionRow extends StatelessWidget {
       borderRadius: BorderRadius.circular(18.r),
       child: GlassCard(
         borderRadius: 18.r,
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.spacingL.w,
+          vertical: 14.h,
+        ),
         child: Row(
           children: [
             Container(
               decoration: BoxDecoration(
                 color: accentColor.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(12.r),
+                borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
               ),
-              padding: EdgeInsets.all(12.w),
-              child: Icon(
-                icon,
-                color: accentColor,
-                size: 22.w,
-              ),
+              padding: EdgeInsets.all(AppSizes.spacingM.w),
+              child: Icon(icon, color: accentColor, size: 22.w),
             ),
-            SizedBox(width: 16.w),
+            SizedBox(width: AppSizes.spacingL.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,15 +55,15 @@ class ActionRow extends StatelessWidget {
                     title,
                     style: GoogleFonts.outfit(
                       fontWeight: FontWeight.bold,
-                      fontSize: 14.sp,
+                      fontSize: AppSizes.fontSizeBodyMedium.sp,
                       color: colors.textPrimary,
                     ),
                   ),
-                  SizedBox(height: 2.h),
+                  SizedBox(height: AppSizes.spacingXXS.h),
                   Text(
                     subtitle,
                     style: GoogleFonts.outfit(
-                      fontSize: 11.sp,
+                      fontSize: AppSizes.fontSizeCaption.sp,
                       color: colors.textSecondary,
                     ),
                   ),
@@ -73,7 +73,7 @@ class ActionRow extends StatelessWidget {
             Icon(
               Icons.chevron_right_rounded,
               color: colors.textSecondary,
-              size: 20.w,
+              size: AppSizes.spacingXL.w,
             ),
           ],
         ),

@@ -29,18 +29,18 @@ class Chat extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        senderId,
-        message,
-        mediaUrl,
-        mediaType,
-        fileSize,
-        isDeleted,
-        isBlocked,
-        deletedBy,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    senderId,
+    message,
+    mediaUrl,
+    mediaType,
+    fileSize,
+    isDeleted,
+    isBlocked,
+    deletedBy,
+    createdAt,
+    updatedAt,
+  ];
 
   factory Chat.fromJson(Map<String, dynamic> json) {
     return Chat(
@@ -78,4 +78,3 @@ class Chat extends Equatable {
     };
   }
 }
-

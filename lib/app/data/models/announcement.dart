@@ -25,16 +25,16 @@ class Announcement extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        description,
-        imageUrl,
-        createdBy,
-        isActive,
-        isDeleted,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    title,
+    description,
+    imageUrl,
+    createdBy,
+    isActive,
+    isDeleted,
+    createdAt,
+    updatedAt,
+  ];
 
   factory Announcement.fromJson(Map<String, dynamic> json) {
     return Announcement(
@@ -68,4 +68,3 @@ class Announcement extends Equatable {
     };
   }
 }
-

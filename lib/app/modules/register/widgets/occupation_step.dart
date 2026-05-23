@@ -11,6 +11,7 @@ import '../../../data/models/enums.dart';
 import '../../../global_widgets/neomorphic_dropdown_field.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_card.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
@@ -47,20 +48,20 @@ class OccupationStep extends StatelessWidget {
               color: colors.textPrimary,
             ),
           ),
-          SizedBox(height: 8.h),
+          SizedBox(height: AppSizes.spacingS.h),
           Text(
             'choose_occupation'.tr,
             style: GoogleFonts.outfit(
-              fontSize: 14.sp,
+              fontSize: AppSizes.fontSizeBodyMedium.sp,
               color: colors.textSecondary,
             ),
           ),
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSizes.spacingXXL.h),
 
           // Custom Segmented Control for Selection
           NeomorphicCard(
-            borderRadius: 16.r,
-            padding: EdgeInsets.all(4.w),
+            borderRadius: AppSizes.radiusL.r,
+            padding: EdgeInsets.all(AppSizes.spacingXS.w),
             child: Row(
               children: [
                 _buildOccupationTab(
@@ -88,7 +89,7 @@ class OccupationStep extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 24.h),
+          SizedBox(height: AppSizes.spacingXXL.h),
 
           // Conditional Forms
           Obx(() {
@@ -118,10 +119,10 @@ class OccupationStep extends StatelessWidget {
           onTap: () => controller.occupationType.value = value,
           child: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            padding: EdgeInsets.symmetric(vertical: 12.h),
+            padding: EdgeInsets.symmetric(vertical: AppSizes.spacingM.h),
             decoration: BoxDecoration(
               color: isSelected ? colors.primary : Colors.transparent,
-              borderRadius: BorderRadius.circular(12.r),
+              borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
               boxShadow: isSelected
                   ? [
                       BoxShadow(
@@ -139,7 +140,7 @@ class OccupationStep extends StatelessWidget {
                   color: isSelected ? colors.white : colors.textSecondary,
                   size: 24.sp,
                 ),
-                SizedBox(height: 4.h),
+                SizedBox(height: AppSizes.spacingXS.h),
                 Text(
                   label,
                   style: GoogleFonts.outfit(
@@ -147,7 +148,7 @@ class OccupationStep extends StatelessWidget {
                     fontWeight: isSelected
                         ? FontWeight.bold
                         : FontWeight.normal,
-                    fontSize: 12.sp,
+                    fontSize: AppSizes.fontSizeBodySmall.sp,
                   ),
                 ),
               ],
@@ -170,7 +171,7 @@ class OccupationStep extends StatelessWidget {
           ),
           validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         Obx(() {
           final categories = AppEnums.jobCategories.keys.toList();
           final subCategories = controller.businessCategory.value.isEmpty
@@ -200,7 +201,7 @@ class OccupationStep extends StatelessWidget {
                   }
                 },
               ),
-              SizedBox(height: 12.h),
+              SizedBox(height: AppSizes.spacingM.h),
               NeomorphicDropdownField<String>(
                 value: controller.businessSubCategory.value.isEmpty
                     ? null
@@ -218,7 +219,7 @@ class OccupationStep extends StatelessWidget {
                 },
               ),
               if (controller.businessSubCategory.value == 'Other Jobs') ...[
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: controller.businessSubCategoryOtherController,
                   labelText: 'other_category'.tr,
@@ -233,13 +234,13 @@ class OccupationStep extends StatelessWidget {
             ],
           );
         }),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         NeomorphicTextField(
           controller: controller.businessOwnerNameController,
           labelText: 'owner_name'.tr,
           prefixIcon: Icon(Icons.person_outline, color: colors.textPrimary),
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         NeomorphicTextField(
           controller: controller.businessDescriptionController,
           labelText: 'description'.tr,
@@ -249,7 +250,7 @@ class OccupationStep extends StatelessWidget {
           ),
           maxLines: 3,
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         NeomorphicTextField(
           controller: controller.businessAddressController,
           labelText: 'company_address'.tr,
@@ -259,7 +260,7 @@ class OccupationStep extends StatelessWidget {
           ),
           validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         Row(
           children: [
             Expanded(
@@ -272,7 +273,7 @@ class OccupationStep extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSizes.spacingM.w),
             Expanded(
               child: NeomorphicTextField(
                 controller: controller.businessStateController,
@@ -282,7 +283,7 @@ class OccupationStep extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         Row(
           children: [
             Expanded(
@@ -300,7 +301,7 @@ class OccupationStep extends StatelessWidget {
                 keyboardType: TextInputType.number,
               ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSizes.spacingM.w),
             Expanded(
               child: NeomorphicTextField(
                 controller: controller.businessGoogleMapLinkController,
@@ -310,7 +311,7 @@ class OccupationStep extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         Row(
           children: [
             Expanded(
@@ -326,7 +327,7 @@ class OccupationStep extends StatelessWidget {
                     (val == null || val.isEmpty) ? 'Required' : null,
               ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSizes.spacingM.w),
             Expanded(
               child: NeomorphicTextField(
                 controller: controller.businessMobile2Controller,
@@ -340,7 +341,7 @@ class OccupationStep extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         Row(
           children: [
             Expanded(
@@ -354,7 +355,7 @@ class OccupationStep extends StatelessWidget {
                 keyboardType: TextInputType.emailAddress,
               ),
             ),
-            SizedBox(width: 12.w),
+            SizedBox(width: AppSizes.spacingM.w),
             Expanded(
               child: NeomorphicTextField(
                 controller: controller.businessWebsiteController,
@@ -364,7 +365,7 @@ class OccupationStep extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         NeomorphicTextField(
           controller: controller.businessPortfolioLinkController,
           labelText: 'portfolio_website'.tr,
@@ -386,7 +387,7 @@ class OccupationStep extends StatelessWidget {
           prefixIcon: Icon(Icons.business_outlined, color: colors.textPrimary),
           validator: (val) => (val == null || val.isEmpty) ? 'Required' : null,
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         Obx(
           () => NeomorphicDropdownField<String>(
             value: controller.jobCategory.value.isEmpty
@@ -408,7 +409,7 @@ class OccupationStep extends StatelessWidget {
             },
           ),
         ),
-        SizedBox(height: 16.h),
+        SizedBox(height: AppSizes.spacingL.h),
         Obx(() {
           if (controller.jobCategory.value.isEmpty) {
             return const SizedBox.shrink();
@@ -430,7 +431,7 @@ class OccupationStep extends StatelessWidget {
                   if (val != null) controller.jobRole.value = val;
                 },
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: AppSizes.spacingL.h),
               if (controller.jobRole.value == 'Other Jobs') ...[
                 NeomorphicTextField(
                   controller: controller.jobRoleOtherController,
@@ -442,7 +443,7 @@ class OccupationStep extends StatelessWidget {
                   validator: (val) =>
                       (val == null || val.isEmpty) ? 'Required' : null,
                 ),
-                SizedBox(height: 16.h),
+                SizedBox(height: AppSizes.spacingL.h),
               ],
             ],
           );

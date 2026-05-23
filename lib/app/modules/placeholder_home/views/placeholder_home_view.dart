@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import '../controllers/placeholder_home_controller.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
 
 class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
   const PlaceholderHomeView({super.key});
@@ -52,7 +53,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                 icon: Icon(Icons.logout_rounded, color: colors.textPrimary),
                 onPressed: controller.logout,
               ),
-              SizedBox(width: 8.w),
+              SizedBox(width: AppSizes.spacingS.w),
             ],
           ),
           body: Stack(
@@ -103,15 +104,17 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                         child: CircularProgressIndicator(color: colors.primary),
                       )
                     : SingleChildScrollView(
-                        padding: EdgeInsets.all(20.w),
+                        padding: EdgeInsets.all(AppSizes.spacingXL.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(
-                              padding: EdgeInsets.all(20.w),
+                              padding: EdgeInsets.all(AppSizes.spacingXL.w),
                               decoration: BoxDecoration(
                                 color: colors.card,
-                                borderRadius: BorderRadius.circular(16.r),
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radiusL.r,
+                                ),
                                 border: Border.all(
                                   color: colors.primary.withValues(alpha: 0.3),
                                   width: 1,
@@ -137,11 +140,11 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                                       color: colors.primary,
                                     ),
                                   ),
-                                  SizedBox(height: 8.h),
+                                  SizedBox(height: AppSizes.spacingS.h),
                                   Text(
                                     'welcome_desc'.tr,
                                     style: GoogleFonts.outfit(
-                                      fontSize: 14.sp,
+                                      fontSize: AppSizes.fontSizeBodyMedium.sp,
                                       color: colors.textSecondary,
                                       height: 1.5,
                                     ),
@@ -149,7 +152,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                                 ],
                               ),
                             ),
-                            SizedBox(height: 24.h),
+                            SizedBox(height: AppSizes.spacingXXL.h),
                             _buildSectionHeader(
                               'personal_info'.tr,
                               Icons.person,
@@ -190,7 +193,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 20.h),
+                            SizedBox(height: AppSizes.spacingXL.h),
                             if (user.workDetails != null) ...[
                               _buildSectionHeader(
                                 'occupation_details'.tr,
@@ -241,7 +244,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                                   ],
                                 ],
                               ),
-                              SizedBox(height: 20.h),
+                              SizedBox(height: AppSizes.spacingXL.h),
                             ],
                             _buildSectionHeader(
                               '${'family_members'.tr} (${user.familyMembers.length})',
@@ -250,7 +253,9 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                             ),
                             if (user.familyMembers.isEmpty)
                               Padding(
-                                padding: EdgeInsets.symmetric(vertical: 8.h),
+                                padding: EdgeInsets.symmetric(
+                                  vertical: AppSizes.spacingS.h,
+                                ),
                                 child: Text(
                                   'no_members_yet'.tr,
                                   style: GoogleFonts.outfit(
@@ -264,7 +269,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                                 physics: const NeverScrollableScrollPhysics(),
                                 itemCount: user.familyMembers.length,
                                 separatorBuilder: (context, index) =>
-                                    SizedBox(height: 12.h),
+                                    SizedBox(height: AppSizes.spacingM.h),
                                 itemBuilder: (context, index) {
                                   final member = user.familyMembers[index];
                                   return _buildInfoCard(
@@ -293,7 +298,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
                                   );
                                 },
                               ),
-                            SizedBox(height: 40.h),
+                            SizedBox(height: AppSizes.spacing4XL.h),
                           ],
                         ),
                       ),
@@ -311,11 +316,14 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
     AppColorScheme colors,
   ) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 12.h, left: 4.w),
+      padding: EdgeInsets.only(
+        bottom: AppSizes.spacingM.h,
+        left: AppSizes.spacingXS.w,
+      ),
       child: Row(
         children: [
           Icon(icon, color: colors.primary, size: 20.sp),
-          SizedBox(width: 8.w),
+          SizedBox(width: AppSizes.spacingS.w),
           Text(
             title,
             style: GoogleFonts.outfit(
@@ -335,10 +343,10 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
   }) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.all(AppSizes.spacingL.w),
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
         border: Border.all(color: colors.divider),
       ),
       child: Column(
@@ -350,7 +358,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
 
   Widget _buildDataRow(String label, String value, AppColorScheme colors) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 8.h),
+      padding: EdgeInsets.only(bottom: AppSizes.spacingS.h),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -359,7 +367,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
             child: Text(
               label,
               style: GoogleFonts.outfit(
-                fontSize: 14.sp,
+                fontSize: AppSizes.fontSizeBodyMedium.sp,
                 color: colors.textSecondary,
                 fontWeight: FontWeight.w500,
               ),
@@ -371,7 +379,7 @@ class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
             child: Text(
               value.isNotEmpty ? value : '-',
               style: GoogleFonts.outfit(
-                fontSize: 14.sp,
+                fontSize: AppSizes.fontSizeBodyMedium.sp,
                 color: colors.textPrimary,
                 fontWeight: FontWeight.w500,
               ),

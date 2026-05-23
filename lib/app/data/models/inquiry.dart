@@ -27,17 +27,17 @@ class Inquiry extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        senderId,
-        targetType,
-        targetId,
-        message,
-        reply,
-        repliedAt,
-        isRead,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    senderId,
+    targetType,
+    targetId,
+    message,
+    reply,
+    repliedAt,
+    isRead,
+    createdAt,
+    updatedAt,
+  ];
 
   factory Inquiry.fromJson(Map<String, dynamic> json) {
     return Inquiry(
@@ -75,4 +75,3 @@ class Inquiry extends Equatable {
     };
   }
 }
-
