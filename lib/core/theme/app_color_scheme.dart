@@ -203,7 +203,7 @@ class AppColorScheme {
   // ── Neumorphic Shadow Helpers ───────────────────────────────────────────
 
   /// Outer neumorphic shadow — auto-resolves light/dark variant.
-  List<BoxShadow> neumorphicShadow({double blur = 15, double distance = 5}) {
+  List<BoxShadow> neumorphicShadow({double blur = 6, double distance = 2}) {
     return isDark
         ? AppColors.neumorphicShadowDark(blur: blur, distance: distance)
         : AppColors.neumorphicShadowLight(blur: blur, distance: distance);
@@ -211,8 +211,8 @@ class AppColorScheme {
 
   /// Inset neumorphic shadow — auto-resolves light/dark variant.
   List<BoxShadow> neumorphicInsetShadow({
-    double blur = 12,
-    double distance = 4,
+    double blur = 4,
+    double distance = 1,
   }) {
     return isDark
         ? AppColors.neumorphicInsetShadowDark(blur: blur, distance: distance)
@@ -221,8 +221,8 @@ class AppColorScheme {
 
   /// Press-state neumorphic shadow — auto-resolves light/dark variant.
   List<BoxShadow> neumorphicPressShadow({
-    double blur = 8,
-    double distance = 2,
+    double blur = 2,
+    double distance = 1,
   }) {
     return isDark
         ? AppColors.neumorphicPressShadowDark(blur: blur, distance: distance)

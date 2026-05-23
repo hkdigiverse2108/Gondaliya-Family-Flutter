@@ -52,8 +52,8 @@ class AppColors {
 
   // Neumorphic shadow utilities
   static List<BoxShadow> neumorphicShadowLight({
-    double blur = 15,
-    double distance = 5,
+    double blur = 6,
+    double distance = 2,
   }) {
     return [
       // Soft shadow (bottom-right)
@@ -72,8 +72,8 @@ class AppColors {
   }
 
   static List<BoxShadow> neumorphicShadowDark({
-    double blur = 15,
-    double distance = 5,
+    double blur = 6,
+    double distance = 2,
   }) {
     return [
       // Dark shadow (bottom-right)
@@ -92,8 +92,8 @@ class AppColors {
   }
 
   static List<BoxShadow> neumorphicInsetShadowLight({
-    double blur = 12,
-    double distance = 4,
+    double blur = 4,
+    double distance = 1,
   }) {
     return [
       // Inner shadow effect (top-left)
@@ -114,8 +114,8 @@ class AppColors {
   }
 
   static List<BoxShadow> neumorphicInsetShadowDark({
-    double blur = 12,
-    double distance = 4,
+    double blur = 4,
+    double distance = 1,
   }) {
     return [
       // Inner highlight (top-left) - subtle for black theme
@@ -136,8 +136,8 @@ class AppColors {
   }
 
   static List<BoxShadow> neumorphicPressShadowLight({
-    double blur = 8,
-    double distance = 2,
+    double blur = 2,
+    double distance = 1,
   }) {
     return [
       // Pressed state - reduced shadow
@@ -155,8 +155,8 @@ class AppColors {
   }
 
   static List<BoxShadow> neumorphicPressShadowDark({
-    double blur = 8,
-    double distance = 2,
+    double blur = 2,
+    double distance = 1,
   }) {
     return [
       BoxShadow(

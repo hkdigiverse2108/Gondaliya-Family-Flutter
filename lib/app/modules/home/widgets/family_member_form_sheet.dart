@@ -7,13 +7,13 @@ import '../../../../core/values/colors.dart';
 import '../../../global_widgets/custom_text_field.dart';
 import '../../../global_widgets/custom_button.dart';
 import '../../../data/models/family_member.dart';
-import '../controllers/home_controller.dart';
+import '../controllers/profile_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 
 void showFamilyMemberFormSheet(
   BuildContext context, {
-  required HomeController controller,
+  required ProfileController controller,
   FamilyMember? member,
 }) {
   final formKey = GlobalKey<FormState>();

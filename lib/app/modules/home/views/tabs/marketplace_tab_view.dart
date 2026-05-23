@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gondalia_family/app/modules/home/controllers/marketplace_controller.dart';
 import 'package:gondalia_family/app/modules/home/widgets/marketplace_card.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/theme/app_color_scheme.dart';
 import '../../../../../core/values/colors.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import 'package:gondalia_family/core/utils/time_utils.dart';
+import 'package:get/get.dart';
+import '../../../../data/models/listing.dart';
 
 class MarketplaceTabView extends StatefulWidget {
   const MarketplaceTabView({super.key});
@@ -19,60 +23,6 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
   late TabController _tabController;
 
   final List<String> _tabs = ['All', 'Rent', 'Rent / Sale', 'Sale'];
-
-  final List<Map<String, dynamic>> _mockListings = [
-    {
-      'type': 'RENT',
-      'status': 'ACTIVE',
-      'title': '2 BHK Fully Furnished Flat',
-      'location': 'Surat • 395007',
-      'date': 'From 25 May 2025',
-      'price': '₹ 18,000',
-      'priceUnit': 'Month',
-      'contact': '98765 43210',
-      'name': 'Gondaliya Family',
-      'image': 'assets/images/flat1.jpg',
-      'isSale': false,
-    },
-    {
-      'type': 'RENT',
-      'status': 'ACTIVE',
-      'title': '1 BHK Semi Furnished Flat',
-      'location': 'Surat • 394210',
-      'date': 'From 10 Jun 2025',
-      'price': '₹ 12,000',
-      'priceUnit': 'Month',
-      'contact': '91234 56789',
-      'name': 'Patel Meet',
-      'image': 'assets/images/flat2.jpg',
-      'isSale': false,
-    },
-    {
-      'type': 'RENT / SALE',
-      'status': 'ACTIVE',
-      'title': 'Shop for Rent / Sale',
-      'location': 'Surat • 395010',
-      'date': 'From 01 Jun 2025',
-      'price': '₹ 25,000',
-      'priceUnit': 'Month',
-      'contact': '98980 12345',
-      'name': 'Vora Hardik',
-      'image': 'assets/images/shop.jpg',
-      'isSale': false,
-    },
-    {
-      'type': 'SALE',
-      'status': 'ACTIVE',
-      'title': 'Residential Plot for Sale',
-      'location': 'Surat • 395006',
-      'area': '1200 Sq.ft',
-      'price': '₹ 26,00,000',
-      'contact': '90123 45678',
-      'name': 'Shah Dhaval',
-      'image': 'assets/images/plot.jpg',
-      'isSale': true,
-    },
-  ];
 
   @override
   void initState() {
@@ -92,18 +42,11 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final controller = Get.find<MarketplaceController>();
 
     return SafeArea(
-      top: false,
       child: Column(
         children: [
-          // Add padding to account for the transparent AppBar and status bar
-          SizedBox(
-            height:
-                Scaffold.of(context).appBarMaxHeight ??
-                (MediaQuery.of(context).padding.top + kToolbarHeight),
-          ),
-
           // Filter Chips & Button
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -203,12 +146,11 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
             ),
           ),
 
-          // Tab Views (List of Items)
           Expanded(
             child: TabBarView(
               controller: _tabController,
               children: _tabs
-                  .map((tabName) => _buildListing(colors, tabName))
+                  .map((tabName) => _buildListing(colors, tabName, controller))
                   .toList(),
             ),
           ),
@@ -217,46 +159,64 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
     );
   }
 
-  Widget _buildListing(AppColorScheme colors, String category) {
-    // Filter list by category if not 'All'
-    final filteredList = category == 'All'
-        ? _mockListings
-        : _mockListings
-              .where(
-                (item) =>
-                    item['type'] == category.toUpperCase() ||
-                    (category == 'Rent / Sale' &&
-                        item['type'] == 'RENT / SALE'),
-              )
-              .toList();
+  Widget _buildListing(
+    AppColorScheme colors,
+    String category,
+    MarketplaceController controller,
+  ) {
+    return Obx(() {
+      final listings = controller.listings;
+      final filteredList = category == 'All'
+          ? listings
+          : listings
+                .where(
+                  (item) =>
+                      item.type.toUpperCase() == category.toUpperCase() ||
+                      (category == 'Rent / Sale' &&
+                          item.type.toUpperCase() == 'RENT / SALE'),
+                )
+                .toList();
 
-    return ListView.separated(
-      padding: EdgeInsets.symmetric(vertical: AppSizes.spacingS.h),
-      itemCount: filteredList.length,
-      separatorBuilder: (context, index) =>
-          SizedBox(height: AppSizes.spacingM.h),
-      itemBuilder: (context, index) {
-        final item = filteredList[index];
-        return _buildCard(colors, item);
-      },
-    );
+      if (filteredList.isEmpty) {
+        return Center(
+          child: Text(
+            'No marketplace listings yet.',
+            style: GoogleFonts.outfit(color: colors.textSecondary),
+          ),
+        );
+      }
+
+      return ListView.separated(
+        padding: EdgeInsets.symmetric(vertical: AppSizes.spacingS.h),
+        itemCount: filteredList.length,
+        separatorBuilder: (context, index) =>
+            SizedBox(height: AppSizes.spacingM.h),
+        itemBuilder: (context, index) {
+          final l = filteredList[index];
+          return _buildCard(colors, l);
+        },
+      );
+    });
   }
 
-  Widget _buildCard(AppColorScheme colors, Map<String, dynamic> item) {
+  Widget _buildCard(AppColorScheme colors, Listing l) {
+    final availableDateStr =
+        "${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}";
+
     return MarketplaceCard(
       colors: colors,
-      type: item['type'],
-      status: item['status'],
-      title: item['title'],
-      location: item['location'],
-      area: item['area'],
-      date: item['date'],
-      price: item['price'],
-      priceUnit: item['priceUnit'] ?? '',
-      contact: item['contact'],
-      name: item['name'],
-      isSale: item['isSale'] ?? false,
-      imageUrl: item['image'],
+      type: l.type,
+      status: l.status,
+      title: l.title,
+      location: '${l.location.city} • ${l.location.pincode}',
+      area: l.description,
+      date: 'From $availableDateStr',
+      price: '₹ ${l.price}',
+      priceUnit: l.priceUnit == 'FIXED' ? 'Total' : l.priceUnit,
+      contact: l.contactPhone,
+      name: l.postedBy,
+      isSale: l.type.toUpperCase() == 'SALE',
+      imageUrl: l.photos?.isNotEmpty == true ? l.photos!.first : null,
     );
   }
 }

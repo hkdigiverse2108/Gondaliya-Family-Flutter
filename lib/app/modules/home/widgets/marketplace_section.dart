@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/utils/time_utils.dart';
-import '../controllers/home_controller.dart';
+import '../controllers/marketplace_controller.dart';
 import 'marketplace_card.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 
@@ -16,9 +16,9 @@ class MarketplaceSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<HomeController>(
+    return GetX<MarketplaceController>(
       builder: (controller) {
-        final listings = controller.listings;
+        final listings = controller.listings.take(3).toList();
 
         if (listings.isEmpty) {
           return Padding(

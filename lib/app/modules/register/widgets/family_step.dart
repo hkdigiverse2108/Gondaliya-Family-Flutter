@@ -8,7 +8,6 @@ import '../../../global_widgets/generation_avatar.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
 
 class FamilyStep extends StatelessWidget {
   final RegisterController controller;

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../../../data/models/enums.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
+import 'package:gondalia_family/app/routes/app_pages.dart';
+import 'package:get/get.dart';
 import 'package:gondalia_family/app/global_widgets/neomorphic_text_field.dart';
 import '../../widgets/verified_businesses_section.dart';
 import '../../widgets/marketplace_section.dart';
-import '../../widgets/community_square_section.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 
 class HomeTabView extends StatelessWidget {
@@ -18,56 +19,75 @@ class HomeTabView extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.appColors;
 
-    return SafeArea(
-      top: false,
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Add padding to account for the transparent AppBar and status bar
-            SizedBox(
-              height:
-                  Scaffold.of(context).appBarMaxHeight ??
-                  (MediaQuery.of(context).padding.top + kToolbarHeight),
-            ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      extendBodyBehindAppBar: true,
+      appBar: GlassAppBar(
+        title: Text(
+          'app_name'.tr,
+          style: GoogleFonts.outfit(
+            fontWeight: FontWeight.bold,
+            fontSize: 18.sp,
+            color: colors.textPrimary,
+          ),
+        ),
+        centerTitle: false,
+        actions: [
+          IconButton(
+            tooltip: 'announcements'.tr,
+            icon: Icon(PhosphorIcons.megaphone(), color: colors.textPrimary),
+            onPressed: () {
+              Get.toNamed(Routes.announcements);
+            },
+          ),
+          IconButton(
+            tooltip: 'notifications'.tr,
+            icon: Icon(PhosphorIcons.bell(), color: colors.textPrimary),
+            onPressed: () {
+              // TODO: Navigate to notifications
+            },
+          ),
+          SizedBox(width: AppSizes.spacingS.w),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Total Data Counters
+              // _buildStatsCounters(colors),
+              SizedBox(height: AppSizes.spacingL.h),
 
-            // Total Data Counters
-            // _buildStatsCounters(colors),
-            // SizedBox(height: AppSizes.spacingL.h),
-
-            // Search Bar
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
-              child: NeomorphicTextField(
-                hintText: 'Search in Gondaliya Family...',
-                prefixIcon: Icon(
-                  PhosphorIcons.magnifyingGlass(),
-                  color: colors.accent,
+              // Search Bar
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
+                child: NeomorphicTextField(
+                  hintText: 'Search in Gondaliya Family...',
+                  prefixIcon: Icon(
+                    PhosphorIcons.magnifyingGlass(),
+                    color: colors.accent,
+                  ),
                 ),
               ),
-            ),
 
-            SizedBox(height: AppSizes.spacingL.h),
+              SizedBox(height: AppSizes.spacingL.h),
 
-            _buildStoriesSection(colors),
+              _buildStoriesSection(colors),
 
-            SizedBox(height: 18.h),
+              SizedBox(height: 18.h),
 
-            _buildSectionHeader('Verified Businesses', 'See all', colors),
-            SizedBox(height: AppSizes.spacingM.h),
-            VerifiedBusinessesSection(colors: colors),
+              _buildSectionHeader('Verified Businesses', 'See all', colors),
+              SizedBox(height: AppSizes.spacingM.h),
+              VerifiedBusinessesSection(colors: colors),
 
-            SizedBox(height: AppSizes.spacingXXL.h),
+              SizedBox(height: AppSizes.spacingXXL.h),
 
-            _buildSectionHeader('Hot on the Marketplace', 'See all', colors),
-            SizedBox(height: AppSizes.spacingM.h),
-            MarketplaceSection(colors: colors),
-
-            _buildSectionHeader('The Community Square', 'See all', colors),
-            SizedBox(height: AppSizes.spacingM.h),
-            CommunitySquareSection(colors: colors),
-          ],
+              _buildSectionHeader('Hot on the Marketplace', 'See all', colors),
+              SizedBox(height: AppSizes.spacingM.h),
+              MarketplaceSection(colors: colors),
+            ],
+          ),
         ),
       ),
     );

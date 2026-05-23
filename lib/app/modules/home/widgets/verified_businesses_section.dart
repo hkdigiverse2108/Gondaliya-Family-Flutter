@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import '../controllers/home_controller.dart';
+import '../controllers/profile_controller.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 
 class VerifiedBusinessesSection extends StatelessWidget {
@@ -15,7 +15,7 @@ class VerifiedBusinessesSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<HomeController>(
+    return GetX<ProfileController>(
       builder: (controller) {
         final businesses = controller.businesses;
 

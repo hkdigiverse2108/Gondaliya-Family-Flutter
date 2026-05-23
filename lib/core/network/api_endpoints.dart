@@ -23,7 +23,7 @@ class ApiEndpoints {
   static const String business = '/businesses/{id}';
 
   // Announcements
-  static const String announcements = '/announcements';
+  static const String getAnnouncements = '/announcements/all';
 
   // Chat
   static const String chatRooms = '/chat/rooms';
@@ -31,10 +31,13 @@ class ApiEndpoints {
 
   // Listings
   static const String listings = '/listings';
+  static const String listingsAll = '/listings/all';
   static const String listing = '/listings/{id}';
 
   // Parivar
   static const String parivar = '/parivar';
+  static const String parivarVillages = '/parivar/villages';
+  static const String parivarAll = '/parivar/all';
 
   // Feedback
   static const String feedback = '/feedback';

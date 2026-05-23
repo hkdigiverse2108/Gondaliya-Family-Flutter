@@ -6,7 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/utils/time_utils.dart';
-import '../controllers/home_controller.dart';
+import '../../announcements/controllers/announcements_controller.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 
 class CommunitySquareSection extends StatelessWidget {
@@ -16,7 +16,7 @@ class CommunitySquareSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetX<HomeController>(
+    return GetX<AnnouncementsController>(
       builder: (controller) {
         final announcements = controller.announcements;
 

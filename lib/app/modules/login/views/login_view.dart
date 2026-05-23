@@ -10,7 +10,6 @@ import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_button.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/login_controller.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
 
 class LoginView extends GetView<LoginController> {
   const LoginView({super.key});

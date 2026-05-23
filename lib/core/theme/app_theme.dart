@@ -76,8 +76,9 @@ class AppTheme {
           return Colors.grey.shade400;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected))
+          if (states.contains(WidgetState.selected)) {
             return AppColors.secondary.withValues(alpha: 0.4);
+          }
           return Colors.grey.shade300;
         }),
       ),
@@ -244,13 +245,15 @@ class AppTheme {
       ),
       switchTheme: SwitchThemeData(
         thumbColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected))
+          if (states.contains(WidgetState.selected)) {
             return AppColors.secondaryLight;
+          }
           return Colors.grey.shade600;
         }),
         trackColor: WidgetStateProperty.resolveWith((states) {
-          if (states.contains(WidgetState.selected))
+          if (states.contains(WidgetState.selected)) {
             return AppColors.secondary.withValues(alpha: 0.5);
+          }
           return AppColors.dividerDark;
         }),
       ),
