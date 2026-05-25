@@ -66,6 +66,7 @@
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
+		<!-- Unused Permissions
 		<key>NSCameraUsageDescription</key>
 		<string>We need access to the camera to allow you to take profile pictures and item photos.</string>
 		<key>NSPhotoLibraryUsageDescription</key>
@@ -74,6 +75,7 @@
 		<string>We need your location to show relevant marketplace items and community members near you.</string>
 		<key>NSLocationAlwaysUsageDescription</key>
 		<string>We need your location to show relevant marketplace items and community members near you.</string>
+		-->
 		<key>LSApplicationQueriesSchemes</key>
 		<array>
 			<string>tel</string>

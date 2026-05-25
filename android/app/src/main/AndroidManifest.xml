@@ -2,16 +2,19 @@
     <!-- Internet permission -->
     <uses-permission android:name="android.permission.INTERNET" />
     
-    <!-- Camera and Storage permissions (for Profile/Marketplace photos) -->
+    <!-- Camera and Storage permissions (for Profile/Marketplace photos) (Unused)
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- For Android 13+ Media Images -->
+    -->
+    <!-- For Android 13+ Media Images (Unused)
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    -->
     
-    <!-- Location permissions -->
+    <!-- Location permissions (Unused)
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    -->
 
     <application
         android:label="Gondaliya Family"
