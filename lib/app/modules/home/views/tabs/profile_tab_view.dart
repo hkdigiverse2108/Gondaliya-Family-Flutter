@@ -18,7 +18,6 @@ class ProfileTabView extends StatelessWidget {
     final controller = Get.find<HomeController>();
 
     return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
           // Header / Avatar Section

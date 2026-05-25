@@ -118,7 +118,6 @@ class HomeView extends StatelessWidget {
   }
 }
 
-
 class _FloatingNavBar extends StatelessWidget {
   final AppColorScheme colors;
   final bool isDark;
