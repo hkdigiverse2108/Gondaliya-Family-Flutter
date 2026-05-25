@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'app/data/services/socket_service.dart';
 import 'app/data/services/storage_service.dart';
 import 'app/data/services/translation_service.dart';
 import 'app/routes/app_pages.dart';
@@ -13,6 +14,11 @@ void main() async {
   final storageService = StorageService();
   await storageService.init();
   Get.put<StorageService>(storageService, permanent: true);
+
+  // Initialize SocketService
+  final socketService = SocketService();
+  await socketService.init();
+  Get.put<SocketService>(socketService, permanent: true);
 
   runApp(const MyApp());
 }

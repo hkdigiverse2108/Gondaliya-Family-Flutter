@@ -7,6 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../../core/values/colors.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import 'package:gondalia_family/app/data/models/parivar_directory.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ParivarTabView extends StatelessWidget {
   const ParivarTabView({super.key});
@@ -150,104 +152,9 @@ class ParivarTabView extends StatelessWidget {
                 separatorBuilder: (context, index) =>
                     SizedBox(height: AppSizes.spacingM.h),
                 itemBuilder: (context, index) {
-                  final member = members[index].head;
-                  return Container(
-                    padding: EdgeInsets.all(AppSizes.spacingL.w),
-                    decoration: BoxDecoration(
-                      color: colors.card,
-                      borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.05),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 28.r,
-                          backgroundColor: AppColors.primaryLight.withValues(
-                            alpha: 0.2,
-                          ),
-                          child: Icon(
-                            Icons.person_rounded,
-                            color: AppColors.primary,
-                            size: AppSizes.radius3XL.r,
-                          ),
-                        ),
-                        SizedBox(width: AppSizes.spacingL.w),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                '${member.firstName} ${member.lastName}',
-                                style: GoogleFonts.outfit(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: AppSizes.fontSizeBodyLarge.sp,
-                                  color: colors.textPrimary,
-                                ),
-                              ),
-                              if (member.workDetailsSummary != null &&
-                                  member.workDetailsSummary!.isNotEmpty) ...[
-                                SizedBox(height: AppSizes.spacingXS.h),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.work_outline,
-                                      size: AppSizes.fontSizeBodyMedium.sp,
-                                      color: Colors.grey,
-                                    ),
-                                    SizedBox(width: AppSizes.spacingXS.w),
-                                    Expanded(
-                                      child: Text(
-                                        member.workDetailsSummary!,
-                                        style: GoogleFonts.outfit(
-                                          fontSize:
-                                              AppSizes.fontSizeBodySmall.sp,
-                                          color: Colors.grey,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                              SizedBox(height: AppSizes.spacingXXS.h),
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on_outlined,
-                                    size: AppSizes.fontSizeBodyMedium.sp,
-                                    color: Colors.grey,
-                                  ),
-                                  SizedBox(width: AppSizes.spacingXS.w),
-                                  Text(
-                                    member.village,
-                                    style: GoogleFonts.outfit(
-                                      fontSize: AppSizes.fontSizeBodySmall.sp,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.phone_rounded,
-                            color: Colors.green,
-                          ),
-                          onPressed: () {
-                            // Make call using member.phoneNumber
-                          },
-                        ),
-                      ],
-                    ),
+                  return PremiumParivarCard(
+                    parivar: members[index],
+                    colors: colors,
                   );
                 },
               );
@@ -324,5 +231,383 @@ class ParivarTabView extends StatelessWidget {
         });
       },
     );
+  }
+}
+
+class PremiumParivarCard extends StatefulWidget {
+  final ParivarDirectory parivar;
+  final AppColorScheme colors;
+
+  const PremiumParivarCard({
+    super.key,
+    required this.parivar,
+    required this.colors,
+  });
+
+  @override
+  State<PremiumParivarCard> createState() => _PremiumParivarCardState();
+}
+
+class _PremiumParivarCardState extends State<PremiumParivarCard> {
+  bool _isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = widget.colors;
+    final head = widget.parivar.head;
+    final family = widget.parivar.familyMembers;
+    final hasFamily = family.isNotEmpty;
+
+    final initials =
+        '${head.firstName.isNotEmpty ? head.firstName[0] : ''}${head.lastName.isNotEmpty ? head.lastName[0] : ''}'
+            .toUpperCase();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: colors.card,
+        borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+        border: Border.all(
+          color: colors.primary.withValues(alpha: 0.08),
+          width: 1,
+        ),
+        boxShadow: colors.neumorphicShadow(blur: 10, distance: 3),
+      ),
+      child: Column(
+        children: [
+          Stack(
+            children: [
+              InkWell(
+                onTap: hasFamily
+                    ? () {
+                        setState(() {
+                          _isExpanded = !_isExpanded;
+                        });
+                      }
+                    : null,
+                borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                child: Padding(
+                  padding: EdgeInsets.all(AppSizes.spacingL.w),
+                  child: Row(
+                    children: [
+                      // Premium Initials Avatar
+                      Container(
+                        width: 56.r,
+                        height: 56.r,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: colors.primaryGradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: Center(
+                          child: Text(
+                            initials,
+                            style: GoogleFonts.outfit(
+                              fontSize: 18.sp,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: AppSizes.spacingL.w),
+                      // Details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              '${head.firstName} ${head.lastName}',
+                              style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.bold,
+                                fontSize: AppSizes.fontSizeTitleSmall.sp,
+                                color: colors.textPrimary,
+                              ),
+                            ),
+                            if (head.workDetailsSummary != null &&
+                                head.workDetailsSummary!.isNotEmpty) ...[
+                              SizedBox(height: 4.h),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.work_outline_rounded,
+                                    size: 14.sp,
+                                    color: colors.textSecondary,
+                                  ),
+                                  SizedBox(width: 6.w),
+                                  Expanded(
+                                    child: Text(
+                                      head.workDetailsSummary!,
+                                      style: GoogleFonts.outfit(
+                                        fontSize: AppSizes.fontSizeBodySmall.sp,
+                                        color: colors.textSecondary,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                            SizedBox(height: 4.h),
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.location_on_outlined,
+                                  size: 14.sp,
+                                  color: colors.textSecondary,
+                                ),
+                                SizedBox(width: 6.w),
+                                Expanded(
+                                  child: Text(
+                                    head.village,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: AppSizes.fontSizeBodySmall.sp,
+                                      color: colors.textSecondary,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Phone Call Action
+                      Container(
+                        decoration: BoxDecoration(
+                          color: colors.card,
+                          shape: BoxShape.circle,
+                          boxShadow: colors.neumorphicShadow(
+                            blur: 6,
+                            distance: 2,
+                          ),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.phone_rounded,
+                            color: Colors.green,
+                          ),
+                          onPressed: () async {
+                            final uri = Uri.parse('tel:${head.phoneNumber}');
+                            if (await canLaunchUrl(uri)) {
+                              await launchUrl(uri);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              if (hasFamily)
+                Positioned(
+                  top: 10.h,
+                  right: 10.w,
+                  child: AnimatedRotation(
+                    turns: _isExpanded ? 0.5 : 0.0,
+                    duration: const Duration(milliseconds: 300),
+                    child: Icon(
+                      Icons.keyboard_arrow_down_rounded,
+                      color: colors.textSecondary,
+                      size: 22.r,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          // Expanded Family Members Section
+          AnimatedCrossFade(
+            firstChild: const SizedBox.shrink(),
+            secondChild: Container(
+              padding: EdgeInsets.only(
+                left: AppSizes.spacingL.w,
+                right: AppSizes.spacingL.w,
+                bottom: AppSizes.spacingL.w,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Divider(),
+                  SizedBox(height: AppSizes.spacingS.h),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.people_outline_rounded,
+                        size: 16.sp,
+                        color: colors.primary,
+                      ),
+                      SizedBox(width: 6.w),
+                      Text(
+                        'family_members'.tr,
+                        style: GoogleFonts.outfit(
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
+                          fontWeight: FontWeight.bold,
+                          color: colors.primary,
+                          letterSpacing: 1.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: AppSizes.spacingM.h),
+                  ...family.map((f) {
+                    final memberInitials =
+                        '${f.firstName.isNotEmpty ? f.firstName[0] : ''}${f.lastName.isNotEmpty ? f.lastName[0] : ''}'
+                            .toUpperCase();
+                    return Container(
+                      margin: EdgeInsets.only(bottom: AppSizes.spacingS.h),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.spacingM.w,
+                        vertical: AppSizes.spacingS.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+                        border: Border.all(
+                          color: colors.primary.withValues(alpha: 0.04),
+                          width: 1,
+                        ),
+                        boxShadow: colors.neumorphicInsetShadow(
+                          blur: 4,
+                          distance: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 18.r,
+                            backgroundColor: colors.primary.withValues(
+                              alpha: 0.1,
+                            ),
+                            child: Text(
+                              memberInitials,
+                              style: GoogleFonts.outfit(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                                color: colors.primary,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: AppSizes.spacingM.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        '${f.firstName} ${f.lastName}',
+                                        style: GoogleFonts.outfit(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize:
+                                              AppSizes.fontSizeBodyMedium.sp,
+                                          color: colors.textPrimary,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(width: AppSizes.spacingS.w),
+                                    // Relation Chip
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 8.w,
+                                        vertical: 2.h,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: _getRelationColor(
+                                          f.relation,
+                                          colors,
+                                        ).withValues(alpha: 0.1),
+                                        borderRadius: BorderRadius.circular(
+                                          AppSizes.radiusS.r,
+                                        ),
+                                        border: Border.all(
+                                          color: _getRelationColor(
+                                            f.relation,
+                                            colors,
+                                          ).withValues(alpha: 0.2),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        f.relation,
+                                        style: GoogleFonts.outfit(
+                                          fontSize: AppSizes.fontSizeCaption.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: _getRelationColor(
+                                            f.relation,
+                                            colors,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                if (f.workDetailsSummary != null &&
+                                    f.workDetailsSummary!.isNotEmpty) ...[
+                                  SizedBox(height: 2.h),
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.work_outline_rounded,
+                                        size: 12.sp,
+                                        color: colors.textSecondary,
+                                      ),
+                                      SizedBox(width: 4.w),
+                                      Expanded(
+                                        child: Text(
+                                          f.workDetailsSummary!,
+                                          style: GoogleFonts.outfit(
+                                            fontSize:
+                                                AppSizes.fontSizeCaption.sp,
+                                            color: colors.textSecondary,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                ],
+              ),
+            ),
+            crossFadeState: _isExpanded
+                ? CrossFadeState.showSecond
+                : CrossFadeState.showFirst,
+            duration: const Duration(milliseconds: 300),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getRelationColor(String relation, AppColorScheme colors) {
+    switch (relation.toLowerCase()) {
+      case 'wife':
+      case 'spouse':
+        return Colors.purple;
+      case 'son':
+        return Colors.blue;
+      case 'daughter':
+        return Colors.pink;
+      case 'father':
+        return Colors.teal;
+      case 'mother':
+        return Colors.orange;
+      default:
+        return colors.primary;
+    }
   }
 }

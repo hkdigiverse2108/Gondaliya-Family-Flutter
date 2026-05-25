@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/repositories/auth_repository.dart';
+import '../../../data/services/socket_service.dart';
 import '../../../data/services/storage_service.dart';
 import '../../../routes/app_pages.dart';
 
@@ -68,6 +69,7 @@ class LoginController extends GetxController {
         }
       }
 
+      Get.find<SocketService>().connect();
       Get.offAllNamed(Routes.home);
     } else {
       Get.snackbar(

@@ -2,21 +2,27 @@ class Business {
   final String id;
   final String name;
   final String category;
+  final String subCategory;
   final String address;
+  final String city;
   final String contact;
   final String description;
   final String? ownerId; // Links to FamilyMember id if applicable
   final DateTime createdAt;
+  final String ownerName;
 
   Business({
     required this.id,
     required this.name,
     required this.category,
+    required this.subCategory,
     required this.address,
+    required this.city,
     required this.contact,
     required this.description,
     this.ownerId,
     required this.createdAt,
+    required this.ownerName,
   });
 
   Map<String, dynamic> toJson() {
@@ -24,24 +30,32 @@ class Business {
       'id': id,
       'name': name,
       'category': category,
+      'subCategory': subCategory,
       'address': address,
+      'city': city,
       'contact': contact,
       'description': description,
       'ownerId': ownerId,
       'createdAt': createdAt.toIso8601String(),
+      'ownerName': ownerName,
     };
   }
 
   factory Business.fromJson(Map<String, dynamic> json) {
     return Business(
-      id: json['id'] as String,
-      name: json['name'] as String,
-      category: json['category'] as String,
-      address: json['address'] as String,
-      contact: json['contact'] as String,
-      description: json['description'] as String,
+      id: json['id'] as String? ?? '',
+      name: json['name'] as String? ?? '',
+      category: json['category'] as String? ?? '',
+      subCategory: json['subCategory'] as String? ?? '',
+      address: json['address'] as String? ?? '',
+      city: json['city'] as String? ?? '',
+      contact: json['contact'] as String? ?? '',
+      description: json['description'] as String? ?? '',
       ownerId: json['ownerId'] as String?,
-      createdAt: DateTime.parse(json['createdAt'] as String),
+      createdAt: json['createdAt'] != null
+          ? DateTime.parse(json['createdAt'] as String)
+          : DateTime.now(),
+      ownerName: json['ownerName'] as String? ?? '',
     );
   }
 
@@ -49,21 +63,27 @@ class Business {
     String? id,
     String? name,
     String? category,
+    String? subCategory,
     String? address,
+    String? city,
     String? contact,
     String? description,
     String? ownerId,
     DateTime? createdAt,
+    String? ownerName,
   }) {
     return Business(
       id: id ?? this.id,
       name: name ?? this.name,
       category: category ?? this.category,
+      subCategory: subCategory ?? this.subCategory,
       address: address ?? this.address,
+      city: city ?? this.city,
       contact: contact ?? this.contact,
       description: description ?? this.description,
       ownerId: ownerId ?? this.ownerId,
       createdAt: createdAt ?? this.createdAt,
+      ownerName: ownerName ?? this.ownerName,
     );
   }
 }

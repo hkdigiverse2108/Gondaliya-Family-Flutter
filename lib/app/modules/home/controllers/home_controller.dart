@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../data/services/socket_service.dart';
 import '../../../data/services/storage_service.dart';
 import '../../../data/services/translation_service.dart';
 import '../../../routes/app_pages.dart';
@@ -30,6 +31,7 @@ class HomeController extends GetxController {
 
   // --- Logout ---
   Future<void> logout() async {
+    Get.find<SocketService>().disconnect();
     await _storage.clearAuthToken();
     Get.offAllNamed(Routes.login);
   }

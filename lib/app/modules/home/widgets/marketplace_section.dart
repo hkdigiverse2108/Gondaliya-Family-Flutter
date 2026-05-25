@@ -8,6 +8,7 @@ import 'package:gondalia_family/core/utils/time_utils.dart';
 import '../controllers/marketplace_controller.dart';
 import 'marketplace_card.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import 'package:gondalia_family/app/routes/app_pages.dart';
 
 class MarketplaceSection extends StatelessWidget {
   final AppColorScheme colors;
@@ -47,20 +48,25 @@ class MarketplaceSection extends StatelessWidget {
 
             return Padding(
               padding: EdgeInsets.only(bottom: AppSizes.spacingL.h),
-              child: MarketplaceCard(
-                colors: colors,
-                type: l.type,
-                status: l.status,
-                title: l.title,
-                location: '${l.location.city} • ${l.location.pincode}',
-                area: l.description,
-                date: 'From $availableDateStr',
-                price: '₹ ${l.price}',
-                priceUnit: l.priceUnit == 'FIXED' ? 'Total' : l.priceUnit,
-                contact: l.contactPhone,
-                name: l.postedBy,
-                isSale: l.type.toUpperCase() == 'SALE',
-                imageUrl: l.photos?.isNotEmpty == true ? l.photos!.first : null,
+              child: GestureDetector(
+                onTap: () {
+                  Get.toNamed(Routes.listingDetail, arguments: {'listing': l});
+                },
+                child: MarketplaceCard(
+                  colors: colors,
+                  type: l.type,
+                  status: l.status,
+                  title: l.title,
+                  location: '${l.location.city} • ${l.location.pincode}',
+                  area: l.description,
+                  date: 'From $availableDateStr',
+                  price: '₹ ${l.price}',
+                  priceUnit: l.priceUnit == 'FIXED' ? 'Total' : l.priceUnit,
+                  contact: l.contactPhone,
+                  name: l.postedBy,
+                  isSale: l.type.toUpperCase() == 'SALE',
+                  imageUrl: l.photos?.isNotEmpty == true ? l.photos!.first : null,
+                ),
               ),
             );
           },

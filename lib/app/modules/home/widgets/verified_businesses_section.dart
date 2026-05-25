@@ -3,211 +3,413 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:shimmer/shimmer.dart';
 
+import 'package:gondalia_family/app/routes/app_pages.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import '../controllers/profile_controller.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import 'package:gondalia_family/app/data/models/business.dart';
+import '../controllers/profile_controller.dart';
 
-class VerifiedBusinessesSection extends StatelessWidget {
+class VerifiedBusinessesSection extends StatefulWidget {
   final AppColorScheme colors;
 
   const VerifiedBusinessesSection({super.key, required this.colors});
 
   @override
-  Widget build(BuildContext context) {
-    return GetX<ProfileController>(
-      builder: (controller) {
-        final businesses = controller.businesses;
+  State<VerifiedBusinessesSection> createState() =>
+      _VerifiedBusinessesSectionState();
+}
 
-        if (businesses.isEmpty) {
-          return Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSizes.spacingL.w,
-              vertical: AppSizes.spacingXL.h,
+class _VerifiedBusinessesSectionState extends State<VerifiedBusinessesSection> {
+  late final ProfileController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = Get.find<ProfileController>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.fetchBusinesses();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.isBusinessesLoading.value) {
+        return _buildShimmerLoading(context);
+      }
+
+      final allBusinesses = controller.businesses;
+      // Limit to 3 items
+      final businesses = allBusinesses.take(3).toList();
+
+      if (businesses.isEmpty) {
+        return Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: AppSizes.spacingL.w,
+            vertical: AppSizes.spacingXL.h,
+          ),
+          child: Center(
+            child: Text(
+              'no_businesses_yet'.tr,
+              style: GoogleFonts.outfit(color: widget.colors.textSecondary),
             ),
-            child: Center(
-              child: Text(
-                'No verified businesses yet.',
-                style: GoogleFonts.outfit(color: colors.textSecondary),
+          ),
+        );
+      }
+
+      return SizedBox(
+        height: 230.h,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
+          itemCount: businesses.length,
+          itemBuilder: (context, index) {
+            final b = businesses[index];
+            return _BusinessCard(business: b, colors: widget.colors);
+          },
+        ),
+      );
+    });
+  }
+
+  Widget _buildShimmerLoading(BuildContext context) {
+    final colors = widget.colors;
+    return SizedBox(
+      height: 230.h,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
+        itemCount: 3,
+        itemBuilder: (context, index) {
+          return Container(
+            width: 260.w,
+            margin: EdgeInsets.only(
+              right: AppSizes.spacingL.w,
+              bottom: AppSizes.spacingS.h,
+            ),
+            decoration: BoxDecoration(
+              color: colors.card,
+              borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+              border: Border.all(
+                color: colors.isDark ? Colors.grey[800]! : Colors.grey[200]!,
+              ),
+            ),
+            child: Shimmer.fromColors(
+              baseColor: colors.isDark ? Colors.grey[800]! : Colors.grey[300]!,
+              highlightColor: colors.isDark
+                  ? Colors.grey[700]!
+                  : Colors.grey[100]!,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 75.h,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(AppSizes.radiusM.r),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 28.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.spacingM.w,
+                    ),
+                    child: Container(
+                      width: 150.w,
+                      height: 12.h,
+                      color: Colors.white,
+                    ),
+                  ),
+                  SizedBox(height: 6.h),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.spacingM.w,
+                    ),
+                    child: Container(
+                      width: 80.w,
+                      height: 10.h,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Spacer(),
+                  Container(height: 1, color: Colors.white),
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: AppSizes.spacingM.w,
+                      vertical: AppSizes.spacingS.h,
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 12.w,
+                          height: 12.h,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 4.w),
+                        Container(
+                          width: 70.w,
+                          height: 10.h,
+                          color: Colors.white,
+                        ),
+                        const Spacer(),
+                        Container(
+                          width: 12.w,
+                          height: 12.h,
+                          color: Colors.white,
+                        ),
+                        SizedBox(width: 4.w),
+                        Container(
+                          width: 70.w,
+                          height: 10.h,
+                          color: Colors.white,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
           );
-        }
+        },
+      ),
+    );
+  }
+}
 
-        return SizedBox(
-          height: 260.h,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            physics: const BouncingScrollPhysics(),
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
-            itemCount: businesses.length,
-            itemBuilder: (context, index) {
-              final b = businesses[index];
-              return Container(
-                width: 260.w,
-                margin: EdgeInsets.only(
-                  right: AppSizes.spacingL.w,
-                  bottom: AppSizes.spacingS.h,
+class _BusinessCard extends StatelessWidget {
+  final Business business;
+  final AppColorScheme colors;
+
+  const _BusinessCard({required this.business, required this.colors});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = colors.isDark;
+    final hasSubCategory = business.subCategory.trim().isNotEmpty;
+    final categoryText = hasSubCategory
+        ? "${business.category} • ${business.subCategory}"
+        : business.category;
+
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.business, arguments: {'userId': business.ownerId});
+      },
+      child: Container(
+        width: 260.w,
+        margin: EdgeInsets.only(
+          right: AppSizes.spacingL.w,
+          bottom: AppSizes.spacingS.h,
+        ),
+        decoration: BoxDecoration(
+          color: colors.card,
+          borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+          border: Border.all(
+            color: colors.isDark ? colors.divider : Colors.grey.shade200,
+            width: 1.0,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: isDark ? 0.15 : 0.03),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Cover with primary gradient
+            Container(
+              height: 75.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(AppSizes.radiusM.r),
                 ),
-                decoration: BoxDecoration(
-                  color: colors.card,
-                  borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
-                  boxShadow: colors.neumorphicShadow(blur: 8, distance: 3),
-                  border: Border.all(
-                    color: colors.primary.withValues(alpha: 0.1),
-                    width: 1,
-                  ),
+                gradient: LinearGradient(
+                  colors: colors.primaryGradient,
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Cover Placeholder
-                    Container(
-                      height: 90.h,
+              ),
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Positioned(
+                    bottom: -16.h,
+                    left: AppSizes.spacingM.w,
+                    child: Container(
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(AppSizes.radiusL.r),
-                        ),
-                        gradient: LinearGradient(
-                          colors: colors.primaryGradient,
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          Positioned(
-                            top: AppSizes.spacingS.h,
-                            right: AppSizes.spacingS.w,
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: AppSizes.spacingS.w,
-                                vertical: AppSizes.spacingXS.h,
-                              ),
-                              decoration: BoxDecoration(
-                                color: colors.warning.withValues(alpha: 0.9),
-                                borderRadius: BorderRadius.circular(
-                                  AppSizes.radiusS.r,
-                                ),
-                              ),
-                              child: Row(
-                                children: [
-                                  Icon(
-                                    PhosphorIcons.checkCircle(
-                                      PhosphorIconsStyle.fill,
-                                    ),
-                                    color: Colors.white,
-                                    size: AppSizes.fontSizeBodySmall.sp,
-                                  ),
-                                  SizedBox(width: AppSizes.spacingXS.w),
-                                  Text(
-                                    'VERIFIED',
-                                    style: GoogleFonts.outfit(
-                                      fontSize: AppSizes.fontSizeMicro.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: -AppSizes.spacingXL.h,
-                            left: AppSizes.spacingM.w,
-                            child: CircleAvatar(
-                              radius: AppSizes.radiusXL.r,
-                              backgroundColor: colors.card,
-                              child: Icon(
-                                PhosphorIcons.briefcase(),
-                                color: colors.primary,
-                                size: AppSizes.radiusXL.r,
-                              ),
-                            ),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: colors.card, width: 1.5),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 3,
+                            offset: Offset(0, 1.5),
                           ),
                         ],
                       ),
-                    ),
-                    SizedBox(height: AppSizes.spacingXXL.h),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.spacingM.w,
-                      ),
-                      child: Text(
-                        b.name,
-                        style: GoogleFonts.outfit(
-                          fontSize: AppSizes.fontSizeBodyLarge.sp,
-                          fontWeight: FontWeight.bold,
-                          color: colors.textPrimary,
+                      child: CircleAvatar(
+                        radius: 16.r,
+                        backgroundColor: colors.card,
+                        child: Icon(
+                          PhosphorIcons.storefront(),
+                          color: colors.primary,
+                          size: 16.sp,
                         ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.spacingM.w,
-                      ),
-                      child: Text(
-                        b.description,
-                        style: GoogleFonts.outfit(
-                          fontSize: AppSizes.fontSizeBodySmall.sp,
-                          color: colors.textSecondary,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingM.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    business.name,
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14.sp,
+                      color: colors.textPrimary,
                     ),
-                    Spacer(),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: AppSizes.spacingM.w,
-                        vertical: AppSizes.spacingM.h,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  if (business.ownerName.isNotEmpty) ...[
+                    SizedBox(height: 1.h),
+                    Text(
+                      "By ${business.ownerName}",
+                      style: GoogleFonts.outfit(
+                        fontSize: 9.sp,
+                        color: colors.textSecondary,
+                        fontWeight: FontWeight.w500,
                       ),
-                      child: Row(
-                        children: [
-                          Icon(
-                            PhosphorIcons.star(PhosphorIconsStyle.fill),
-                            color: colors.warning,
-                            size: AppSizes.fontSizeBodyMedium.sp,
-                          ),
-                          SizedBox(width: AppSizes.spacingXS.w),
-                          Text(
-                            '4.8', // Mocked rating for now
-                            style: GoogleFonts.outfit(
-                              fontSize: AppSizes.fontSizeBodySmall.sp,
-                              fontWeight: FontWeight.w600,
-                              color: colors.textPrimary,
-                            ),
-                          ),
-                          SizedBox(width: AppSizes.spacingM.w),
-                          Icon(
-                            PhosphorIcons.mapPin(),
-                            color: colors.textSecondary,
-                            size: AppSizes.fontSizeBodyMedium.sp,
-                          ),
-                          SizedBox(width: AppSizes.spacingXS.w),
-                          Expanded(
-                            child: Text(
-                              b.address,
-                              style: GoogleFonts.outfit(
-                                fontSize: AppSizes.fontSizeBodySmall.sp,
-                                color: colors.textSecondary,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
-                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
+                ],
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingM.w),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
+                decoration: BoxDecoration(
+                  color: colors.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusS.r),
                 ),
-              );
-            },
-          ),
-        );
-      },
+                child: Text(
+                  categoryText,
+                  style: GoogleFonts.outfit(
+                    fontSize: 8.sp,
+                    fontWeight: FontWeight.bold,
+                    color: colors.primary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+            SizedBox(height: 4.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingM.w),
+              child: Text(
+                business.description,
+                style: GoogleFonts.outfit(
+                  fontSize: 11.sp,
+                  color: colors.textSecondary,
+                  height: 1.25,
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const Spacer(),
+            Divider(
+              height: 1,
+              color: isDark ? colors.divider : Colors.grey.shade200,
+            ),
+            Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.spacingM.w,
+                vertical: AppSizes.spacingS.h,
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          PhosphorIcons.phone(),
+                          size: 14.sp,
+                          color: colors.primary,
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            business.contact,
+                            style: GoogleFonts.outfit(
+                              fontSize: 10.sp,
+                              color: colors.textSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: 1,
+                    height: 14.h,
+                    color: isDark ? colors.divider : Colors.grey.shade200,
+                  ),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          PhosphorIcons.mapPin(),
+                          size: 14.sp,
+                          color: colors.primary,
+                        ),
+                        SizedBox(width: 4.w),
+                        Expanded(
+                          child: Text(
+                            business.city.isNotEmpty
+                                ? business.city
+                                : business.address,
+                            style: GoogleFonts.outfit(
+                              fontSize: 10.sp,
+                              color: colors.textSecondary,
+                              fontWeight: FontWeight.w500,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

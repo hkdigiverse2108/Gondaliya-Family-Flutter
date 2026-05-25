@@ -79,9 +79,20 @@ class Listing extends Equatable {
   ];
 
   factory Listing.fromJson(Map<String, dynamic> json) {
+    String postedByVal = '';
+    final rawPostedBy = json['postedBy'];
+    if (rawPostedBy is Map<String, dynamic>) {
+      postedByVal = '${rawPostedBy['firstName'] ?? ''} ${rawPostedBy['lastName'] ?? ''}'.trim();
+      if (postedByVal.isEmpty) {
+        postedByVal = rawPostedBy['_id'] ?? rawPostedBy['id'] ?? '';
+      }
+    } else if (rawPostedBy is String) {
+      postedByVal = rawPostedBy;
+    }
+
     return Listing(
       id: json['_id'] as String? ?? json['id'] as String? ?? '',
-      postedBy: json['postedBy'] as String? ?? '',
+      postedBy: postedByVal,
       type: json['type'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',

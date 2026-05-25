@@ -9,7 +9,7 @@ import 'package:gondalia_family/app/routes/app_pages.dart';
 import 'package:get/get.dart';
 import 'package:gondalia_family/app/global_widgets/neomorphic_text_field.dart';
 import '../../widgets/verified_businesses_section.dart';
-import '../../widgets/marketplace_section.dart';
+// import '../../widgets/marketplace_section.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 
 class HomeTabView extends StatelessWidget {
@@ -33,6 +33,13 @@ class HomeTabView extends StatelessWidget {
         ),
         centerTitle: false,
         actions: [
+          IconButton(
+            tooltip: 'chat'.tr,
+            icon: Icon(PhosphorIcons.chatCircle(), color: colors.textPrimary),
+            onPressed: () {
+              Get.toNamed(Routes.chat);
+            },
+          ),
           IconButton(
             tooltip: 'announcements'.tr,
             icon: Icon(PhosphorIcons.megaphone(), color: colors.textPrimary),
@@ -63,7 +70,7 @@ class HomeTabView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
                 child: NeomorphicTextField(
-                  hintText: 'Search in Gondaliya Family...',
+                  hintText: 'search_placeholder'.tr,
                   prefixIcon: Icon(
                     PhosphorIcons.magnifyingGlass(),
                     color: colors.accent,
@@ -77,15 +84,23 @@ class HomeTabView extends StatelessWidget {
 
               SizedBox(height: 18.h),
 
-              _buildSectionHeader('Verified Businesses', 'See all', colors),
+              _buildSectionHeader(
+                'verified_businesses'.tr,
+                'see_all'.tr,
+                colors,
+              ),
               SizedBox(height: AppSizes.spacingM.h),
               VerifiedBusinessesSection(colors: colors),
 
-              SizedBox(height: AppSizes.spacingXXL.h),
+              // SizedBox(height: AppSizes.spacingXXL.h),
 
-              _buildSectionHeader('Hot on the Marketplace', 'See all', colors),
-              SizedBox(height: AppSizes.spacingM.h),
-              MarketplaceSection(colors: colors),
+              // _buildSectionHeader(
+              //   'hot_on_marketplace'.tr,
+              //   'see_all'.tr,
+              //   colors,
+              // ),
+              // SizedBox(height: AppSizes.spacingM.h),
+              // MarketplaceSection(colors: colors),
             ],
           ),
         ),
@@ -93,97 +108,6 @@ class HomeTabView extends StatelessWidget {
     );
   }
 
-  // Widget _buildStatsCounters(AppColorScheme colors) {
-  //   return Padding(
-  //     padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w, vertical: AppSizes.spacingS.h),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: _buildStatCard(
-  //             'Active Members',
-  //             '1,240',
-  //             PhosphorIcons.users(PhosphorIconsStyle.fill),
-  //             colors,
-  //           ),
-  //         ),
-  //         SizedBox(width: AppSizes.spacingM.w),
-  //         Expanded(
-  //           child: _buildStatCard(
-  //             'Businesses',
-  //             '350',
-  //             PhosphorIcons.briefcase(PhosphorIconsStyle.fill),
-  //             colors,
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildStatCard(
-  //   String label,
-  //   String count,
-  //   IconData icon,
-  //   AppColorScheme colors,
-  // ) {
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w, vertical: AppSizes.spacingM.h),
-  //     decoration: BoxDecoration(
-  //       color: colors.card,
-  //       borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
-  //       border: Border.all(
-  //         color: colors.primary.withValues(alpha: 0.1),
-  //         width: 1,
-  //       ),
-  //       boxShadow: colors.neumorphicShadow(blur: 6, distance: 2),
-  //     ),
-  //     child: Row(
-  //       children: [
-  //         Container(
-  //           padding: EdgeInsets.all(AppSizes.spacingS.w),
-  //           decoration: BoxDecoration(
-  //             color: colors.primary.withValues(alpha: 0.1),
-  //             shape: BoxShape.circle,
-  //           ),
-  //           child: ShaderMask(
-  //             shaderCallback: (bounds) => LinearGradient(
-  //               colors: colors.primaryGradient,
-  //               begin: Alignment.topLeft,
-  //               end: Alignment.bottomRight,
-  //             ).createShader(bounds),
-  //             child: Icon(icon, color: Colors.white, size: AppSizes.spacingXXL.w),
-  //           ),
-  //         ),
-  //         SizedBox(width: AppSizes.spacingM.w),
-  //         Expanded(
-  //           child: Column(
-  //             crossAxisAlignment: CrossAxisAlignment.start,
-  //             children: [
-  //               Text(
-  //                 count,
-  //                 style: GoogleFonts.outfit(
-  //                   fontSize: 18.sp,
-  //                   fontWeight: FontWeight.bold,
-  //                   color: colors.textPrimary,
-  //                 ),
-  //               ),
-  //               Text(
-  //                 label,
-  //                 style: GoogleFonts.outfit(
-  //                   fontSize: AppSizes.fontSizeCaption.sp,
-  //                   fontWeight: FontWeight.w500,
-  //                   color: colors.textSecondary,
-  //                 ),
-  //                 maxLines: 1,
-  //                 overflow: TextOverflow.ellipsis,
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   IconData _getCategoryIcon(String category) {
     switch (category) {

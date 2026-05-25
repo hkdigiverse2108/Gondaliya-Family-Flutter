@@ -3,8 +3,10 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/values/colors.dart';
+import '../../../data/models/chat.dart';
 import '../controllers/chat_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
@@ -118,15 +120,29 @@ class ChatView extends GetView<ChatController> {
 
           // Message List
           Expanded(
-            child: ListView.builder(
-              padding: EdgeInsets.all(AppSizes.spacingL.w),
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                final isMe = index % 2 == 0;
-                final mode = index % 3 == 0 ? ChatMode.take : ChatMode.give;
-                return _buildMessageBubble(isMe, isDark, mode);
-              },
-            ),
+            child: Obx(() {
+              if (controller.isLoading.value && controller.messages.isEmpty) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (controller.messages.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No messages yet. Start the conversation!',
+                    style: GoogleFonts.outfit(color: Colors.grey),
+                  ),
+                );
+              }
+              return ListView.builder(
+                controller: controller.scrollController,
+                padding: EdgeInsets.all(AppSizes.spacingL.w),
+                itemCount: controller.messages.length,
+                itemBuilder: (context, index) {
+                  final msg = controller.messages[index];
+                  final isMe = msg.senderId == controller.currentUserId;
+                  return _buildMessageBubble(msg, isMe, isDark);
+                },
+              );
+            }),
           ),
 
           // Input Area
@@ -151,11 +167,13 @@ class ChatView extends GetView<ChatController> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      '32 messages remaining today',
-                      style: GoogleFonts.outfit(
-                        fontSize: AppSizes.fontSizeBodySmall.sp,
-                        color: Colors.grey,
+                    Obx(
+                      () => Text(
+                        '${controller.remainingMessages.value} messages remaining today',
+                        style: GoogleFonts.outfit(
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
                     Text(
@@ -180,6 +198,7 @@ class ChatView extends GetView<ChatController> {
                     ),
                     Expanded(
                       child: TextField(
+                        controller: controller.messageController,
                         decoration: InputDecoration(
                           hintText: 'Type a message...',
                           filled: true,
@@ -208,7 +227,7 @@ class ChatView extends GetView<ChatController> {
                           Icons.send_rounded,
                           color: Colors.white,
                         ),
-                        onPressed: () {},
+                        onPressed: controller.sendMessage,
                       ),
                     ),
                   ],
@@ -221,7 +240,11 @@ class ChatView extends GetView<ChatController> {
     );
   }
 
-  Widget _buildMessageBubble(bool isMe, bool isDark, ChatMode mode) {
+  Widget _buildMessageBubble(Chat msg, bool isMe, bool isDark) {
+    final timeString = msg.createdAt != null
+        ? DateFormat('hh:mm a').format(msg.createdAt!.toLocal())
+        : DateFormat('hh:mm a').format(DateTime.now());
+
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
@@ -244,7 +267,8 @@ class ChatView extends GetView<ChatController> {
           children: [
             if (!isMe) ...[
               Text(
-                'Member Name',
+                msg.senderName ??
+                    'Member #${msg.senderId.length > 4 ? msg.senderId.substring(msg.senderId.length - 4) : msg.senderId}',
                 style: GoogleFonts.outfit(
                   fontWeight: FontWeight.bold,
                   fontSize: AppSizes.fontSizeBodySmall.sp,
@@ -253,42 +277,26 @@ class ChatView extends GetView<ChatController> {
               ),
               SizedBox(height: AppSizes.spacingXS.h),
             ],
-            // Mode Tag
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: 6.w,
-                vertical: AppSizes.spacingXXS.h,
-              ),
-              decoration: BoxDecoration(
-                color: mode == ChatMode.give
-                    ? Colors.green.withValues(alpha: 0.8)
-                    : Colors.orange.withValues(alpha: 0.8),
-                borderRadius: BorderRadius.circular(AppSizes.radiusXS.r),
-              ),
-              child: Text(
-                mode == ChatMode.give ? 'Give' : 'Take',
-                style: GoogleFonts.outfit(
-                  fontSize: AppSizes.fontSizeMicro.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            SizedBox(height: 6.h),
+            // Message Content
             Text(
-              'This is a sample message in the general chat stream.',
+              msg.isBlocked
+                  ? '[Message blocked by administrator]'
+                  : (msg.message ?? ''),
               style: GoogleFonts.outfit(
                 fontSize: AppSizes.fontSizeBodyMedium.sp,
-                color: isMe
-                    ? Colors.white
-                    : (isDark ? Colors.white : Colors.black87),
+                fontStyle: msg.isBlocked ? FontStyle.italic : FontStyle.normal,
+                color: msg.isBlocked
+                    ? Colors.red
+                    : (isMe
+                          ? Colors.white
+                          : (isDark ? Colors.white : Colors.black87)),
               ),
             ),
             SizedBox(height: AppSizes.spacingXS.h),
             Align(
               alignment: Alignment.centerRight,
               child: Text(
-                '10:42 AM',
+                isMe ? '$timeString • You' : timeString,
                 style: GoogleFonts.outfit(
                   fontSize: AppSizes.fontSizeMicro.sp,
                   color: isMe ? Colors.white70 : Colors.grey,

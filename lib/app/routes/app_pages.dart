@@ -18,6 +18,14 @@ import '../modules/splash/views/splash_view.dart';
 import '../modules/placeholder_home/bindings/placeholder_home_binding.dart';
 import '../modules/placeholder_home/views/placeholder_home_view.dart';
 
+import '../modules/business_detail/bindings/business_detail_binding.dart';
+import '../modules/business_detail/views/business_detail_view.dart';
+import '../modules/member_detail/bindings/member_detail_binding.dart';
+import '../modules/member_detail/views/member_detail_view.dart';
+import '../modules/my_family/views/my_family_view.dart';
+import '../modules/listing_detail/bindings/listing_detail_binding.dart';
+import '../modules/listing_detail/views/listing_detail_view.dart';
+
 part 'app_routes.dart';
 
 class AppPages {
@@ -65,6 +73,26 @@ class AppPages {
       name: _Paths.placeholderHome,
       page: () => const PlaceholderHomeView(),
       binding: PlaceholderHomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.business,
+      page: () => const BusinessDetailView(),
+      binding: BusinessDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.family,
+      page: () => const MemberDetailView(),
+      binding: MemberDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.familyMembers,
+      page: () => const MyFamilyView(),
+      binding: HomeBinding(), // ProfileController is initialized in HomeBinding
+    ),
+    GetPage(
+      name: _Paths.listingDetail,
+      page: () => const ListingDetailView(),
+      binding: ListingDetailBinding(),
     ),
   ];
 }

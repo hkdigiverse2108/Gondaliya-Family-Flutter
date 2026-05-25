@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+
+import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import 'package:gondalia_family/core/values/sizes.dart';
+
+// Comments: Unused imports commented out to preserve them for the next update
+/*
 import 'package:gondalia_family/app/modules/home/controllers/marketplace_controller.dart';
 import 'package:gondalia_family/app/modules/home/widgets/marketplace_card.dart';
-import 'package:google_fonts/google_fonts.dart';
-
-import '../../../../../core/theme/app_color_scheme.dart';
-import '../../../../../core/values/colors.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
 import 'package:gondalia_family/core/utils/time_utils.dart';
 import 'package:get/get.dart';
 import '../../../../data/models/listing.dart';
+import 'package:gondalia_family/app/routes/app_pages.dart';
+*/
 
 class MarketplaceTabView extends StatefulWidget {
   const MarketplaceTabView({super.key});
@@ -20,6 +25,8 @@ class MarketplaceTabView extends StatefulWidget {
 
 class _MarketplaceTabViewState extends State<MarketplaceTabView>
     with SingleTickerProviderStateMixin {
+  // Comments: State logic and tabs commented out to preserve for the next update
+  /*
   late TabController _tabController;
 
   final List<String> _tabs = ['All', 'Rent', 'Rent / Sale', 'Sale'];
@@ -38,127 +45,64 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
     _tabController.dispose();
     super.dispose();
   }
+  */
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final controller = Get.find<MarketplaceController>();
 
-    return SafeArea(
-      child: Column(
-        children: [
-          // Filter Chips & Button
-          SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            padding: EdgeInsets.symmetric(
-              horizontal: AppSizes.spacingL.w,
-              vertical: AppSizes.spacingS.h,
-            ),
-            child: Row(
-              children: [
-                ...List.generate(_tabs.length, (index) {
-                  final isSelected = index == _tabController.index;
-                  return Padding(
-                    padding: EdgeInsets.only(right: AppSizes.spacingS.w),
-                    child: GestureDetector(
-                      onTap: () {
-                        _tabController.animateTo(index);
-                      },
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: AppSizes.spacingL.w,
-                          vertical: AppSizes.spacingS.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: isSelected
-                              ? AppColors.primary
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(
-                            AppSizes.radiusXL.r,
-                          ),
-                          border: Border.all(
-                            color: isSelected
-                                ? AppColors.primary
-                                : (colors.isDark
-                                      ? AppColors.dividerDark
-                                      : Colors.grey.shade300),
-                          ),
-                        ),
-                        child: Text(
-                          _tabs[index],
-                          style: GoogleFonts.outfit(
-                            color: isSelected
-                                ? Colors.white
-                                : (colors.isDark
-                                      ? Colors.grey.shade300
-                                      : Colors.grey.shade700),
-                            fontWeight: isSelected
-                                ? FontWeight.w600
-                                : FontWeight.normal,
-                            fontSize: AppSizes.fontSizeBodySmall.sp,
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                }),
-                SizedBox(width: AppSizes.spacingS.w),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 14.w,
-                    vertical: AppSizes.spacingS.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: colors.isDark
-                        ? AppColors.cardDark
-                        : Colors.grey.shade50,
-                    borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
-                    border: Border.all(
-                      color: colors.isDark
-                          ? AppColors.dividerDark
-                          : Colors.grey.shade300,
-                    ),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.filter_alt_outlined,
-                        size: AppSizes.fontSizeBodyLarge.sp,
-                        color: colors.isDark
-                            ? Colors.grey.shade300
-                            : Colors.grey.shade700,
-                      ),
-                      SizedBox(width: AppSizes.spacingXS.w),
-                      Text(
-                        'Filter',
-                        style: GoogleFonts.outfit(
-                          color: colors.isDark
-                              ? Colors.grey.shade300
-                              : Colors.grey.shade700,
-                          fontSize: AppSizes.fontSizeBodySmall.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingXL.w),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(24.w),
+                decoration: BoxDecoration(
+                  color: colors.primary.withValues(alpha: 0.08),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: colors.primary.withValues(alpha: 0.15),
+                    width: 2,
                   ),
                 ),
-              ],
-            ),
+                child: Icon(
+                  PhosphorIcons.storefront(PhosphorIconsStyle.fill),
+                  color: colors.primary,
+                  size: 48.sp,
+                ),
+              ),
+              SizedBox(height: 24.h),
+              Text(
+                'Coming Soon',
+                style: GoogleFonts.outfit(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.bold,
+                  color: colors.textPrimary,
+                ),
+              ),
+              SizedBox(height: 12.h),
+              Text(
+                'This feature is going to be added in the next update.',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.outfit(
+                  fontSize: 14.sp,
+                  color: colors.textSecondary,
+                  height: 1.4,
+                ),
+              ),
+            ],
           ),
-
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: _tabs
-                  .map((tabName) => _buildListing(colors, tabName, controller))
-                  .toList(),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
 
+  // Comments: Card and listing builders commented out to preserve them for the next update
+  /*
   Widget _buildListing(
     AppColorScheme colors,
     String category,
@@ -203,20 +147,26 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
     final availableDateStr =
         "${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}";
 
-    return MarketplaceCard(
-      colors: colors,
-      type: l.type,
-      status: l.status,
-      title: l.title,
-      location: '${l.location.city} • ${l.location.pincode}',
-      area: l.description,
-      date: 'From $availableDateStr',
-      price: '₹ ${l.price}',
-      priceUnit: l.priceUnit == 'FIXED' ? 'Total' : l.priceUnit,
-      contact: l.contactPhone,
-      name: l.postedBy,
-      isSale: l.type.toUpperCase() == 'SALE',
-      imageUrl: l.photos?.isNotEmpty == true ? l.photos!.first : null,
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed(Routes.listingDetail, arguments: {'listing': l});
+      },
+      child: MarketplaceCard(
+        colors: colors,
+        type: l.type,
+        status: l.status,
+        title: l.title,
+        location: '${l.location.city} • ${l.location.pincode}',
+        area: l.description,
+        date: 'From $availableDateStr',
+        price: '₹ ${l.price}',
+        priceUnit: l.priceUnit == 'FIXED' ? 'Total' : l.priceUnit,
+        contact: l.contactPhone,
+        name: l.postedBy,
+        isSale: l.type.toUpperCase() == 'SALE',
+        imageUrl: l.photos?.isNotEmpty == true ? l.photos!.first : null,
+      ),
     );
   }
+  */
 }

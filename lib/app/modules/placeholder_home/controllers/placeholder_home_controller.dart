@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/models/user.dart';
+import '../../../data/services/socket_service.dart';
 import '../../../data/services/storage_service.dart';
 import '../../../routes/app_pages.dart';
 
@@ -22,6 +23,7 @@ class PlaceholderHomeController extends GetxController {
   }
 
   void logout() {
+    Get.find<SocketService>().disconnect();
     _storage.clearAuthToken();
     _storage.clearUser();
     Get.offAllNamed(Routes.login);
