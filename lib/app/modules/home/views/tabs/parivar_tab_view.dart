@@ -321,28 +321,51 @@ class _PremiumParivarCardState extends State<PremiumParivarCard> {
                   padding: EdgeInsets.all(AppSizes.spacingL.w),
                   child: Row(
                     children: [
-                      // Premium Initials Avatar
+                      // Premium Avatar (Image or Initials)
                       Container(
                         width: 56.r,
                         height: 56.r,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: colors.primaryGradient,
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
+                          gradient:
+                              head.profilePhoto == null ||
+                                  head.profilePhoto!.isEmpty
+                              ? LinearGradient(
+                                  colors: colors.primaryGradient,
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                )
+                              : null,
                         ),
-                        child: Center(
-                          child: Text(
-                            initials,
-                            style: GoogleFonts.outfit(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                        clipBehavior: Clip.antiAlias,
+                        child:
+                            head.profilePhoto != null &&
+                                head.profilePhoto!.isNotEmpty
+                            ? Image.network(
+                                head.profilePhoto!,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) =>
+                                    Center(
+                                      child: Text(
+                                        initials,
+                                        style: GoogleFonts.outfit(
+                                          fontSize: 18.sp,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                              )
+                            : Center(
+                                child: Text(
+                                  initials,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
                       ),
                       SizedBox(width: AppSizes.spacingL.w),
                       // Details
@@ -554,19 +577,48 @@ class _PremiumParivarCardState extends State<PremiumParivarCard> {
                             ),
                             child: Row(
                               children: [
-                                CircleAvatar(
-                                  radius: 18.r,
-                                  backgroundColor: colors.primary.withValues(
-                                    alpha: 0.1,
+                                Container(
+                                  width: 36.r,
+                                  height: 36.r,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color:
+                                        f.profilePhoto == null ||
+                                            f.profilePhoto!.isEmpty
+                                        ? colors.primary.withValues(alpha: 0.1)
+                                        : null,
                                   ),
-                                  child: Text(
-                                    memberInitials,
-                                    style: GoogleFonts.outfit(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: colors.primary,
-                                    ),
-                                  ),
+                                  clipBehavior: Clip.antiAlias,
+                                  child:
+                                      f.profilePhoto != null &&
+                                          f.profilePhoto!.isNotEmpty
+                                      ? Image.network(
+                                          f.profilePhoto!,
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Center(
+                                                    child: Text(
+                                                      memberInitials,
+                                                      style: GoogleFonts.outfit(
+                                                        fontSize: 12.sp,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: colors.primary,
+                                                      ),
+                                                    ),
+                                                  ),
+                                        )
+                                      : Center(
+                                          child: Text(
+                                            memberInitials,
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color: colors.primary,
+                                            ),
+                                          ),
+                                        ),
                                 ),
                                 SizedBox(width: AppSizes.spacingM.w),
                                 Expanded(

@@ -30,6 +30,7 @@ class ParivarHead {
   final String village;
   final String phoneNumber;
   final String? workDetailsSummary;
+  final String? profilePhoto;
 
   ParivarHead({
     required this.firstName,
@@ -37,6 +38,7 @@ class ParivarHead {
     required this.village,
     required this.phoneNumber,
     this.workDetailsSummary,
+    this.profilePhoto,
   });
 
   factory ParivarHead.fromJson(Map<String, dynamic> json) {
@@ -46,6 +48,7 @@ class ParivarHead {
       village: json['village'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       workDetailsSummary: json['workDetailsSummary'],
+      profilePhoto: json['profilePhoto'] == 'null' ? null : json['profilePhoto'],
     );
   }
 }
@@ -59,6 +62,7 @@ class ParivarFamilyMember {
   final String? workDetailsSummary;
   final bool isIndependent;
   final String? linkedUserId;
+  final String? profilePhoto;
 
   ParivarFamilyMember({
     required this.id,
@@ -69,6 +73,7 @@ class ParivarFamilyMember {
     this.workDetailsSummary,
     this.isIndependent = false,
     this.linkedUserId,
+    this.profilePhoto,
   });
 
   factory ParivarFamilyMember.fromJson(Map<String, dynamic> json) {
@@ -81,6 +86,7 @@ class ParivarFamilyMember {
       workDetailsSummary: json['workDetailsSummary'],
       isIndependent: json['isIndependent'] ?? false,
       linkedUserId: json['linkedUserId'],
+      profilePhoto: json['profilePhoto'] == 'null' ? null : json['profilePhoto'],
     );
   }
 }
