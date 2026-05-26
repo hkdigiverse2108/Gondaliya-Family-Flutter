@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'app/data/services/firebase_notification_service.dart';
 import 'app/data/services/socket_service.dart';
 import 'app/data/services/storage_service.dart';
 import 'app/data/services/translation_service.dart';
@@ -19,6 +20,11 @@ void main() async {
   final socketService = SocketService();
   await socketService.init();
   Get.put<SocketService>(socketService, permanent: true);
+
+  // Initialize Firebase Notifications
+  final notificationService = FirebaseNotificationService();
+  await notificationService.init();
+  Get.put<FirebaseNotificationService>(notificationService, permanent: true);
 
   runApp(const MyApp());
 }

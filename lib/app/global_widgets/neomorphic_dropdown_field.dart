@@ -163,7 +163,7 @@ class _NeomorphicDropdownFieldState<T>
                   borderRadius: BorderRadius.circular(12),
                   child: InputDecorator(
                     isFocused: _isFocused,
-                    isEmpty: field.value == null,
+                    isEmpty: displayLabel.isEmpty,
                     decoration: InputDecoration(
                       labelText: widget.labelText,
                       prefixIcon: widget.prefixIcon,

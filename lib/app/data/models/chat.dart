@@ -8,6 +8,7 @@ class Chat extends Equatable {
   final String? message;
   final String? mediaUrl;
   final String mediaType;
+  final String messageType;
   final int fileSize;
   final bool isDeleted;
   final bool isBlocked;
@@ -23,6 +24,7 @@ class Chat extends Equatable {
     this.message,
     this.mediaUrl,
     this.mediaType = 'TEXT',
+    this.messageType = 'text',
     this.fileSize = 0,
     this.isDeleted = false,
     this.isBlocked = false,
@@ -40,6 +42,7 @@ class Chat extends Equatable {
     message,
     mediaUrl,
     mediaType,
+    messageType,
     fileSize,
     isDeleted,
     isBlocked,
@@ -75,6 +78,7 @@ class Chat extends Equatable {
       message: json['message'] as String?,
       mediaUrl: json['mediaUrl'] as String?,
       mediaType: json['mediaType'] as String? ?? 'TEXT',
+      messageType: json['messageType'] as String? ?? 'text',
       fileSize: (json['fileSize'] as num?)?.toInt() ?? 0,
       isDeleted: json['isDeleted'] as bool? ?? false,
       isBlocked: json['isBlocked'] as bool? ?? false,
@@ -97,6 +101,7 @@ class Chat extends Equatable {
       if (message != null) 'message': message,
       if (mediaUrl != null) 'mediaUrl': mediaUrl,
       'mediaType': mediaType,
+      'messageType': messageType,
       'fileSize': fileSize,
       'isDeleted': isDeleted,
       'isBlocked': isBlocked,

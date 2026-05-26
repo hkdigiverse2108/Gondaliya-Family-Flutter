@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../data/models/chat.dart';
 import '../../../data/repositories/chat_repository.dart';
+import '../../../data/repositories/private_chat_repository.dart';
+import '../../../data/models/private_conversation_model.dart';
 import '../../../data/services/socket_service.dart';
 import '../../../data/services/storage_service.dart';
 
@@ -14,7 +16,8 @@ class ChatController extends GetxController {
   final _storage = Get.find<StorageService>();
 
   final chatMode = ChatMode.give.obs;
-  final remainingMessages = 32.obs;
+  final remainingMessages = 2.obs;
+  final messageType = 'give'.obs;
 
   final messages = <Chat>[].obs;
   final isLoading = false.obs;
@@ -27,10 +30,16 @@ class ChatController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _updateRemainingMessages();
     // Ensure socket is connected
     _socketService.connect();
     _setupSocketListeners();
     _loadChatMessages();
+  }
+
+  void _updateRemainingMessages() {
+    final sentToday = _storage.getDailyChatCount(currentUserId);
+    remainingMessages.value = (2 - sentToday).clamp(0, 2);
   }
 
   @override
@@ -112,6 +121,7 @@ class ChatController extends GetxController {
               message: oldChat.message,
               mediaUrl: oldChat.mediaUrl,
               mediaType: oldChat.mediaType,
+              messageType: oldChat.messageType,
               fileSize: oldChat.fileSize,
               isDeleted: oldChat.isDeleted,
               isBlocked: true,
@@ -177,22 +187,28 @@ class ChatController extends GetxController {
     final text = messageController.text.trim();
     if (text.isEmpty) return;
 
-    if (remainingMessages.value <= 0) {
+    final sentToday = _storage.getDailyChatCount(currentUserId);
+    if (sentToday >= 2) {
       Get.snackbar(
         'Limit Reached',
-        'You have reached your 32 message daily limit.',
+        'You have reached your 2 messages daily limit.',
         snackPosition: SnackPosition.BOTTOM,
       );
+      remainingMessages.value = 0;
       return;
     }
 
     messageController.clear();
 
     try {
-      final response = await _chatRepo.sendChatMessage(message: text);
+      final response = await _chatRepo.sendChatMessage(
+        message: text,
+        messageType: messageType.value,
+      );
 
       if (response.success && response.data != null) {
-        remainingMessages.value--;
+        await _storage.incrementDailyChatCount(currentUserId);
+        _updateRemainingMessages();
         _addMessageToList(response.data!);
       } else {
         Get.snackbar(
@@ -207,6 +223,58 @@ class ChatController extends GetxController {
         'An unexpected error occurred while sending message',
         snackPosition: SnackPosition.BOTTOM,
       );
+    }
+  }
+
+  /// Start a private chat with the sender of a Give/Take bubble
+  Future<void> startPrivateChat({
+    required String senderId,
+    required String senderName,
+    String? senderAvatar,
+  }) async {
+    if (senderId == currentUserId) {
+      Get.snackbar(
+        'Notice',
+        'You cannot message yourself.',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+    try {
+      final privateChatRepo = PrivateChatRepository();
+      final response = await privateChatRepo.startConversation(
+        receiverId: senderId,
+      );
+
+      if (response.success && response.data != null) {
+        final conversationId = response.data!;
+        Get.toNamed(
+          '/private-chat/$conversationId',
+          arguments: {
+            'otherUser': PrivateChatUser(
+              userId: senderId,
+              name: senderName,
+              avatar: senderAvatar,
+            ),
+          },
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          response.message ?? 'Failed to start private chat',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'An unexpected error occurred',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isLoading.value = false;
     }
   }
 }

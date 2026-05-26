@@ -5,6 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:gondalia_family/app/data/models/user.dart';
+import 'package:gondalia_family/app/data/models/work_details.dart';
+import 'package:gondalia_family/app/modules/home/controllers/profile_controller.dart';
+
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 import 'package:gondalia_family/app/routes/app_pages.dart';
@@ -44,8 +48,17 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
         }
 
         final biz = owner.workDetails!.businessDetails!;
-        final initials = '${owner.firstName.isNotEmpty ? owner.firstName[0] : ''}${owner.lastName.isNotEmpty ? owner.lastName[0] : ''}'.toUpperCase();
-        final ownerFullName = '${owner.firstName} ${owner.middleName} ${owner.lastName}'.trim();
+        final initials =
+            '${owner.firstName.isNotEmpty ? owner.firstName[0] : ''}${owner.lastName.isNotEmpty ? owner.lastName[0] : ''}'
+                .toUpperCase();
+        final ownerFullName =
+            '${owner.firstName} ${owner.middleName} ${owner.lastName}'.trim();
+
+        UserModel? currentUser;
+        if (Get.isRegistered<ProfileController>()) {
+          currentUser = Get.find<ProfileController>().currentUser.value;
+        }
+        final isOwner = currentUser != null && currentUser.id == owner.id;
 
         return CustomScrollView(
           physics: const BouncingScrollPhysics(),
@@ -63,10 +76,36 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                   shape: BoxShape.circle,
                 ),
                 child: IconButton(
-                  icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
+                  icon: Icon(
+                    Icons.arrow_back_rounded,
+                    color: colors.textPrimary,
+                  ),
                   onPressed: () => Get.back(),
                 ),
               ),
+              actions: [
+                Obx(() {
+                  UserModel? currentUser;
+                  if (Get.isRegistered<ProfileController>()) {
+                    currentUser =
+                        Get.find<ProfileController>().currentUser.value;
+                  }
+                  if (currentUser != null && currentUser.id == owner.id) {
+                    return Container(
+                      margin: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        color: colors.card.withValues(alpha: 0.8),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.edit_rounded, color: colors.primary),
+                        onPressed: () => Get.toNamed(Routes.editWork),
+                      ),
+                    );
+                  }
+                  return const SizedBox.shrink();
+                }),
+              ],
               flexibleSpace: FlexibleSpaceBar(
                 stretchModes: const [
                   StretchMode.zoomBackground,
@@ -105,10 +144,15 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 10.w,
+                              vertical: 4.h,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.white24,
-                              borderRadius: BorderRadius.circular(AppSizes.radiusS.r),
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusS.r,
+                              ),
                             ),
                             child: Text(
                               biz.category.toUpperCase(),
@@ -158,11 +202,18 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 12.w,
+                          vertical: 6.h,
+                        ),
                         decoration: BoxDecoration(
                           color: colors.primary.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
-                          border: Border.all(color: colors.primary.withValues(alpha: 0.15)),
+                          borderRadius: BorderRadius.circular(
+                            AppSizes.radiusM.r,
+                          ),
+                          border: Border.all(
+                            color: colors.primary.withValues(alpha: 0.15),
+                          ),
                         ),
                         child: Text(
                           biz.subCategory,
@@ -177,17 +228,37 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                     SizedBox(height: AppSizes.spacingL.h),
                   ],
 
+                  // Quick Actions Bar: Call, WhatsApp, DM
+                  if (!isOwner) ...[
+                    _buildQuickActionsRow(
+                      biz: biz,
+                      owner: owner,
+                      colors: colors,
+                      controller: controller,
+                    ),
+                    SizedBox(height: AppSizes.spacingXL.h),
+                  ],
+
                   // Description card
                   if (biz.description.isNotEmpty) ...[
-                    _buildSectionHeader('description'.tr, PhosphorIcons.article(), colors),
+                    _buildSectionHeader(
+                      'description'.tr,
+                      PhosphorIcons.article(),
+                      colors,
+                    ),
                     SizedBox(height: AppSizes.spacingM.h),
                     Container(
                       padding: EdgeInsets.all(AppSizes.spacingL.w),
                       decoration: BoxDecoration(
                         color: colors.card,
                         borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
-                        boxShadow: colors.neumorphicShadow(blur: 10, distance: 2),
-                        border: Border.all(color: colors.primary.withValues(alpha: 0.04)),
+                        boxShadow: colors.neumorphicShadow(
+                          blur: 10,
+                          distance: 2,
+                        ),
+                        border: Border.all(
+                          color: colors.primary.withValues(alpha: 0.04),
+                        ),
                       ),
                       child: Text(
                         biz.description,
@@ -202,7 +273,11 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                   ],
 
                   // Business Owner section
-                  _buildSectionHeader('owner_name'.tr, PhosphorIcons.user(), colors),
+                  _buildSectionHeader(
+                    'owner_name'.tr,
+                    PhosphorIcons.user(),
+                    colors,
+                  ),
                   SizedBox(height: AppSizes.spacingM.h),
                   InkWell(
                     onTap: () {
@@ -217,7 +292,10 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                       decoration: BoxDecoration(
                         color: colors.card,
                         borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
-                        boxShadow: colors.neumorphicShadow(blur: 10, distance: 2),
+                        boxShadow: colors.neumorphicShadow(
+                          blur: 10,
+                          distance: 2,
+                        ),
                         border: Border.all(
                           color: colors.primary.withValues(alpha: 0.05),
                           width: 1,
@@ -227,7 +305,9 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                         children: [
                           CircleAvatar(
                             radius: 26.r,
-                            backgroundColor: colors.primary.withValues(alpha: 0.1),
+                            backgroundColor: colors.primary.withValues(
+                              alpha: 0.1,
+                            ),
                             child: Text(
                               initials,
                               style: GoogleFonts.outfit(
@@ -243,7 +323,9 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  biz.ownerName.isNotEmpty ? biz.ownerName : ownerFullName,
+                                  biz.ownerName.isNotEmpty
+                                      ? biz.ownerName
+                                      : ownerFullName,
                                   style: GoogleFonts.outfit(
                                     fontWeight: FontWeight.bold,
                                     fontSize: AppSizes.fontSizeBodyLarge.sp,
@@ -275,7 +357,11 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
 
                   // Locations section
                   if (biz.locations.isNotEmpty) ...[
-                    _buildSectionHeader('business_address'.tr, PhosphorIcons.mapPin(), colors),
+                    _buildSectionHeader(
+                      'business_address'.tr,
+                      PhosphorIcons.mapPin(),
+                      colors,
+                    ),
                     SizedBox(height: AppSizes.spacingM.h),
                     ListView.builder(
                       shrinkWrap: true,
@@ -289,9 +375,16 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                           padding: EdgeInsets.all(AppSizes.spacingL.w),
                           decoration: BoxDecoration(
                             color: colors.card,
-                            borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
-                            boxShadow: colors.neumorphicShadow(blur: 10, distance: 2),
-                            border: Border.all(color: colors.primary.withValues(alpha: 0.04)),
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radiusL.r,
+                            ),
+                            boxShadow: colors.neumorphicShadow(
+                              blur: 10,
+                              distance: 2,
+                            ),
+                            border: Border.all(
+                              color: colors.primary.withValues(alpha: 0.04),
+                            ),
                           ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -327,25 +420,44 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                                   onTap: () async {
                                     final uri = Uri.parse(loc.googleMapLink);
                                     if (await canLaunchUrl(uri)) {
-                                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                                      await launchUrl(
+                                        uri,
+                                        mode: LaunchMode.externalApplication,
+                                      );
                                     }
                                   },
-                                  borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.radiusM.r,
+                                  ),
                                   child: Container(
-                                    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 12.w),
+                                    padding: EdgeInsets.symmetric(
+                                      vertical: 8.h,
+                                      horizontal: 12.w,
+                                    ),
                                     decoration: BoxDecoration(
-                                      color: colors.primary.withValues(alpha: 0.08),
-                                      borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+                                      color: colors.primary.withValues(
+                                        alpha: 0.08,
+                                      ),
+                                      borderRadius: BorderRadius.circular(
+                                        AppSizes.radiusM.r,
+                                      ),
                                     ),
                                     child: Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(PhosphorIcons.navigationArrow(PhosphorIconsStyle.fill), color: colors.primary, size: 14.sp),
+                                        Icon(
+                                          PhosphorIcons.navigationArrow(
+                                            PhosphorIconsStyle.fill,
+                                          ),
+                                          color: colors.primary,
+                                          size: 14.sp,
+                                        ),
                                         SizedBox(width: 6.w),
                                         Text(
                                           'map_link'.tr,
                                           style: GoogleFonts.outfit(
-                                            fontSize: AppSizes.fontSizeBodySmall.sp,
+                                            fontSize:
+                                                AppSizes.fontSizeBodySmall.sp,
                                             fontWeight: FontWeight.bold,
                                             color: colors.primary,
                                           ),
@@ -365,64 +477,95 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
 
                   // Contact Details Section
                   if (biz.contactInfo != null) ...[
-                    _buildSectionHeader('business_contact'.tr, PhosphorIcons.phone(), colors),
+                    _buildSectionHeader(
+                      'business_contact'.tr,
+                      PhosphorIcons.phone(),
+                      colors,
+                    ),
                     SizedBox(height: AppSizes.spacingM.h),
                     Container(
                       padding: EdgeInsets.all(AppSizes.spacingL.w),
                       decoration: BoxDecoration(
                         color: colors.card,
                         borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
-                        boxShadow: colors.neumorphicShadow(blur: 10, distance: 2),
-                        border: Border.all(color: colors.primary.withValues(alpha: 0.04)),
+                        boxShadow: colors.neumorphicShadow(
+                          blur: 10,
+                          distance: 2,
+                        ),
+                        border: Border.all(
+                          color: colors.primary.withValues(alpha: 0.04),
+                        ),
                       ),
                       child: Column(
                         children: [
                           if (biz.contactInfo!.mobile1.isNotEmpty)
                             _buildContactRow(
-                              icon: PhosphorIcons.phone(PhosphorIconsStyle.fill),
+                              icon: PhosphorIcons.phone(
+                                PhosphorIconsStyle.fill,
+                              ),
                               label: 'mobile_1'.tr,
                               value: biz.contactInfo!.mobile1,
                               colors: colors,
-                              onTap: () => launchUrl(Uri.parse('tel:${biz.contactInfo!.mobile1}')),
+                              onTap: () => launchUrl(
+                                Uri.parse('tel:${biz.contactInfo!.mobile1}'),
+                              ),
                             ),
                           if (biz.contactInfo!.mobile2.isNotEmpty) ...[
                             const Divider(height: 16),
                             _buildContactRow(
-                              icon: PhosphorIcons.phone(PhosphorIconsStyle.fill),
+                              icon: PhosphorIcons.phone(
+                                PhosphorIconsStyle.fill,
+                              ),
                               label: 'mobile_2'.tr,
                               value: biz.contactInfo!.mobile2,
                               colors: colors,
-                              onTap: () => launchUrl(Uri.parse('tel:${biz.contactInfo!.mobile2}')),
+                              onTap: () => launchUrl(
+                                Uri.parse('tel:${biz.contactInfo!.mobile2}'),
+                              ),
                             ),
                           ],
                           if (biz.contactInfo!.email.isNotEmpty) ...[
                             const Divider(height: 16),
                             _buildContactRow(
-                              icon: PhosphorIcons.envelope(PhosphorIconsStyle.fill),
+                              icon: PhosphorIcons.envelope(
+                                PhosphorIconsStyle.fill,
+                              ),
                               label: 'email'.tr,
                               value: biz.contactInfo!.email,
                               colors: colors,
-                              onTap: () => launchUrl(Uri.parse('mailto:${biz.contactInfo!.email}')),
+                              onTap: () => launchUrl(
+                                Uri.parse('mailto:${biz.contactInfo!.email}'),
+                              ),
                             ),
                           ],
                           if (biz.contactInfo!.website.isNotEmpty) ...[
                             const Divider(height: 16),
                             _buildContactRow(
-                              icon: PhosphorIcons.globe(PhosphorIconsStyle.fill),
+                              icon: PhosphorIcons.globe(
+                                PhosphorIconsStyle.fill,
+                              ),
                               label: 'website'.tr,
                               value: biz.contactInfo!.website,
                               colors: colors,
-                              onTap: () => launchUrl(Uri.parse(biz.contactInfo!.website), mode: LaunchMode.externalApplication),
+                              onTap: () => launchUrl(
+                                Uri.parse(biz.contactInfo!.website),
+                                mode: LaunchMode.externalApplication,
+                              ),
                             ),
                           ],
                           if (biz.contactInfo!.portfolioLink.isNotEmpty) ...[
                             const Divider(height: 16),
                             _buildContactRow(
-                              icon: PhosphorIcons.browser(PhosphorIconsStyle.fill),
+                              icon: PhosphorIcons.browser(
+                                PhosphorIconsStyle.fill,
+                              ),
                               label: 'portfolio_website'.tr,
                               value: biz.contactInfo!.portfolioLink,
                               colors: colors,
-                              onTap: () => launchUrl(Uri.parse(biz.contactInfo!.portfolioLink), mode: LaunchMode.externalApplication),
+                              onTap: () => launchUrl(
+                                Uri.parse(biz.contactInfo!.portfolioLink),
+                                mode: LaunchMode.externalApplication,
+                              ),
                             ),
                           ],
                         ],
@@ -439,7 +582,11 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
     );
   }
 
-  Widget _buildSectionHeader(String title, IconData icon, AppColorScheme colors) {
+  Widget _buildSectionHeader(
+    String title,
+    IconData icon,
+    AppColorScheme colors,
+  ) {
     return Row(
       children: [
         Icon(icon, color: colors.primary, size: 20.sp),
@@ -507,6 +654,141 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildQuickActionsRow({
+    required BusinessDetails biz,
+    required UserModel owner,
+    required AppColorScheme colors,
+    required BusinessDetailController controller,
+  }) {
+    final rawNumber = biz.contactInfo?.mobile1.isNotEmpty == true
+        ? biz.contactInfo!.mobile1
+        : owner.phoneNumber;
+
+    return Row(
+      children: [
+        // Call Button
+        Expanded(
+          child: _buildActionCard(
+            icon: PhosphorIcons.phone(PhosphorIconsStyle.bold),
+            label: 'call_now'.tr,
+            color: colors.primary,
+            onTap: () async {
+              try {
+                final uri = Uri.parse('tel:$rawNumber');
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                } else {
+                  Get.snackbar('Error', 'Could not launch dialer');
+                }
+              } catch (e) {
+                Get.snackbar('Error', 'Could not place call');
+              }
+            },
+            colors: colors,
+          ),
+        ),
+        SizedBox(width: AppSizes.spacingM.w),
+        // WhatsApp Button
+        Expanded(
+          child: _buildActionCard(
+            icon: PhosphorIcons.chatCircle(PhosphorIconsStyle.bold),
+            label: 'whatsapp'.tr,
+            color: const Color(0xFF25D366),
+            onTap: () async {
+              try {
+                String cleanPhone = rawNumber.replaceAll(RegExp(r'[^0-9]'), '');
+                if (cleanPhone.length == 10) {
+                  cleanPhone = '91$cleanPhone';
+                }
+                final text =
+                    'Hi, I am interested in your business: ${biz.businessName}';
+                final url =
+                    'https://wa.me/$cleanPhone?text=${Uri.encodeComponent(text)}';
+                final uri = Uri.parse(url);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                } else {
+                  Get.snackbar('Error', 'Could not open WhatsApp');
+                }
+              } catch (e) {
+                Get.snackbar('Error', 'Could not start WhatsApp chat');
+              }
+            },
+            colors: colors,
+          ),
+        ),
+        SizedBox(width: AppSizes.spacingM.w),
+        // DM Button
+        Expanded(
+          child: Obx(() {
+            return _buildActionCard(
+              icon: PhosphorIcons.paperPlaneTilt(PhosphorIconsStyle.bold),
+              label: 'dm'.tr,
+              color: colors.accent,
+              isLoading: controller.isStartingChat.value,
+              onTap: () {
+                controller.startDirectMessage();
+              },
+              colors: colors,
+            );
+          }),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildActionCard({
+    required IconData icon,
+    required String label,
+    required Color color,
+    required VoidCallback onTap,
+    required AppColorScheme colors,
+    bool isLoading = false,
+  }) {
+    return InkWell(
+      onTap: isLoading ? null : onTap,
+      borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+      child: Container(
+        padding: EdgeInsets.symmetric(vertical: 12.h),
+        decoration: BoxDecoration(
+          color: colors.card,
+          borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+          boxShadow: colors.neumorphicShadow(blur: 10, distance: 2),
+          border: Border.all(
+            color: colors.primary.withValues(alpha: 0.05),
+            width: 1,
+          ),
+        ),
+        child: isLoading
+            ? Center(
+                child: SizedBox(
+                  width: 20.w,
+                  height: 20.w,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    valueColor: AlwaysStoppedAnimation<Color>(color),
+                  ),
+                ),
+              )
+            : Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(icon, color: color, size: 24.sp),
+                  SizedBox(height: 6.h),
+                  Text(
+                    label,
+                    style: GoogleFonts.outfit(
+                      fontSize: AppSizes.fontSizeBodySmall.sp,
+                      fontWeight: FontWeight.bold,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
   }

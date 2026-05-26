@@ -40,11 +40,13 @@ class ChatRepository {
     required String message,
     String? mediaUrl,
     String mediaType = 'TEXT',
+    String messageType = 'text',
   }) async {
     final body = <String, dynamic>{
       'message': message,
       'mediaType': mediaType,
-      'mediaUrl': ?mediaUrl,
+      'mediaUrl': mediaUrl,
+      'messageType': messageType,
     };
 
     return _apiService.post<Chat>(

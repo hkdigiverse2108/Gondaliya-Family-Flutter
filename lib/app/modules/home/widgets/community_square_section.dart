@@ -17,6 +17,7 @@ class CommunitySquareSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetX<AnnouncementsController>(
+      init: Get.find<AnnouncementsController>(),
       builder: (controller) {
         final announcements = controller.announcements;
 

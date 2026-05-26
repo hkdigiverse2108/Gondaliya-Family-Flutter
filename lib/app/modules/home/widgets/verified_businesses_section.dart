@@ -9,7 +9,7 @@ import 'package:gondalia_family/app/routes/app_pages.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
 import 'package:gondalia_family/app/data/models/business.dart';
-import '../controllers/profile_controller.dart';
+import '../controllers/home_controller.dart';
 
 class VerifiedBusinessesSection extends StatefulWidget {
   final AppColorScheme colors;
@@ -22,12 +22,12 @@ class VerifiedBusinessesSection extends StatefulWidget {
 }
 
 class _VerifiedBusinessesSectionState extends State<VerifiedBusinessesSection> {
-  late final ProfileController controller;
+  late final HomeController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = Get.find<ProfileController>();
+    controller = Get.find<HomeController>();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       controller.fetchBusinesses();
     });
@@ -35,9 +35,12 @@ class _VerifiedBusinessesSectionState extends State<VerifiedBusinessesSection> {
 
   @override
   Widget build(BuildContext context) {
+    final textScale = MediaQuery.of(context).textScaler.scale(1.0);
+    final containerHeight = (230.0 * textScale).clamp(225.0, 265.0);
+
     return Obx(() {
       if (controller.isBusinessesLoading.value) {
-        return _buildShimmerLoading(context);
+        return _buildShimmerLoading(context, containerHeight);
       }
 
       final allBusinesses = controller.businesses;
@@ -60,7 +63,7 @@ class _VerifiedBusinessesSectionState extends State<VerifiedBusinessesSection> {
       }
 
       return SizedBox(
-        height: 230.h,
+        height: containerHeight,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
           physics: const BouncingScrollPhysics(),
@@ -68,17 +71,17 @@ class _VerifiedBusinessesSectionState extends State<VerifiedBusinessesSection> {
           itemCount: businesses.length,
           itemBuilder: (context, index) {
             final b = businesses[index];
-            return _BusinessCard(business: b, colors: widget.colors);
+            return BusinessCard(business: b, colors: widget.colors);
           },
         ),
       );
     });
   }
 
-  Widget _buildShimmerLoading(BuildContext context) {
+  Widget _buildShimmerLoading(BuildContext context, double height) {
     final colors = widget.colors;
     return SizedBox(
-      height: 230.h,
+      height: height,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         physics: const NeverScrollableScrollPhysics(),
@@ -182,11 +185,11 @@ class _VerifiedBusinessesSectionState extends State<VerifiedBusinessesSection> {
   }
 }
 
-class _BusinessCard extends StatelessWidget {
+class BusinessCard extends StatelessWidget {
   final Business business;
   final AppColorScheme colors;
 
-  const _BusinessCard({required this.business, required this.colors});
+  const BusinessCard({super.key, required this.business, required this.colors});
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +272,7 @@ class _BusinessCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 20.h),
+            SizedBox(height: 12.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingM.w),
               child: Column(

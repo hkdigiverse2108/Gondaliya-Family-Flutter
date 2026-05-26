@@ -1,12 +1,16 @@
 import 'package:get/get.dart';
 import '../../../data/models/user.dart';
 import '../../../data/repositories/auth_repository.dart';
+import '../../../data/repositories/private_chat_repository.dart';
+import '../../../data/models/private_conversation_model.dart';
 
 class BusinessDetailController extends GetxController {
   final _authRepo = AuthRepository();
+  final _chatRepo = PrivateChatRepository();
 
   final owner = Rxn<UserModel>();
   final isLoading = false.obs;
+  final isStartingChat = false.obs;
 
   @override
   void onInit() {
@@ -38,6 +42,45 @@ class BusinessDetailController extends GetxController {
       Get.printError(info: 'fetchOwnerProfile error: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> startDirectMessage() async {
+    final ownerVal = owner.value;
+    if (ownerVal == null) return;
+
+    isStartingChat.value = true;
+    try {
+      final response = await _chatRepo.startConversation(
+        receiverId: ownerVal.id,
+      );
+      if (response.success && response.data != null) {
+        final conversationId = response.data!;
+        Get.toNamed(
+          '/private-chat/$conversationId',
+          arguments: {
+            'otherUser': PrivateChatUser(
+              userId: ownerVal.id,
+              name: '${ownerVal.firstName} ${ownerVal.lastName}'.trim(),
+              avatar: ownerVal.profilePhoto,
+            ),
+          },
+        );
+      } else {
+        Get.snackbar(
+          'Error',
+          response.message ?? 'Failed to start conversation',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    } catch (e) {
+      Get.snackbar(
+        'Error',
+        'Could not start conversation',
+        snackPosition: SnackPosition.BOTTOM,
+      );
+    } finally {
+      isStartingChat.value = false;
     }
   }
 }

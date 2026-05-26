@@ -1,5 +1,5 @@
 import 'package:gondalia_family/core/network/api_service.dart';
-import 'package:gondalia_family/core/network/api_endpoints.dart'; 
+import 'package:gondalia_family/core/network/api_endpoints.dart';
 import 'package:gondalia_family/app/data/models/listing.dart';
 import 'package:flutter/foundation.dart';
 import 'package:gondalia_family/app/data/models/parivar_directory.dart';
@@ -28,7 +28,7 @@ class HomeRepository {
     }
   }
 
-  Future<List<String>> getParivarVillages() async {
+  Future<List<String>?> getParivarVillages() async {
     try {
       final response = await _apiService.get<List<dynamic>>(
         ApiEndpoints.parivarVillages,
@@ -36,14 +36,14 @@ class HomeRepository {
       if (response.success && response.data != null) {
         return response.data!.map((e) => e.toString()).toList();
       }
-      return [];
+      return null;
     } catch (e, stack) {
       debugPrint('getParivarVillages error: $e\n$stack');
-      return [];
+      return null;
     }
   }
 
-  Future<List<ParivarDirectory>> getParivarDirectory() async {
+  Future<List<ParivarDirectory>?> getParivarDirectory() async {
     try {
       final response = await _apiService.get<List<dynamic>>(
         ApiEndpoints.parivarAll,
@@ -53,10 +53,10 @@ class HomeRepository {
             .map((e) => ParivarDirectory.fromJson(e as Map<String, dynamic>))
             .toList();
       }
-      return [];
+      return null;
     } catch (e, stack) {
       debugPrint('getParivarDirectory error: $e\n$stack');
-      return [];
+      return null;
     }
   }
 }

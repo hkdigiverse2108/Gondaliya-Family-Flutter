@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "399851150525",
+    "project_id": "gondaliyafamily-d7002",
+    "storage_bucket": "gondaliyafamily-d7002.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:399851150525:android:5d92a40522c4deff2c6bd4",
+        "android_client_info": {
+          "package_name": "com.gondaliya.family"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBjifqpeFWpfXxG_0gRMLaA5jHZCnlOl_U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,14 +15,16 @@ class HomeBinding extends Bindings {
       () => HomeRepository(Get.find<DioApiService>()),
     );
     Get.lazyPut<NavigationController>(() => NavigationController());
-    Get.lazyPut<HomeController>(() => HomeController());
-    Get.lazyPut<ParivarController>(
-      () => ParivarController(Get.find<HomeRepository>()),
-    );
+    Get.lazyPut<HomeController>(() => HomeController(), fenix: true);
+    Get.put<ParivarController>(ParivarController(Get.find<HomeRepository>()));
     Get.lazyPut<MarketplaceController>(
       () => MarketplaceController(Get.find<HomeRepository>()),
+      fenix: true,
     );
-    Get.lazyPut<ProfileController>(() => ProfileController());
-    Get.lazyPut<AnnouncementsController>(() => AnnouncementsController());
+    Get.lazyPut<ProfileController>(() => ProfileController(), fenix: true);
+    Get.lazyPut<AnnouncementsController>(
+      () => AnnouncementsController(),
+      fenix: true,
+    );
   }
 }

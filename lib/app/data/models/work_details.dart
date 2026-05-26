@@ -43,6 +43,7 @@ class BusinessDetails extends Equatable {
   final String businessName;
   final String ownerName;
   final String description;
+  final String? businessLogo;
   final List<BusinessLocation> locations;
   final ContactInfo? contactInfo;
 
@@ -52,6 +53,7 @@ class BusinessDetails extends Equatable {
     required this.businessName,
     required this.ownerName,
     required this.description,
+    this.businessLogo,
     required this.locations,
     this.contactInfo,
   });
@@ -63,6 +65,9 @@ class BusinessDetails extends Equatable {
       businessName: json['businessName'] as String? ?? '',
       ownerName: json['ownerName'] as String? ?? '',
       description: json['description'] as String? ?? '',
+      businessLogo: json['businessLogo'] == 'null'
+          ? null
+          : json['businessLogo'] as String?,
       locations:
           (json['locations'] as List<dynamic>?)
               ?.map((e) => BusinessLocation.fromJson(e as Map<String, dynamic>))
@@ -81,6 +86,7 @@ class BusinessDetails extends Equatable {
       'businessName': businessName,
       'ownerName': ownerName,
       'description': description,
+      'businessLogo': businessLogo,
       'locations': locations.map((e) => e.toJson()).toList(),
       'contactInfo': contactInfo?.toJson(),
     };
@@ -93,6 +99,7 @@ class BusinessDetails extends Equatable {
     businessName,
     ownerName,
     description,
+    businessLogo,
     locations,
     contactInfo,
   ];

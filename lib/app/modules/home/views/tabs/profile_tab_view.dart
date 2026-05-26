@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../routes/app_pages.dart';
 import '../../../../global_widgets/neomorphic_button.dart';
+import '../../../../global_widgets/neomorphic_card.dart';
+import '../../../../global_widgets/neomorphic_text_field.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/profile_controller.dart';
@@ -62,94 +64,98 @@ class ProfileTabView extends StatelessWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Stack(
-                        alignment: Alignment.bottomRight,
-                        children: [
-                          Container(
-                            width: 70.r,
-                            height: 70.r,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: colors.card,
-                              boxShadow: colors.neumorphicShadow(
-                                blur: 10,
-                                distance: 2,
-                              ),
-                              border: Border.all(
-                                color: colors.primary.withValues(alpha: 0.08),
-                                width: 2,
-                              ),
-                            ),
-                            child: Container(
-                              margin: EdgeInsets.all(3.w),
+                      GestureDetector(
+                        onTap: profileController.pickAndUploadProfilePhoto,
+                        child: Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            Container(
+                              width: 70.r,
+                              height: 70.r,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
-                                gradient:
-                                    user?.profilePhoto == null ||
-                                        user!.profilePhoto!.isEmpty
-                                    ? LinearGradient(
-                                        colors: colors.primaryGradient,
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                      )
-                                    : null,
+                                color: colors.card,
+                                boxShadow: colors.neumorphicShadow(
+                                  blur: 10,
+                                  distance: 2,
+                                ),
+                                border: Border.all(
+                                  color: colors.primary.withValues(alpha: 0.08),
+                                  width: 2,
+                                ),
                               ),
-                              clipBehavior: Clip.antiAlias,
-                              child:
-                                  user?.profilePhoto != null &&
-                                      user!.profilePhoto!.isNotEmpty
-                                  ? Image.network(
-                                      user.profilePhoto!,
-                                      fit: BoxFit.cover,
-                                      errorBuilder:
-                                          (context, error, stackTrace) =>
-                                              Center(
-                                                child: Text(
-                                                  initials,
-                                                  style: GoogleFonts.outfit(
-                                                    fontSize: 20.sp,
-                                                    fontWeight: FontWeight.bold,
-                                                    color: Colors.white,
+                              child: Container(
+                                margin: EdgeInsets.all(3.w),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  gradient:
+                                      user?.profilePhoto == null ||
+                                          user!.profilePhoto!.isEmpty
+                                      ? LinearGradient(
+                                          colors: colors.primaryGradient,
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        )
+                                      : null,
+                                ),
+                                clipBehavior: Clip.antiAlias,
+                                child:
+                                    user?.profilePhoto != null &&
+                                        user!.profilePhoto!.isNotEmpty
+                                    ? Image.network(
+                                        user.profilePhoto!,
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Center(
+                                                  child: Text(
+                                                    initials,
+                                                    style: GoogleFonts.outfit(
+                                                      fontSize: 20.sp,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors.white,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                    )
-                                  : Center(
-                                      child: Text(
-                                        initials,
-                                        style: GoogleFonts.outfit(
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                      )
+                                    : Center(
+                                        child: Text(
+                                          initials,
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                            ),
-                          ),
-                          Container(
-                            padding: EdgeInsets.all(2.w),
-                            decoration: BoxDecoration(
-                              color: colors.card,
-                              shape: BoxShape.circle,
-                              boxShadow: colors.neumorphicShadow(
-                                blur: 4,
-                                distance: 1,
                               ),
                             ),
-                            child: Container(
-                              padding: EdgeInsets.all(5.w),
+                            Container(
+                              padding: EdgeInsets.all(2.w),
                               decoration: BoxDecoration(
-                                color: colors.primary,
+                                color: colors.card,
                                 shape: BoxShape.circle,
+                                boxShadow: colors.neumorphicShadow(
+                                  blur: 4,
+                                  distance: 1,
+                                ),
                               ),
-                              child: Icon(
-                                PhosphorIcons.pencilSimple(),
-                                color: Colors.white,
-                                size: 12.r,
+                              child: Container(
+                                padding: EdgeInsets.all(5.w),
+                                decoration: BoxDecoration(
+                                  color: colors.primary,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  PhosphorIcons.pencilSimple(),
+                                  color: Colors.white,
+                                  size: 12.r,
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       SizedBox(width: AppSizes.spacingXL.w),
                       Expanded(
@@ -252,7 +258,7 @@ class ProfileTabView extends StatelessWidget {
                     height: 38.h,
                     fontSize: AppSizes.fontSizeTitleSmall.sp,
                     iconSize: 16.sp,
-                    onPressed: () => Get.toNamed(Routes.register),
+                    onPressed: () => Get.toNamed(Routes.editProfile),
                   ),
                 ],
               ),
@@ -269,8 +275,13 @@ class ProfileTabView extends StatelessWidget {
               children: [
                 Obx(() {
                   final user = profileController.currentUser.value;
-                  final hasBusiness = user?.workDetails?.hasOwnBusiness == true &&
+                  final hasBusiness =
+                      user?.workDetails?.hasOwnBusiness == true &&
                       user?.workDetails?.businessDetails != null;
+                  final hasJob =
+                      user?.workDetails?.hasOwnBusiness == false &&
+                      user?.workDetails?.jobDetails != null;
+
                   return _buildMenuGroup(
                     title: 'manage'.tr,
                     colors: colors,
@@ -287,6 +298,29 @@ class ProfileTabView extends StatelessWidget {
                               arguments: {'userId': user!.id, 'user': user},
                             );
                           },
+                        )
+                      else if (hasJob)
+                        _buildMenuTile(
+                          icon: PhosphorIcons.briefcase(),
+                          title: 'my_job'.tr,
+                          subtitle: 'my_job_desc'.tr,
+                          colors: colors,
+                          onTap: () {
+                            Get.toNamed(
+                              Routes.jobDetail,
+                              arguments: {'userId': user!.id, 'user': user},
+                            );
+                          },
+                        )
+                      else
+                        _buildMenuTile(
+                          icon: PhosphorIcons.briefcase(),
+                          title: 'setup_work_profile'.tr,
+                          subtitle: 'setup_work_profile_desc'.tr,
+                          colors: colors,
+                          onTap: () {
+                            Get.toNamed(Routes.editWork);
+                          },
                         ),
                       _buildMenuTile(
                         icon: PhosphorIcons.users(),
@@ -295,13 +329,13 @@ class ProfileTabView extends StatelessWidget {
                         colors: colors,
                         onTap: () => Get.toNamed(Routes.familyMembers),
                       ),
-                      _buildMenuTile(
-                        icon: PhosphorIcons.storefront(),
-                        title: 'my_business'.tr,
-                        subtitle: 'my_business_desc'.tr,
-                        colors: colors,
-                        onTap: () => Get.toNamed(Routes.myBusiness),
-                      ),
+                      // _buildMenuTile(
+                      //   icon: PhosphorIcons.storefront(),
+                      //   title: 'my_business'.tr,
+                      //   subtitle: 'my_business_desc'.tr,
+                      //   colors: colors,
+                      //   onTap: () => Get.toNamed(Routes.myBusiness),
+                      // ),
                     ],
                   );
                 }),
@@ -319,7 +353,8 @@ class ProfileTabView extends StatelessWidget {
                         colors: colors,
                         trailing: Switch(
                           value: controller.isDarkTheme.value,
-                          onChanged: (val) => controller.toggleTheme(),
+                          onChanged: (val) {},
+                          // onChanged: (val) => controller.toggleTheme(),
                           activeThumbColor: colors.primary,
                           activeTrackColor: colors.primary.withValues(
                             alpha: 0.2,
@@ -356,7 +391,20 @@ class ProfileTabView extends StatelessWidget {
                       subtitle: 'help_support_desc'.tr,
                       colors: colors,
                       onTap: () {
-                        // TODO: Navigate to Support Page
+                        Get.toNamed(Routes.support);
+                      },
+                    ),
+                    _buildMenuTile(
+                      icon: PhosphorIcons.chatTeardropDots(),
+                      title: 'feedback_complaint'.tr.isEmpty
+                          ? 'Feedback & Complaints'
+                          : 'feedback_complaint'.tr,
+                      subtitle: 'feedback_complaint_desc'.tr.isEmpty
+                          ? 'Share your thoughts or report issues'
+                          : 'feedback_complaint_desc'.tr,
+                      colors: colors,
+                      onTap: () {
+                        _showFeedbackBottomSheet(context, profileController);
                       },
                     ),
                     _buildMenuTile(
@@ -552,6 +600,218 @@ class ProfileTabView extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showFeedbackBottomSheet(
+    BuildContext context,
+    ProfileController profileController,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) =>
+          _FeedbackBottomSheetContent(controller: profileController),
+    );
+  }
+}
+
+class _FeedbackBottomSheetContent extends StatefulWidget {
+  final ProfileController controller;
+  const _FeedbackBottomSheetContent({required this.controller});
+
+  @override
+  State<_FeedbackBottomSheetContent> createState() =>
+      _FeedbackBottomSheetContentState();
+}
+
+class _FeedbackBottomSheetContentState
+    extends State<_FeedbackBottomSheetContent> {
+  final _formKey = GlobalKey<FormState>();
+  final _messageController = TextEditingController();
+  String _selectedType = 'FEEDBACK'; // 'FEEDBACK' or 'COMPLAINT'
+
+  @override
+  void dispose() {
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) return;
+    FocusScope.of(context).unfocus();
+
+    final success = await widget.controller.submitFeedback(
+      type: _selectedType,
+      message: _messageController.text.trim(),
+    );
+
+    if (success) {
+      Get.back(); // close bottom sheet
+      Get.snackbar(
+        'Success',
+        'Feedback submitted successfully!'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
+    } else {
+      Get.snackbar(
+        'Error',
+        'Failed to submit feedback. Please try again.'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.appColors;
+
+    return Container(
+      padding: EdgeInsets.only(
+        left: AppSizes.spacingXL.w,
+        right: AppSizes.spacingXL.w,
+        top: AppSizes.spacingXL.h,
+        bottom: MediaQuery.of(context).viewInsets.bottom + AppSizes.spacingXL.h,
+      ),
+      decoration: BoxDecoration(
+        color: colors.background,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(AppSizes.radiusXXL.r),
+          topRight: Radius.circular(AppSizes.radiusXXL.r),
+        ),
+        boxShadow: colors.neumorphicShadow(blur: 20, distance: 4),
+      ),
+      child: Form(
+        key: _formKey,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Header Drag Handle
+              Center(
+                child: Container(
+                  width: 40.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: colors.textSecondary.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+              ),
+              SizedBox(height: AppSizes.spacingXL.h),
+
+              Text(
+                'feedback_complaint'.tr.isEmpty
+                    ? 'Feedback & Complaints'
+                    : 'feedback_complaint'.tr,
+                style: GoogleFonts.outfit(
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                  color: colors.textPrimary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: AppSizes.spacingS.h),
+              Text(
+                'feedback_complaint_desc'.tr.isEmpty
+                    ? 'Help us improve Gondaliya Family by sharing your feedback.'
+                    : 'feedback_complaint_desc'.tr,
+                style: GoogleFonts.outfit(
+                  fontSize: AppSizes.fontSizeBodySmall.sp,
+                  color: colors.textSecondary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: AppSizes.spacingXL.h),
+
+              // Neomorphic Type Selector
+              NeomorphicCard(
+                borderRadius: AppSizes.radiusL.r,
+                padding: EdgeInsets.all(AppSizes.spacingXS.w),
+                child: Row(
+                  children: [
+                    _buildTypeTab('FEEDBACK', 'Feedback'.tr),
+                    _buildTypeTab('COMPLAINT', 'Complaint'.tr),
+                  ],
+                ),
+              ),
+              SizedBox(height: AppSizes.spacingL.h),
+
+              // Neomorphic Message Text Field
+              NeomorphicTextField(
+                controller: _messageController,
+                labelText: 'description'.tr,
+                hintText: 'Enter details here...'.tr,
+                maxLines: 5,
+                validator: (val) =>
+                    (val == null || val.isEmpty) ? 'Required' : null,
+              ),
+              SizedBox(height: AppSizes.spacingXL.h),
+
+              // Action Buttons
+              Obx(() {
+                final loading = widget.controller.isLoading.value;
+                return Row(
+                  children: [
+                    Expanded(
+                      child: NeomorphicButton(
+                        text: 'cancel'.tr,
+                        onPressed: loading ? null : () => Get.back(),
+                      ),
+                    ),
+                    SizedBox(width: AppSizes.spacingM.w),
+                    Expanded(
+                      child: NeomorphicButton(
+                        text: loading
+                            ? 'submitting'.tr.isEmpty
+                                  ? 'Submitting...'
+                                  : 'submitting'.tr
+                            : 'save'.tr,
+                        isGradient: true,
+                        onPressed: loading ? null : _submit,
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTypeTab(String value, String label) {
+    final colors = context.appColors;
+    final isSelected = _selectedType == value;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () => setState(() => _selectedType = value),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: EdgeInsets.symmetric(vertical: AppSizes.spacingM.h),
+          decoration: BoxDecoration(
+            color: isSelected ? colors.primary : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+          ),
+          child: Center(
+            child: Text(
+              label.toUpperCase(),
+              style: GoogleFonts.outfit(
+                color: isSelected ? colors.white : colors.textSecondary,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                fontSize: AppSizes.fontSizeBodySmall.sp,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

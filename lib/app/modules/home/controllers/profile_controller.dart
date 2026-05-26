@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import '../../../data/models/family_member.dart';
-import '../../../data/models/business.dart';
 import '../../../data/models/user.dart';
 import '../../../data/services/storage_service.dart';
 import '../../../data/repositories/auth_repository.dart';
@@ -13,13 +14,8 @@ class ProfileController extends GetxController {
 
   final currentUser = Rxn<UserModel>();
   final isLoading = false.obs;
-  final isBusinessesLoading = false.obs;
-
   final familyMembers = <FamilyMember>[].obs;
-  final businesses = <Business>[].obs;
-
   final familySearchQuery = ''.obs;
-  final businessSearchQuery = ''.obs;
 
   @override
   void onInit() {
@@ -31,7 +27,6 @@ class ProfileController extends GetxController {
     }
     // Fetch latest user details from API
     fetchUserProfile();
-    fetchBusinesses();
   }
 
   Future<void> fetchUserProfile() async {
@@ -53,115 +48,261 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> fetchBusinesses() async {
-    isBusinessesLoading.value = true;
+  /// Pick and upload a new profile photo directly using FilePicker
+  Future<void> pickAndUploadProfilePhoto() async {
     try {
-      final response = await _authRepo.getBusinesses();
-      if (response.success && response.data != null) {
-        final List<Business> list = [];
-        for (var item in response.data!) {
-          try {
-            if (item is Map<String, dynamic> && item.containsKey('business')) {
-              final bizJson = item['business'] as Map<String, dynamic>;
-              final ownerJson = item['owner'] as Map<String, dynamic>?;
-              final ownerId = ownerJson?['userId'] ?? '';
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'gif', 'pdf'],
+      );
 
-              final locs = bizJson['locations'] as List<dynamic>?;
-              final String shopAddress;
-              final String city;
-              if (locs != null && locs.isNotEmpty) {
-                final firstLoc = locs.first as Map<String, dynamic>;
-                city = firstLoc['areaCity'] ?? '';
-                final addrParts = [
-                  firstLoc['shopAddress'] ?? '',
-                  firstLoc['areaCity'] ?? '',
-                  firstLoc['state'] ?? '',
-                  firstLoc['pincode'] ?? '',
-                ].where((part) => part.toString().trim().isNotEmpty).toList();
-                shopAddress = addrParts.join(', ');
-              } else {
-                shopAddress = '';
-                city = '';
-              }
+      if (result == null || result.files.single.path == null) {
+        return;
+      }
 
-              final contactInfo =
-                  bizJson['contactInfo'] as Map<String, dynamic>?;
-              final contact =
-                  contactInfo?['mobile1'] ?? ownerJson?['phoneNumber'] ?? '';
-              final ownerName = (ownerJson != null)
-                  ? "${ownerJson['firstName'] ?? ''} ${ownerJson['lastName'] ?? ''}"
-                        .trim()
-                  : (bizJson['ownerName'] ?? '');
+      final pickedPath = result.files.single.path!;
+      
+      isLoading.value = true;
+      Get.snackbar(
+        'Uploading...',
+        'Please wait while your profile photo is being uploaded.',
+        snackPosition: SnackPosition.BOTTOM,
+        showProgressIndicator: true,
+      );
 
-              list.add(
-                Business(
-                  id: ownerId,
-                  name: bizJson['businessName'] ?? '',
-                  category: bizJson['category'] ?? '',
-                  subCategory: bizJson['subCategory'] ?? '',
-                  address: shopAddress,
-                  city: city,
-                  contact: contact,
-                  description: bizJson['description'] ?? '',
-                  ownerId: ownerId,
-                  createdAt: DateTime.now(),
-                  ownerName: ownerName,
-                ),
-              );
-            } else if (item is Map<String, dynamic> &&
-                item.containsKey('workDetails')) {
-              final user = UserModel.fromJson(item);
-              if (user.workDetails?.businessDetails != null) {
-                final biz = user.workDetails!.businessDetails!;
-                final String shopAddress;
-                final String city;
-                if (biz.locations.isNotEmpty) {
-                  final firstLoc = biz.locations.first;
-                  city = firstLoc.areaCity;
-                  final addrParts = [
-                    firstLoc.shopAddress,
-                    firstLoc.areaCity,
-                    firstLoc.state,
-                    firstLoc.pincode,
-                  ].where((part) => part.trim().isNotEmpty).toList();
-                  shopAddress = addrParts.join(', ');
-                } else {
-                  shopAddress = '';
-                  city = '';
-                }
+      // 1. Upload to centralized upload API with old file replacement
+      final uploadResp = await _authRepo.uploadFile(
+        filePath: pickedPath,
+        oldFileUrl: currentUser.value?.profilePhoto,
+      );
 
-                list.add(
-                  Business(
-                    id: user.id,
-                    name: biz.businessName,
-                    category: biz.category,
-                    subCategory: biz.subCategory,
-                    address: shopAddress,
-                    city: city,
-                    contact: biz.contactInfo?.mobile1 ?? user.phoneNumber,
-                    description: biz.description,
-                    ownerId: user.id,
-                    createdAt: user.createdAt ?? DateTime.now(),
-                    ownerName: biz.ownerName.isNotEmpty
-                        ? biz.ownerName
-                        : '${user.firstName} ${user.lastName}'.trim(),
-                  ),
-                );
-              }
-            } else {
-              list.add(Business.fromJson(item as Map<String, dynamic>));
-            }
-          } catch (e) {
-            // Ignore single item errors
-          }
+      if (uploadResp.success && uploadResp.data != null) {
+        final uploadedUrl = uploadResp.data!['url'] as String;
+
+        // 2. Perform direct user profile update with the new profilePhoto url
+        final updateResp = await _authRepo.updateUser({
+          'userId': currentUser.value!.id,
+          'profilePhoto': uploadedUrl,
+        });
+
+        if (updateResp.success && updateResp.data != null) {
+          currentUser.value = updateResp.data;
+          await _storage.saveUser(updateResp.data!);
+          familyMembers.assignAll(updateResp.data!.familyMembers);
+
+          Get.closeAllSnackbars();
+          Get.snackbar(
+            'Success',
+            'Profile photo updated successfully',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.green,
+            colorText: Colors.white,
+          );
+        } else {
+          Get.closeAllSnackbars();
+          Get.snackbar(
+            'Error',
+            updateResp.message ?? 'Failed to update profile photo',
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
         }
-        businesses.assignAll(list);
+      } else {
+        Get.closeAllSnackbars();
+        Get.snackbar(
+          'Error',
+          uploadResp.message ?? 'Failed to upload photo',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.redAccent,
+          colorText: Colors.white,
+        );
       }
     } catch (e) {
-      Get.printError(info: 'fetchBusinesses error: $e');
+      Get.printError(info: 'pickAndUploadProfilePhoto error: $e');
+      Get.closeAllSnackbars();
+      Get.snackbar(
+        'Error',
+        'An error occurred: $e',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     } finally {
-      isBusinessesLoading.value = false;
+      isLoading.value = false;
     }
+  }
+
+
+
+  Future<void> addFamilyMember({
+    required String firstName,
+    required String middleName,
+    required String lastName,
+    required String dob,
+    required String relation,
+    required String phoneNumber,
+    required String education,
+    required String isMarried,
+    required String bloodGroup,
+  }) async {
+    isLoading.value = true;
+    try {
+      final normalizedIsMarried = isMarried.toLowerCase() == 'married'
+          ? 'married'
+          : 'unMarried';
+      final payload = {
+        'id': currentUser.value?.id ?? '',
+        'firstName': firstName,
+        'middleName': middleName,
+        'lastName': lastName,
+        'dob': dob,
+        'relation': relation,
+        'phoneNumber': phoneNumber,
+        'education': education,
+        'isMarried': normalizedIsMarried,
+        'bloodGroup': bloodGroup,
+      };
+
+      final response = await _authRepo.addFamilyMember(payload);
+      if (response.success && response.data != null) {
+        currentUser.value = response.data;
+        await _storage.saveUser(response.data!);
+        familyMembers.assignAll(response.data!.familyMembers);
+      } else {
+        _addLocalFamilyMember(
+          firstName: firstName,
+          middleName: middleName,
+          lastName: lastName,
+          dob: dob,
+          relation: relation,
+          phoneNumber: phoneNumber,
+          education: education,
+          isMarried: normalizedIsMarried,
+          bloodGroup: bloodGroup,
+        );
+      }
+    } catch (e) {
+      Get.printError(info: 'addFamilyMember error: $e');
+      final normalizedIsMarried = isMarried.toLowerCase() == 'married'
+          ? 'married'
+          : 'unMarried';
+      _addLocalFamilyMember(
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        dob: dob,
+        relation: relation,
+        phoneNumber: phoneNumber,
+        education: education,
+        isMarried: normalizedIsMarried,
+        bloodGroup: bloodGroup,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _addLocalFamilyMember({
+    required String firstName,
+    required String middleName,
+    required String lastName,
+    required String dob,
+    required String relation,
+    required String phoneNumber,
+    required String education,
+    required String isMarried,
+    required String bloodGroup,
+  }) {
+    familyMembers.add(
+      FamilyMember(
+        id: _uuid.v4(),
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        dob: dob,
+        relation: relation,
+        phoneNumber: phoneNumber,
+        education: education,
+        isMarried: isMarried,
+        bloodGroup: bloodGroup,
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<void> updateFamilyMember(FamilyMember updated) async {
+    isLoading.value = true;
+    try {
+      final normalizedIsMarried = updated.isMarried.toLowerCase() == 'married'
+          ? 'married'
+          : 'unMarried';
+      final payload = {
+        'id': currentUser.value?.id ?? '',
+        'memberId': updated.id,
+        'firstName': updated.firstName,
+        'middleName': updated.middleName,
+        'lastName': updated.lastName,
+        'dob': updated.dob,
+        'relation': updated.relation,
+        'phoneNumber': updated.phoneNumber,
+        'education': updated.education,
+        'isMarried': normalizedIsMarried,
+        'bloodGroup': updated.bloodGroup,
+      };
+
+      final response = await _authRepo.updateFamilyMember(payload);
+      if (response.success && response.data != null) {
+        currentUser.value = response.data;
+        await _storage.saveUser(response.data!);
+        familyMembers.assignAll(response.data!.familyMembers);
+      } else {
+        _updateLocalFamilyMember(
+          updated.copyWith(isMarried: normalizedIsMarried),
+        );
+      }
+    } catch (e) {
+      Get.printError(info: 'updateFamilyMember error: $e');
+      final normalizedIsMarried = updated.isMarried.toLowerCase() == 'married'
+          ? 'married'
+          : 'unMarried';
+      _updateLocalFamilyMember(
+        updated.copyWith(isMarried: normalizedIsMarried),
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _updateLocalFamilyMember(FamilyMember updated) {
+    final i = familyMembers.indexWhere((m) => m.id == updated.id);
+    if (i != -1) {
+      familyMembers[i] = updated;
+    }
+  }
+
+  Future<void> deleteFamilyMember(String memberId) async {
+    isLoading.value = true;
+    try {
+      final payload = {'id': currentUser.value?.id ?? '', 'memberId': memberId};
+      final response = await _authRepo.deleteFamilyMember(payload);
+      if (response.success && response.data != null) {
+        currentUser.value = response.data;
+        await _storage.saveUser(response.data!);
+        familyMembers.assignAll(response.data!.familyMembers);
+      } else {
+        _deleteLocalFamilyMember(memberId);
+      }
+    } catch (e) {
+      Get.printError(info: 'deleteFamilyMember error: $e');
+      _deleteLocalFamilyMember(memberId);
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  void _deleteLocalFamilyMember(String id) {
+    familyMembers.removeWhere((m) => m.id == id);
   }
 
   List<FamilyMember> get filteredFamilyMembers {
@@ -179,213 +320,22 @@ class ProfileController extends GetxController {
         .toList();
   }
 
-  List<Business> get filteredBusinesses {
-    if (businessSearchQuery.value.trim().isEmpty) return businesses;
-    final q = businessSearchQuery.value.toLowerCase();
-    return businesses
-        .where(
-          (b) =>
-              b.name.toLowerCase().contains(q) ||
-              b.category.toLowerCase().contains(q) ||
-              b.description.toLowerCase().contains(q) ||
-              b.address.toLowerCase().contains(q),
-        )
-        .toList();
-  }
-
-  Future<void> addFamilyMember({
-    required String firstName,
-    required String middleName,
-    required String lastName,
-    required String dob,
-    required String relation,
-    required String phoneNumber,
-    required String occupation,
-    required String education,
-    required String isMarried,
-    required String bloodGroup,
-    required String skills,
+  Future<bool> submitFeedback({
+    required String type,
+    required String message,
   }) async {
     isLoading.value = true;
     try {
-      final payload = {
-        'firstName': firstName,
-        'middleName': middleName,
-        'lastName': lastName,
-        'dob': dob,
-        'relation': relation,
-        'phoneNumber': phoneNumber,
-        'occupation': occupation,
-        'education': education,
-        'isMarried': isMarried,
-        'bloodGroup': bloodGroup,
-        'skills': skills,
-      };
-
-      final response = await _authRepo.addFamilyMember(payload);
-      if (response.success && response.data != null) {
-        currentUser.value = response.data;
-        await _storage.saveUser(response.data!);
-        familyMembers.assignAll(response.data!.familyMembers);
-      } else {
-        _addLocalFamilyMember(
-          firstName: firstName,
-          middleName: middleName,
-          lastName: lastName,
-          dob: dob,
-          relation: relation,
-          phoneNumber: phoneNumber,
-          occupation: occupation,
-          education: education,
-          isMarried: isMarried,
-          bloodGroup: bloodGroup,
-          skills: skills,
-        );
-      }
-    } catch (e) {
-      Get.printError(info: 'addFamilyMember error: $e');
-      _addLocalFamilyMember(
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        dob: dob,
-        relation: relation,
-        phoneNumber: phoneNumber,
-        occupation: occupation,
-        education: education,
-        isMarried: isMarried,
-        bloodGroup: bloodGroup,
-        skills: skills,
+      final response = await _authRepo.addFeedback(
+        type: type,
+        message: message,
       );
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  void _addLocalFamilyMember({
-    required String firstName,
-    required String middleName,
-    required String lastName,
-    required String dob,
-    required String relation,
-    required String phoneNumber,
-    required String occupation,
-    required String education,
-    required String isMarried,
-    required String bloodGroup,
-    required String skills,
-  }) {
-    familyMembers.add(
-      FamilyMember(
-        id: _uuid.v4(),
-        firstName: firstName,
-        middleName: middleName,
-        lastName: lastName,
-        dob: dob,
-        relation: relation,
-        phoneNumber: phoneNumber,
-        occupation: occupation,
-        education: education,
-        isMarried: isMarried,
-        bloodGroup: bloodGroup,
-        skills: skills,
-        createdAt: DateTime.now(),
-      ),
-    );
-  }
-
-  Future<void> updateFamilyMember(FamilyMember updated) async {
-    isLoading.value = true;
-    try {
-      final payload = {
-        'firstName': updated.firstName,
-        'middleName': updated.middleName,
-        'lastName': updated.lastName,
-        'dob': updated.dob,
-        'relation': updated.relation,
-        'phoneNumber': updated.phoneNumber,
-        'occupation': updated.occupation,
-        'education': updated.education,
-        'isMarried': updated.isMarried,
-        'bloodGroup': updated.bloodGroup,
-        'skills': updated.skills,
-      };
-
-      final response = await _authRepo.updateFamilyMember(
-        updated.id ?? '',
-        payload,
-      );
-      if (response.success && response.data != null) {
-        currentUser.value = response.data;
-        await _storage.saveUser(response.data!);
-        familyMembers.assignAll(response.data!.familyMembers);
-      } else {
-        _updateLocalFamilyMember(updated);
-      }
+      return response.success;
     } catch (e) {
-      Get.printError(info: 'updateFamilyMember error: $e');
-      _updateLocalFamilyMember(updated);
+      Get.printError(info: 'submitFeedback error: $e');
+      return false;
     } finally {
       isLoading.value = false;
     }
-  }
-
-  void _updateLocalFamilyMember(FamilyMember updated) {
-    final i = familyMembers.indexWhere((m) => m.id == updated.id);
-    if (i != -1) {
-      familyMembers[i] = updated;
-    }
-  }
-
-  Future<void> deleteFamilyMember(String id) async {
-    isLoading.value = true;
-    try {
-      final response = await _authRepo.deleteFamilyMember(id);
-      if (response.success && response.data != null) {
-        currentUser.value = response.data;
-        await _storage.saveUser(response.data!);
-        familyMembers.assignAll(response.data!.familyMembers);
-      } else {
-        _deleteLocalFamilyMember(id);
-      }
-    } catch (e) {
-      Get.printError(info: 'deleteFamilyMember error: $e');
-      _deleteLocalFamilyMember(id);
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  void _deleteLocalFamilyMember(String id) {
-    familyMembers.removeWhere((m) => m.id == id);
-  }
-
-  void addBusiness({
-    required String name,
-    required String category,
-    required String subCategory,
-    required String address,
-    required String city,
-    required String contact,
-    required String description,
-    required String ownerName,
-    String? ownerId,
-  }) {
-    businesses.add(
-      Business(
-        id: _uuid.v4(),
-        name: name,
-        category: category,
-        subCategory: subCategory,
-        address: address,
-        city: city,
-        contact: contact,
-        description: description,
-        ownerId: ownerId,
-        createdAt: DateTime.now(),
-        ownerName: ownerName,
-      ),
-    );
-    // TODO: persist via API
   }
 }

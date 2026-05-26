@@ -91,6 +91,7 @@ class AnnouncementCard extends StatefulWidget {
   final AppColorScheme colors;
   final bool isDark;
   final bool hasImage;
+  final bool isExpandable;
 
   const AnnouncementCard({
     super.key,
@@ -98,6 +99,7 @@ class AnnouncementCard extends StatefulWidget {
     required this.colors,
     required this.isDark,
     required this.hasImage,
+    this.isExpandable = true,
   });
 
   @override
@@ -109,14 +111,17 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
 
   @override
   Widget build(BuildContext context) {
-    final hasImage = widget.hasImage;
+    final hasImage = widget.announcement.imageUrl != null &&
+        widget.announcement.imageUrl!.trim().isNotEmpty;
 
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          _isExpanded = !_isExpanded;
-        });
-      },
+      onTap: widget.isExpandable
+          ? () {
+              setState(() {
+                _isExpanded = !_isExpanded;
+              });
+            }
+          : null,
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 400),
         curve: Curves.easeInOutCubic,
@@ -135,34 +140,33 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Expandable Image Section
-            AnimatedCrossFade(
-              firstChild: const SizedBox(width: double.infinity, height: 0),
-              secondChild: hasImage
-                  ? Image.network(
-                      widget.announcement.imageUrl!,
+            if (hasImage)
+              AnimatedCrossFade(
+                firstChild: const SizedBox(width: double.infinity, height: 0),
+                secondChild: Image.network(
+                  widget.announcement.imageUrl!,
+                  height: 220.h,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
                       height: 220.h,
                       width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          height: 220.h,
-                          width: double.infinity,
-                          color: widget.colors.primary.withValues(alpha: 0.05),
-                          child: Icon(
-                            Icons.image_not_supported_outlined,
-                            color: widget.colors.primary.withValues(alpha: 0.3),
-                            size: 60.r,
-                          ),
-                        );
-                      },
-                    )
-                  : const SizedBox(width: double.infinity, height: 0),
-              crossFadeState: _isExpanded && hasImage
-                  ? CrossFadeState.showSecond
-                  : CrossFadeState.showFirst,
-              duration: const Duration(milliseconds: 400),
-              sizeCurve: Curves.easeInOutCubic,
-            ),
+                      color: widget.colors.primary.withValues(alpha: 0.05),
+                      child: Icon(
+                        Icons.image_not_supported_outlined,
+                        color: widget.colors.primary.withValues(alpha: 0.3),
+                        size: 60.r,
+                      ),
+                    );
+                  },
+                ),
+                crossFadeState: (!widget.isExpandable || _isExpanded)
+                    ? CrossFadeState.showSecond
+                    : CrossFadeState.showFirst,
+                duration: const Duration(milliseconds: 400),
+                sizeCurve: Curves.easeInOutCubic,
+              ),
 
             // Card Content
             Padding(
@@ -170,7 +174,9 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                 top: AppSizes.spacingL.w,
                 left: AppSizes.spacingL.w,
                 right: AppSizes.spacingL.w,
-                bottom: AppSizes.spacingXXS.w,
+                bottom: widget.isExpandable
+                    ? AppSizes.spacingXXS.w
+                    : AppSizes.spacingL.w,
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +239,7 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
                       maxLines: 5,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    crossFadeState: _isExpanded
+                    crossFadeState: (!widget.isExpandable || _isExpanded)
                         ? CrossFadeState.showSecond
                         : CrossFadeState.showFirst,
                     duration: const Duration(milliseconds: 400),
@@ -244,87 +250,88 @@ class _AnnouncementCardState extends State<AnnouncementCard> {
             ),
 
             // Read More Button (Bottom Right Aligned)
-            Align(
-              alignment: Alignment.bottomRight,
-              child: AnimatedCrossFade(
-                firstChild: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isExpanded = true;
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.spacingXL.w,
-                      vertical: AppSizes.spacingM.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: widget
-                          .colors
-                          .primary, // The red/accent color from the design
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppSizes.radiusXL.r),
-                        bottomRight: Radius.circular(AppSizes.radiusXL.r),
+            if (widget.isExpandable)
+              Align(
+                alignment: Alignment.bottomRight,
+                child: AnimatedCrossFade(
+                  firstChild: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isExpanded = true;
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.spacingXL.w,
+                        vertical: AppSizes.spacingM.h,
                       ),
-                    ),
-                    child: Text(
-                      'Read more',
-                      style: GoogleFonts.outfit(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppSizes.fontSizeBodySmall.sp,
-                      ),
-                    ),
-                  ),
-                ),
-                secondChild: GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _isExpanded = false;
-                    });
-                  },
-                  child: Container(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: AppSizes.spacingXL.w,
-                      vertical: AppSizes.spacingM.h,
-                    ),
-                    decoration: BoxDecoration(
-                      color: widget.colors.card,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(AppSizes.radiusXL.r),
-                        bottomRight: Radius.circular(AppSizes.radiusXL.r),
-                      ),
-                      border: Border(
-                        top: BorderSide(
-                          color: Colors.white.withValues(
-                            alpha: widget.isDark ? 0.05 : 0.6,
-                          ),
-                          width: 1.5,
+                      decoration: BoxDecoration(
+                        color: widget
+                            .colors
+                            .primary, // The red/accent color from the design
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppSizes.radiusXL.r),
+                          bottomRight: Radius.circular(AppSizes.radiusXL.r),
                         ),
-                        left: BorderSide(
-                          color: Colors.white.withValues(
-                            alpha: widget.isDark ? 0.05 : 0.6,
-                          ),
-                          width: 1.5,
+                      ),
+                      child: Text(
+                        'Read more',
+                        style: GoogleFonts.outfit(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
                         ),
                       ),
                     ),
-                    child: Text(
-                      'Show less',
-                      style: GoogleFonts.outfit(
-                        color: widget.colors.primary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: AppSizes.fontSizeBodySmall.sp,
+                  ),
+                  secondChild: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        _isExpanded = false;
+                      });
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.spacingXL.w,
+                        vertical: AppSizes.spacingM.h,
+                      ),
+                      decoration: BoxDecoration(
+                        color: widget.colors.card,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(AppSizes.radiusXL.r),
+                          bottomRight: Radius.circular(AppSizes.radiusXL.r),
+                        ),
+                        border: Border(
+                          top: BorderSide(
+                            color: Colors.white.withValues(
+                              alpha: widget.isDark ? 0.05 : 0.6,
+                            ),
+                            width: 1.5,
+                          ),
+                          left: BorderSide(
+                            color: Colors.white.withValues(
+                              alpha: widget.isDark ? 0.05 : 0.6,
+                            ),
+                            width: 1.5,
+                          ),
+                        ),
+                      ),
+                      child: Text(
+                        'Show less',
+                        style: GoogleFonts.outfit(
+                          color: widget.colors.primary,
+                          fontWeight: FontWeight.w600,
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
+                        ),
                       ),
                     ),
                   ),
+                  crossFadeState: _isExpanded
+                      ? CrossFadeState.showSecond
+                      : CrossFadeState.showFirst,
+                  duration: const Duration(milliseconds: 400),
                 ),
-                crossFadeState: _isExpanded
-                    ? CrossFadeState.showSecond
-                    : CrossFadeState.showFirst,
-                duration: const Duration(milliseconds: 400),
               ),
-            ),
           ],
         ),
       ),

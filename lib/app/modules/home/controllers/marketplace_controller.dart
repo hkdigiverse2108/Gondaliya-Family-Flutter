@@ -10,11 +10,11 @@ class MarketplaceController extends GetxController {
   final listings = <Listing>[].obs;
   final isFeedLoading = false.obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-    fetchListings();
-  }
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   // fetchListings(); // Commented out to prevent API call while marketplace is disabled
+  // }
 
   Future<void> fetchListings() async {
     isFeedLoading.value = true;

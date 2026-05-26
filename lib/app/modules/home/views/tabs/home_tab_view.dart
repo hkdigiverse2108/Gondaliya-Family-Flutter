@@ -11,6 +11,9 @@ import 'package:gondalia_family/app/global_widgets/neomorphic_text_field.dart';
 import '../../widgets/verified_businesses_section.dart';
 // import '../../widgets/marketplace_section.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import 'package:gondalia_family/app/modules/announcements/controllers/announcements_controller.dart';
+import 'package:gondalia_family/app/modules/announcements/views/announcements_view.dart';
+import '../../controllers/home_controller.dart';
 
 class HomeTabView extends StatelessWidget {
   const HomeTabView({super.key});
@@ -18,6 +21,7 @@ class HomeTabView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final controller = Get.find<HomeController>();
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -51,63 +55,406 @@ class HomeTabView extends StatelessWidget {
             tooltip: 'notifications'.tr,
             icon: Icon(PhosphorIcons.bell(), color: colors.textPrimary),
             onPressed: () {
-              // TODO: Navigate to notifications
+              Get.toNamed(Routes.notifications);
             },
           ),
           SizedBox(width: AppSizes.spacingS.w),
         ],
       ),
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Total Data Counters
-              // _buildStatsCounters(colors),
-              SizedBox(height: AppSizes.spacingL.h),
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (scrollInfo.metrics.pixels >=
+                scrollInfo.metrics.maxScrollExtent - 100) {
+              if (controller.businessSearchQuery.value.trim().isNotEmpty) {
+                controller.searchBusinesses(
+                  controller.businessSearchQuery.value,
+                  loadMore: true,
+                );
+              }
+            }
+            return true;
+          },
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Total Data Counters
+                // _buildStatsCounters(colors),
+                SizedBox(height: AppSizes.spacingL.h),
 
-              // Search Bar
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
-                child: NeomorphicTextField(
-                  hintText: 'search_placeholder'.tr,
-                  prefixIcon: Icon(
-                    PhosphorIcons.magnifyingGlass(),
-                    color: colors.accent,
+                // Search Bar
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSizes.spacingL.w,
+                  ),
+                  child: NeomorphicTextField(
+                    controller: controller.businessSearchController,
+                    hintText: 'search_placeholder'.tr,
+                    prefixIcon: Icon(
+                      PhosphorIcons.magnifyingGlass(),
+                      color: colors.accent,
+                    ),
+                    showValidationIcon: false,
+                    suffixIcon: Obx(() {
+                      if (controller.businessSearchQuery.value.isNotEmpty) {
+                        return IconButton(
+                          icon: Icon(Icons.clear, color: colors.textSecondary),
+                          onPressed: () {
+                            controller.businessSearchController.clear();
+                            controller.businessSearchQuery.value = '';
+                          },
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
                   ),
                 ),
-              ),
 
-              SizedBox(height: AppSizes.spacingL.h),
+                SizedBox(height: AppSizes.spacingL.h),
 
-              _buildStoriesSection(colors),
+                Obx(() {
+                  if (controller.businessSearchQuery.value.trim().isEmpty) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        _buildStoriesSection(colors, controller, context),
 
-              SizedBox(height: 18.h),
+                        SizedBox(height: 18.h),
 
-              _buildSectionHeader(
-                'verified_businesses'.tr,
-                'see_all'.tr,
-                colors,
-              ),
-              SizedBox(height: AppSizes.spacingM.h),
-              VerifiedBusinessesSection(colors: colors),
+                        _buildSectionHeader(
+                          'verified_businesses'.tr,
+                          'see_all'.tr,
+                          colors,
+                        ),
+                        SizedBox(height: AppSizes.spacingM.h),
+                        VerifiedBusinessesSection(colors: colors),
 
-              // SizedBox(height: AppSizes.spacingXXL.h),
+                        SizedBox(height: AppSizes.spacingXXL.h),
 
-              // _buildSectionHeader(
-              //   'hot_on_marketplace'.tr,
-              //   'see_all'.tr,
-              //   colors,
-              // ),
-              // SizedBox(height: AppSizes.spacingM.h),
-              // MarketplaceSection(colors: colors),
-            ],
+                        _buildSectionHeader(
+                          'announcements'.tr,
+                          'see_all'.tr,
+                          colors,
+                          onTap: () => Get.toNamed(Routes.announcements),
+                        ),
+                        SizedBox(height: AppSizes.spacingM.h),
+                        GetX<AnnouncementsController>(
+                          init: Get.find<AnnouncementsController>(),
+                          builder: (annController) {
+                            if (annController.isLoading.value &&
+                                annController.announcements.isEmpty) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(vertical: 20.h),
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              );
+                            }
+                            final list = annController.announcements
+                                .take(2)
+                                .toList();
+                            if (list.isEmpty) {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: AppSizes.spacingL.w,
+                                  vertical: AppSizes.spacingXL.h,
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    'No announcements yet',
+                                    style: GoogleFonts.outfit(
+                                      color: colors.textSecondary,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }
+                            return ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              padding: EdgeInsets.symmetric(
+                                horizontal: AppSizes.spacingL.w,
+                              ),
+                              itemCount: list.length,
+                              itemBuilder: (context, index) {
+                                final a = list[index];
+                                final hasImage =
+                                    a.imageUrl != null &&
+                                    a.imageUrl!.isNotEmpty;
+                                return AnnouncementCard(
+                                  announcement: a,
+                                  colors: colors,
+                                  isDark: colors.isDark,
+                                  hasImage: hasImage,
+                                  isExpandable: false,
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ],
+                    );
+                  } else {
+                    if (controller.isSearchLoading.value) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 50.h),
+                        child: const Center(child: CircularProgressIndicator()),
+                      );
+                    }
+
+                    final results = controller.searchBusinessesList;
+                    if (results.isEmpty) {
+                      return Padding(
+                        padding: EdgeInsets.only(top: 50.h),
+                        child: Center(
+                          child: Text(
+                            'No businesses found matching your search.',
+                            style: GoogleFonts.outfit(
+                              color: colors.textSecondary,
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: AppSizes.spacingL.w,
+                        vertical: AppSizes.spacingM.h,
+                      ),
+                      itemCount:
+                          results.length +
+                          (controller.isLoadMoreLoading.value ? 1 : 0),
+                      itemBuilder: (context, index) {
+                        if (index == results.length) {
+                          return Padding(
+                            padding: EdgeInsets.symmetric(vertical: 16.h),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        final b = results[index];
+                        return Container(
+                          margin: EdgeInsets.only(bottom: AppSizes.spacingM.h),
+                          decoration: BoxDecoration(
+                            color: colors.card,
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radiusM.r,
+                            ),
+                            border: Border.all(
+                              color: colors.isDark
+                                  ? colors.divider
+                                  : Colors.grey.shade200,
+                              width: 1.0,
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(
+                                  alpha: colors.isDark ? 0.15 : 0.03,
+                                ),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusM.r,
+                              ),
+                              onTap: () {
+                                Get.toNamed(
+                                  Routes.business,
+                                  arguments: {'userId': b.ownerId},
+                                );
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.all(AppSizes.spacingM.w),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: EdgeInsets.all(8.w),
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: colors.primary.withValues(
+                                              alpha: 0.1,
+                                            ),
+                                          ),
+                                          child: Icon(
+                                            PhosphorIcons.storefront(),
+                                            color: colors.primary,
+                                            size: 20.sp,
+                                          ),
+                                        ),
+                                        SizedBox(width: AppSizes.spacingM.w),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                b.name,
+                                                style: GoogleFonts.outfit(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 16.sp,
+                                                  color: colors.textPrimary,
+                                                ),
+                                                maxLines: 1,
+                                                overflow: TextOverflow.ellipsis,
+                                              ),
+                                              if (b.ownerName.isNotEmpty) ...[
+                                                SizedBox(height: 2.h),
+                                                Text(
+                                                  "By ${b.ownerName}",
+                                                  style: GoogleFonts.outfit(
+                                                    fontSize: 11.sp,
+                                                    color: colors.textSecondary,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ],
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: 8.w,
+                                            vertical: 4.h,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: colors.primary.withValues(
+                                              alpha: 0.08,
+                                            ),
+                                            borderRadius: BorderRadius.circular(
+                                              AppSizes.radiusS.r,
+                                            ),
+                                          ),
+                                          child: Text(
+                                            b.subCategory.isNotEmpty
+                                                ? b.subCategory
+                                                : b.category,
+                                            style: GoogleFonts.outfit(
+                                              fontSize: 10.sp,
+                                              fontWeight: FontWeight.bold,
+                                              color: colors.primary,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    SizedBox(height: AppSizes.spacingM.h),
+                                    Text(
+                                      b.description,
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 12.sp,
+                                        color: colors.textSecondary,
+                                        height: 1.3,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(height: AppSizes.spacingM.h),
+                                    Divider(
+                                      height: 1,
+                                      color: colors.isDark
+                                          ? colors.divider
+                                          : Colors.grey.shade200,
+                                    ),
+                                    SizedBox(height: AppSizes.spacingS.h),
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                PhosphorIcons.phone(),
+                                                size: 14.sp,
+                                                color: colors.primary,
+                                              ),
+                                              SizedBox(width: 4.w),
+                                              Expanded(
+                                                child: Text(
+                                                  b.contact,
+                                                  style: GoogleFonts.outfit(
+                                                    fontSize: 11.sp,
+                                                    color: colors.textSecondary,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Container(
+                                          width: 1,
+                                          height: 14.h,
+                                          color: colors.isDark
+                                              ? colors.divider
+                                              : Colors.grey.shade200,
+                                        ),
+                                        SizedBox(width: 8.w),
+                                        Expanded(
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                PhosphorIcons.mapPin(),
+                                                size: 14.sp,
+                                                color: colors.primary,
+                                              ),
+                                              SizedBox(width: 4.w),
+                                              Expanded(
+                                                child: Text(
+                                                  b.city.isNotEmpty
+                                                      ? b.city
+                                                      : b.address,
+                                                  style: GoogleFonts.outfit(
+                                                    fontSize: 11.sp,
+                                                    color: colors.textSecondary,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  maxLines: 1,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                }),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
-
 
   IconData _getCategoryIcon(String category) {
     switch (category) {
@@ -154,8 +501,13 @@ class HomeTabView extends StatelessWidget {
     }
   }
 
-  Widget _buildStoriesSection(AppColorScheme colors) {
-    final categories = AppEnums.jobCategories.keys.toList();
+  Widget _buildStoriesSection(
+    AppColorScheme colors,
+    HomeController controller,
+    BuildContext context,
+  ) {
+    final allCategories = AppEnums.jobCategories.keys.toList();
+    final categoriesToShow = allCategories.take(7).toList();
 
     return SizedBox(
       height: 98.h,
@@ -163,14 +515,26 @@ class HomeTabView extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         physics: const BouncingScrollPhysics(),
         padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
-        itemCount: categories.length,
+        itemCount: categoriesToShow.length + 1,
         itemBuilder: (context, index) {
-          final categoryName = categories[index];
-          final icon = _getCategoryIcon(categoryName);
+          final isMoreCard = index == categoriesToShow.length;
+          final categoryName = isMoreCard ? 'See All' : categoriesToShow[index];
+          final icon = isMoreCard
+              ? PhosphorIcons.squaresFour()
+              : _getCategoryIcon(categoryName);
 
           return GestureDetector(
             onTap: () {
-              // TODO: Navigate or filter by category
+              if (isMoreCard) {
+                _showAllCategoriesBottomSheet(
+                  context,
+                  colors,
+                  allCategories,
+                  controller,
+                );
+              } else {
+                controller.businessSearchController.text = categoryName;
+              }
             },
             child: Padding(
               padding: EdgeInsets.only(right: AppSizes.spacingXL.w),
@@ -226,11 +590,125 @@ class HomeTabView extends StatelessWidget {
     );
   }
 
+  void _showAllCategoriesBottomSheet(
+    BuildContext context,
+    AppColorScheme colors,
+    List<String> allCategories,
+    HomeController controller,
+  ) {
+    Get.bottomSheet(
+      Container(
+        height: 480.h,
+        decoration: BoxDecoration(
+          color: colors.card,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppSizes.radiusXL.r),
+          ),
+          border: Border.all(
+            color: colors.isDark ? colors.divider : Colors.grey.shade200,
+            width: 1.5,
+          ),
+        ),
+        child: Column(
+          children: [
+            SizedBox(height: AppSizes.spacingM.h),
+            // Bottom Sheet Grab Handle
+            Container(
+              width: 40.w,
+              height: 4.h,
+              decoration: BoxDecoration(
+                color: colors.textSecondary.withValues(alpha: 0.3),
+                borderRadius: BorderRadius.circular(2.r),
+              ),
+            ),
+            SizedBox(height: AppSizes.spacingL.h),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'All Categories',
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.sp,
+                      color: colors.textPrimary,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, color: colors.textSecondary),
+                    onPressed: () => Get.back(),
+                  ),
+                ],
+              ),
+            ),
+            const Divider(),
+            Expanded(
+              child: GridView.builder(
+                padding: EdgeInsets.all(AppSizes.spacingL.w),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: AppSizes.spacingM.w,
+                  mainAxisSpacing: AppSizes.spacingL.h,
+                  childAspectRatio: 0.85,
+                ),
+                itemCount: allCategories.length,
+                itemBuilder: (context, index) {
+                  final categoryName = allCategories[index];
+                  final icon = _getCategoryIcon(categoryName);
+                  return GestureDetector(
+                    onTap: () {
+                      Get.back();
+                      controller.businessSearchController.text = categoryName;
+                    },
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 50.w,
+                          height: 50.w,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: colors.primary.withValues(alpha: 0.08),
+                            border: Border.all(
+                              color: colors.primary.withValues(alpha: 0.1),
+                              width: 1,
+                            ),
+                          ),
+                          child: Icon(icon, color: colors.primary, size: 22.w),
+                        ),
+                        SizedBox(height: AppSizes.spacingS.h),
+                        Text(
+                          categoryName,
+                          style: GoogleFonts.outfit(
+                            fontSize: 10.sp,
+                            fontWeight: FontWeight.w600,
+                            color: colors.textPrimary,
+                          ),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+    );
+  }
+
   Widget _buildSectionHeader(
     String title,
     String actionText,
-    AppColorScheme colors,
-  ) {
+    AppColorScheme colors, {
+    VoidCallback? onTap,
+  }) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
       child: Row(
@@ -245,7 +723,7 @@ class HomeTabView extends StatelessWidget {
             ),
           ),
           GestureDetector(
-            onTap: () {},
+            onTap: onTap,
             child: Text(
               actionText,
               style: GoogleFonts.outfit(

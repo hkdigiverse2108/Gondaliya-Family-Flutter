@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
+import 'package:gondalia_family/app/routes/app_pages.dart';
 
 import 'tabs/home_tab_view.dart';
 import 'tabs/parivar_tab_view.dart';
@@ -196,6 +197,12 @@ class _FloatingNavBar extends StatelessWidget {
                         navController: navController,
                         colors: colors,
                       ),
+                      _NavRouteButton(
+                        icon: PhosphorIcons.chatCircleDots(),
+                        label: 'Messages',
+                        colors: colors,
+                        onTap: () => Get.toNamed(Routes.privateMessages),
+                      ),
                       _NavItem(
                         index: 3,
                         icon: PhosphorIcons.user(),
@@ -315,3 +322,40 @@ class _NavItem extends StatelessWidget {
     });
   }
 }
+
+class _NavRouteButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final AppColorScheme colors;
+
+  const _NavRouteButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.spacingM.w,
+          vertical: AppSizes.spacingS.h,
+        ),
+        decoration: const BoxDecoration(
+          color: Colors.transparent,
+        ),
+        child: Icon(
+          icon,
+          color: colors.textSecondary,
+          size: AppSizes.spacingXXL.w,
+        ),
+      ),
+    );
+  }
+}
+
