@@ -81,7 +81,7 @@ class RegisterController extends GetxController {
   // Business Details
   final businessNameController = TextEditingController();
   final businessCategory = ''.obs;
-  final businessSubCategory = ''.obs;
+  final businessSubCategories = <String>[].obs;
   final businessSubCategoryOtherController = TextEditingController();
   final businessOwnerNameController = TextEditingController();
   final businessDescriptionController = TextEditingController();
@@ -213,9 +213,12 @@ class RegisterController extends GetxController {
               if (occupationType.value == 'Business')
                 'businessDetails': {
                   'category': businessCategory.value,
-                  'subCategory': businessSubCategory.value == 'Other Jobs'
-                      ? businessSubCategoryOtherController.text.trim()
-                      : businessSubCategory.value,
+                  'subCategory': businessSubCategories.map((sub) {
+                    if (sub == 'Other Jobs') {
+                      return businessSubCategoryOtherController.text.trim();
+                    }
+                    return sub;
+                  }).toList(),
                   'businessName': businessNameController.text.trim(),
                   'ownerName': businessOwnerNameController.text.trim(),
                   'description': businessDescriptionController.text.trim(),

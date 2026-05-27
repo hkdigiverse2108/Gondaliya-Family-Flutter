@@ -157,13 +157,15 @@ class PrivateMessagesController extends GetxController {
         for (final fam in directory) {
           // 1. Add head of family (if registered and not current user)
           if (fam.id.isNotEmpty && fam.id != currentUserId) {
-            list.add(SelectableUser(
-              userId: fam.id,
-              name: '${fam.head.firstName} ${fam.head.lastName}'.trim(),
-              avatar: null, // Initial name-based avatar will be shown in UI
-              village: fam.head.village,
-              relation: 'Head of Family',
-            ));
+            list.add(
+              SelectableUser(
+                userId: fam.id,
+                name: '${fam.head.firstName} ${fam.head.lastName}'.trim(),
+                avatar: null, // Initial name-based avatar will be shown in UI
+                village: fam.head.village,
+                relation: 'Head of Family',
+              ),
+            );
           }
 
           // 2. Add family members who have a linked user account
@@ -171,13 +173,15 @@ class PrivateMessagesController extends GetxController {
             if (mem.linkedUserId != null &&
                 mem.linkedUserId!.isNotEmpty &&
                 mem.linkedUserId != currentUserId) {
-              list.add(SelectableUser(
-                userId: mem.linkedUserId!,
-                name: '${mem.firstName} ${mem.lastName}'.trim(),
-                avatar: null,
-                village: fam.head.village,
-                relation: mem.relation,
-              ));
+              list.add(
+                SelectableUser(
+                  userId: mem.linkedUserId!,
+                  name: '${mem.firstName} ${mem.lastName}'.trim(),
+                  avatar: null,
+                  village: fam.head.village,
+                  relation: mem.relation,
+                ),
+              );
             }
           }
         }

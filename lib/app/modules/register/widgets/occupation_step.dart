@@ -196,29 +196,70 @@ class OccupationStep extends StatelessWidget {
                 onChanged: (val) {
                   if (val != null) {
                     controller.businessCategory.value = val;
-                    controller.businessSubCategory.value =
-                        ''; // reset sub category
+                    controller.businessSubCategories.clear();
                   }
                 },
               ),
-              SizedBox(height: AppSizes.spacingM.h),
-              NeomorphicDropdownField<String>(
-                value: controller.businessSubCategory.value.isEmpty
-                    ? null
-                    : controller.businessSubCategory.value,
-                labelText: 'sub_category'.tr,
-                prefixIcon: Icon(
-                  Icons.class_outlined,
-                  color: colors.textPrimary,
+
+              // Multi-select chip list for subcategories
+              if (subCategories.isNotEmpty) ...[
+                SizedBox(height: AppSizes.spacingM.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: AppSizes.spacingS.h),
+                    child: Text(
+                      'sub_category'.tr,
+                      style: GoogleFonts.outfit(
+                        fontSize: AppSizes.fontSizeBodySmall.sp,
+                        color: colors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
-                items: subCategories
-                    .map((c) => NeomorphicDropdownItem(value: c, label: c))
-                    .toList(),
-                onChanged: (val) {
-                  if (val != null) controller.businessSubCategory.value = val;
-                },
-              ),
-              if (controller.businessSubCategory.value == 'Other Jobs') ...[
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children: subCategories.map((sub) {
+                    final isSelected = controller.businessSubCategories
+                        .contains(sub);
+                    return FilterChip(
+                      selected: isSelected,
+                      label: Text(
+                        sub,
+                        style: GoogleFonts.outfit(
+                          color: isSelected ? colors.white : colors.textPrimary,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
+                        ),
+                      ),
+                      backgroundColor: colors.card,
+                      selectedColor: colors.primary,
+                      checkmarkColor: colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+                        side: BorderSide(
+                          color: isSelected
+                              ? colors.primary
+                              : colors.primary.withValues(alpha: 0.15),
+                          width: 1,
+                        ),
+                      ),
+                      onSelected: (selected) {
+                        if (selected) {
+                          controller.businessSubCategories.add(sub);
+                        } else {
+                          controller.businessSubCategories.remove(sub);
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+              ],
+              if (controller.businessSubCategories.contains('Other Jobs')) ...[
                 SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: controller.businessSubCategoryOtherController,

@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -6,6 +8,7 @@ import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/sizes.dart';
 import '../controllers/private_chat_controller.dart';
 import '../widgets/private_message_bubble.dart';
+import 'package:gondalia_family/core/config/app_config.dart';
 
 class PrivateChatView extends GetView<PrivateChatController> {
   const PrivateChatView({super.key});
@@ -38,16 +41,43 @@ class PrivateChatView extends GetView<PrivateChatController> {
 
           return Row(
             children: [
-              CircleAvatar(
-                radius: 18.r,
-                backgroundColor: colors.primary.withValues(alpha: 0.1),
-                child: Text(
-                  initials,
-                  style: GoogleFonts.outfit(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                    color: colors.primary,
-                  ),
+              Container(
+                width: 36.r,
+                height: 36.r,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: colors.primary.withValues(alpha: 0.1),
+                ),
+                child: ClipOval(
+                  child: (other?.avatar != null &&
+                          other!.avatar!.isNotEmpty &&
+                          other.avatar != 'null')
+                      ? Image.network(
+                          _resolveUrl(other.avatar!),
+                          width: 36.r,
+                          height: 36.r,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) => Center(
+                            child: Text(
+                              initials,
+                              style: GoogleFonts.outfit(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                                color: colors.primary,
+                              ),
+                            ),
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            initials,
+                            style: GoogleFonts.outfit(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.bold,
+                              color: colors.primary,
+                            ),
+                          ),
+                        ),
                 ),
               ),
               SizedBox(width: AppSizes.spacingM.w),
@@ -129,17 +159,129 @@ class PrivateChatView extends GetView<PrivateChatController> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
+                // Attachment Preview (if picked)
+                Obx(() {
+                  if (controller.pickedFilePath.value == null) {
+                    return const SizedBox.shrink();
+                  }
+                  final isImg = controller.pickedFileType.value == 'IMAGE';
+                  return Container(
+                    margin: EdgeInsets.only(bottom: AppSizes.spacingM.h),
+                    padding: EdgeInsets.all(8.r),
+                    decoration: BoxDecoration(
+                      color: isDark ? Colors.black26 : Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12.r),
+                      border: Border.all(
+                        color: isDark ? Colors.grey.shade800 : Colors.grey.shade300,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        if (isImg)
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8.r),
+                            child: Image.file(
+                              File(controller.pickedFilePath.value!),
+                              width: 50.r,
+                              height: 50.r,
+                              fit: BoxFit.cover,
+                            ),
+                          )
+                        else
+                          CircleAvatar(
+                            radius: 25.r,
+                            backgroundColor: Colors.red.withValues(alpha: 0.1),
+                            child: Icon(Icons.picture_as_pdf_rounded, color: Colors.red, size: 28.r),
+                          ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                controller.pickedFileName.value ?? 'Attachment',
+                                style: GoogleFonts.outfit(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: AppSizes.fontSizeBodyMedium.sp,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(height: 2.h),
+                              Text(
+                                _formatBytes(controller.pickedFileSize.value),
+                                style: GoogleFonts.outfit(
+                                  fontSize: AppSizes.fontSizeBodySmall.sp,
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.cancel_rounded, color: Colors.grey),
+                          onPressed: controller.clearAttachment,
+                        ),
+                      ],
+                    ),
+                  );
+                }),
+
                 // Text Input and Send Button
                 Row(
                   children: [
+                    Obx(() {
+                      if (controller.isUploading.value) {
+                        return IconButton(
+                          icon: const Icon(Icons.attach_file_rounded),
+                          onPressed: null,
+                          color: Colors.grey.withValues(alpha: 0.5),
+                        );
+                      }
+                      return PopupMenuButton<String>(
+                        icon: Icon(Icons.attach_file_rounded, color: colors.primary),
+                        onSelected: (value) {
+                          if (value == 'image') {
+                            controller.pickImage();
+                          } else if (value == 'pdf') {
+                            controller.pickDocument();
+                          }
+                        },
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem<String>(
+                            value: 'image',
+                            child: Row(
+                              children: [
+                                Icon(Icons.image_rounded, color: Colors.blue, size: 20.sp),
+                                SizedBox(width: 8.w),
+                                Text('image'.tr, style: GoogleFonts.outfit()),
+                              ],
+                            ),
+                          ),
+                          PopupMenuItem<String>(
+                            value: 'pdf',
+                            child: Row(
+                              children: [
+                                Icon(Icons.picture_as_pdf_rounded, color: Colors.red, size: 20.sp),
+                                SizedBox(width: 8.w),
+                                Text('pdf_document'.tr, style: GoogleFonts.outfit()),
+                              ],
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                     Expanded(
-                      child: TextField(
+                      child: Obx(() => TextField(
                         controller: controller.messageController,
+                        enabled: !controller.isUploading.value,
                         maxLines: 4,
                         minLines: 1,
                         textCapitalization: TextCapitalization.sentences,
                         decoration: InputDecoration(
-                          hintText: 'Type a message...',
+                          hintText: controller.isUploading.value
+                              ? 'uploading'.tr
+                              : 'Type a message...',
                           filled: true,
                           fillColor: isDark
                               ? Colors.black26
@@ -153,20 +295,37 @@ class PrivateChatView extends GetView<PrivateChatController> {
                             vertical: AppSizes.spacingM.h,
                           ),
                         ),
-                      ),
+                      )),
                     ),
                     SizedBox(width: AppSizes.spacingS.w),
-                    CircleAvatar(
-                      backgroundColor: colors.primary,
-                      radius: 24.r,
-                      child: IconButton(
-                        icon: const Icon(
-                          Icons.send_rounded,
-                          color: Colors.white,
+                    Obx(() {
+                      if (controller.isUploading.value) {
+                        return CircleAvatar(
+                          backgroundColor: colors.primary.withValues(alpha: 0.5),
+                          radius: 24.r,
+                          child: const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          ),
+                        );
+                      }
+
+                      return CircleAvatar(
+                        backgroundColor: colors.primary,
+                        radius: 24.r,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.send_rounded,
+                            color: Colors.white,
+                          ),
+                          onPressed: controller.sendMessage,
                         ),
-                        onPressed: controller.sendMessage,
-                      ),
-                    ),
+                      );
+                    }),
                   ],
                 ),
               ],
@@ -175,5 +334,28 @@ class PrivateChatView extends GetView<PrivateChatController> {
         ],
       ),
     );
+  }
+
+
+
+  String _resolveUrl(String? url) {
+    if (url == null || url.isEmpty || url == 'null') return '';
+    if (url.startsWith('/uploads')) {
+      return '${AppConfig.baseUrl}$url';
+    }
+    if (url.contains('localhost:5000')) {
+      return url.replaceAll('http://localhost:5000', AppConfig.baseUrl);
+    }
+    if (url.contains('127.0.0.1:5000')) {
+      return url.replaceAll('http://127.0.0.1:5000', AppConfig.baseUrl);
+    }
+    return url;
+  }
+
+  String _formatBytes(int bytes) {
+    if (bytes <= 0) return '0 B';
+    const suffixes = ["B", "KB", "MB", "GB"];
+    var i = (log(bytes) / log(1024)).floor();
+    return '${(bytes / pow(1024, i)).toStringAsFixed(1)} ${suffixes[i]}';
   }
 }

@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 import 'package:gondalia_family/app/routes/app_pages.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import 'package:gondalia_family/core/config/app_config.dart';
 import 'package:gondalia_family/app/data/models/business.dart';
 import '../controllers/home_controller.dart';
 
@@ -185,6 +186,20 @@ class _VerifiedBusinessesSectionState extends State<VerifiedBusinessesSection> {
   }
 }
 
+String _resolveUrl(String? url) {
+  if (url == null || url.isEmpty || url == 'null') return '';
+  if (url.startsWith('/uploads')) {
+    return '${AppConfig.baseUrl}$url';
+  }
+  if (url.contains('localhost:5000')) {
+    return url.replaceAll('http://localhost:5000', AppConfig.baseUrl);
+  }
+  if (url.contains('127.0.0.1:5000')) {
+    return url.replaceAll('http://127.0.0.1:5000', AppConfig.baseUrl);
+  }
+  return url;
+}
+
 class BusinessCard extends StatelessWidget {
   final Business business;
   final AppColorScheme colors;
@@ -194,9 +209,14 @@ class BusinessCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = colors.isDark;
-    final hasSubCategory = business.subCategory.trim().isNotEmpty;
-    final categoryText = hasSubCategory
-        ? "${business.category} • ${business.subCategory}"
+    final hasSubCategory = business.subCategory.isNotEmpty;
+    final subText = hasSubCategory
+        ? (business.subCategory.length <= 2
+              ? business.subCategory.join(', ')
+              : "${business.subCategory.take(2).join(', ')} +${business.subCategory.length - 2}")
+        : '';
+    final categoryText = subText.isNotEmpty
+        ? "${business.category} • $subText"
         : business.category;
 
     return GestureDetector(
@@ -227,22 +247,49 @@ class BusinessCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Cover with primary gradient
+            // Cover with primary gradient or banner
             Container(
               height: 75.h,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(AppSizes.radiusM.r),
                 ),
-                gradient: LinearGradient(
-                  colors: colors.primaryGradient,
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
+                gradient:
+                    (business.businessBanner == null ||
+                        business.businessBanner!.isEmpty)
+                    ? LinearGradient(
+                        colors: colors.primaryGradient,
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      )
+                    : null,
               ),
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
+                  if (business.businessBanner != null &&
+                      business.businessBanner!.isNotEmpty)
+                    Positioned.fill(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(AppSizes.radiusM.r),
+                        ),
+                        child: Image.network(
+                          _resolveUrl(business.businessBanner),
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: colors.primaryGradient,
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                              ),
+                        ),
+                      ),
+                    ),
                   Positioned(
                     bottom: -16.h,
                     left: AppSizes.spacingM.w,
@@ -261,10 +308,28 @@ class BusinessCard extends StatelessWidget {
                       child: CircleAvatar(
                         radius: 16.r,
                         backgroundColor: colors.card,
-                        child: Icon(
-                          PhosphorIcons.storefront(),
-                          color: colors.primary,
-                          size: 16.sp,
+                        child: ClipOval(
+                          child:
+                              (business.businessLogo != null &&
+                                  business.businessLogo!.isNotEmpty &&
+                                  business.businessLogo != 'null')
+                              ? Image.network(
+                                  _resolveUrl(business.businessLogo),
+                                  width: 32.r,
+                                  height: 32.r,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Icon(
+                                        PhosphorIcons.storefront(),
+                                        color: colors.primary,
+                                        size: 16.sp,
+                                      ),
+                                )
+                              : Icon(
+                                  PhosphorIcons.storefront(),
+                                  color: colors.primary,
+                                  size: 16.sp,
+                                ),
                         ),
                       ),
                     ),
@@ -272,7 +337,7 @@ class BusinessCard extends StatelessWidget {
                 ],
               ),
             ),
-            SizedBox(height: 12.h),
+            SizedBox(height: 20.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingM.w),
               child: Column(

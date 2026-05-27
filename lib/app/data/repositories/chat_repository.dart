@@ -7,46 +7,60 @@ import '../models/chat.dart';
 class ChatRepository {
   final DioApiService _apiService = Get.find<DioApiService>();
 
-  // Fetch all chat messages from the global room
-  Future<ApiResponse<List<Chat>>> getChatMessages({
-    int? page,
-    int? limit,
+  // Fetch paginated chat messages from the global room.
+  // Returns a tuple of (messages, totalPages).
+  Future<ApiResponse<(List<Chat>, int)>> getChatMessages({
+    int page = 1,
+    int limit = 15,
   }) async {
-    final queryParams = <String, dynamic>{};
-    if (page != null) queryParams['page'] = page;
-    if (limit != null) queryParams['limit'] = limit;
+    final queryParams = <String, dynamic>{
+      'page': page,
+      'limit': limit,
+    };
 
-    return _apiService.get<List<Chat>>(
-      ApiEndpoints.chatRooms, // Mapped to '/chat/all'
+    return _apiService.get<(List<Chat>, int)>(
+      ApiEndpoints.chatRooms,
       queryParams: queryParams,
       fromJson: (json) {
-        if (json is Map<String, dynamic> && json['data'] is List) {
-          final list = json['data'] as List;
-          return list
-              .map((e) => Chat.fromJson(e as Map<String, dynamic>))
-              .toList();
+        List<Chat> msgs = [];
+        int totalPages = 1;
+
+        if (json is Map<String, dynamic>) {
+          // Backend wraps in { data: [...], totalData, state: { totalPages } }
+          final raw = json['data'];
+          if (raw is List) {
+            msgs = raw
+                .map((e) => Chat.fromJson(e as Map<String, dynamic>))
+                .toList();
+          }
+          final state = json['state'];
+          if (state is Map<String, dynamic>) {
+            totalPages = (state['totalPages'] as num?)?.toInt() ?? 1;
+          }
         } else if (json is List) {
-          return json
+          msgs = json
               .map((e) => Chat.fromJson(e as Map<String, dynamic>))
               .toList();
         }
-        return [];
+        return (msgs, totalPages);
       },
     );
   }
 
   // Send a chat message using POST /chat/add
   Future<ApiResponse<Chat>> sendChatMessage({
-    required String message,
+    String? message,
     String? mediaUrl,
     String mediaType = 'TEXT',
     String messageType = 'text',
+    int fileSize = 0,
   }) async {
     final body = <String, dynamic>{
       'message': message,
       'mediaType': mediaType,
       'mediaUrl': mediaUrl,
       'messageType': messageType,
+      'fileSize': fileSize,
     };
 
     return _apiService.post<Chat>(

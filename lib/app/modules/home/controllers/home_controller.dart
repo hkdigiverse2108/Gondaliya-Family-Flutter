@@ -27,6 +27,10 @@ class HomeController extends GetxController {
   final int _limit = 10;
   bool _hasMore = true;
 
+  /// When true the search-result list is shown even with an empty query.
+  /// Activated by tapping "See All" on the Verified Businesses section.
+  final showAllBusinessMode = false.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -41,8 +45,11 @@ class HomeController extends GetxController {
     // Debounce business search query to hit API
     debounce(businessSearchQuery, (query) {
       if (query.trim().isNotEmpty) {
+        // When user types, disable showAllBusinessMode (it was set by See All)
+        showAllBusinessMode.value = false;
         searchBusinesses(query);
-      } else {
+      } else if (!showAllBusinessMode.value) {
+        // Only clear when NOT in showAll mode
         searchBusinessesList.clear();
       }
     }, time: const Duration(milliseconds: 500));
@@ -115,12 +122,26 @@ class HomeController extends GetxController {
                         .trim()
                   : (bizJson['ownerName'] ?? '');
 
+              final businessLogo = bizJson['businessLogo'] as String?;
+              final businessBanner = bizJson['businessBanner'] as String?;
+              final businessPhotos =
+                  (bizJson['businessPhotos'] as List<dynamic>?)
+                      ?.map((e) => e.toString())
+                      .toList();
+
               list.add(
                 Business(
                   id: ownerId,
                   name: bizJson['businessName'] ?? '',
                   category: bizJson['category'] ?? '',
-                  subCategory: bizJson['subCategory'] ?? '',
+                  subCategory: bizJson['subCategory'] is List
+                      ? (bizJson['subCategory'] as List)
+                          .map((e) => e.toString())
+                          .toList()
+                      : (bizJson['subCategory'] != null &&
+                              bizJson['subCategory'].toString().isNotEmpty)
+                          ? [bizJson['subCategory'].toString()]
+                          : [],
                   address: shopAddress,
                   city: city,
                   contact: contact,
@@ -128,6 +149,9 @@ class HomeController extends GetxController {
                   ownerId: ownerId,
                   createdAt: DateTime.now(),
                   ownerName: ownerName,
+                  businessLogo: businessLogo,
+                  businessBanner: businessBanner,
+                  businessPhotos: businessPhotos,
                 ),
               );
             } else if (item is Map<String, dynamic> &&
@@ -167,6 +191,9 @@ class HomeController extends GetxController {
                     ownerName: biz.ownerName.isNotEmpty
                         ? biz.ownerName
                         : '${user.firstName} ${user.lastName}'.trim(),
+                    businessLogo: biz.businessLogo,
+                    businessBanner: biz.businessBanner,
+                    businessPhotos: biz.businessPhotos,
                   ),
                 );
               }
@@ -241,12 +268,26 @@ class HomeController extends GetxController {
                         .trim()
                   : (bizJson['ownerName'] ?? '');
 
+              final businessLogo = bizJson['businessLogo'] as String?;
+              final businessBanner = bizJson['businessBanner'] as String?;
+              final businessPhotos =
+                  (bizJson['businessPhotos'] as List<dynamic>?)
+                      ?.map((e) => e.toString())
+                      .toList();
+
               list.add(
                 Business(
                   id: ownerId,
                   name: bizJson['businessName'] ?? '',
                   category: bizJson['category'] ?? '',
-                  subCategory: bizJson['subCategory'] ?? '',
+                  subCategory: bizJson['subCategory'] is List
+                      ? (bizJson['subCategory'] as List)
+                          .map((e) => e.toString())
+                          .toList()
+                      : (bizJson['subCategory'] != null &&
+                              bizJson['subCategory'].toString().isNotEmpty)
+                          ? [bizJson['subCategory'].toString()]
+                          : [],
                   address: shopAddress,
                   city: city,
                   contact: contact,
@@ -254,6 +295,9 @@ class HomeController extends GetxController {
                   ownerId: ownerId,
                   createdAt: DateTime.now(),
                   ownerName: ownerName,
+                  businessLogo: businessLogo,
+                  businessBanner: businessBanner,
+                  businessPhotos: businessPhotos,
                 ),
               );
             } else {
@@ -282,5 +326,20 @@ class HomeController extends GetxController {
         isSearchLoading.value = false;
       }
     }
+  }
+
+  /// Called when the user taps "See All" on the businesses section.
+  /// Loads all businesses with no query and enters search-result display mode.
+  Future<void> loadAllBusinesses() async {
+    showAllBusinessMode.value = true;
+    await searchBusinesses('');
+  }
+
+  /// Resets the "See All" businesses mode back to the normal home view.
+  void resetBusinessMode() {
+    showAllBusinessMode.value = false;
+    searchBusinessesList.clear();
+    _currentPage = 1;
+    _hasMore = true;
   }
 }

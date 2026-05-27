@@ -301,6 +301,7 @@ class MyFamilyView extends StatelessWidget {
     ProfileController controller,
     AppColorScheme colors,
   ) {
+    final head = controller.currentUser.value;
     final initials =
         '${f.firstName.isNotEmpty ? f.firstName[0] : ''}${f.lastName.isNotEmpty ? f.lastName[0] : ''}'
             .toUpperCase();
@@ -317,7 +318,13 @@ class MyFamilyView extends StatelessWidget {
       ),
       child: InkWell(
         onTap: () {
-          Get.toNamed(Routes.family, arguments: {'member': f});
+          Get.toNamed(
+            Routes.family,
+            arguments: {
+              'member': f,
+              if (head != null) 'headName': '${head.firstName} ${head.lastName}',
+            },
+          );
         },
         borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
         child: Padding(

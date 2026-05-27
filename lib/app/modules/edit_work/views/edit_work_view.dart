@@ -27,10 +27,21 @@ class EditWorkView extends GetView<EditWorkController> {
       top: false,
       child: Scaffold(
         extendBodyBehindAppBar: true,
-        appBar: GlassAppBar(
-          titleText: 'occupation_details'.tr.isEmpty
-              ? 'Work Profile'
-              : 'occupation_details'.tr,
+        appBar: PreferredSize(
+          preferredSize: const Size.fromHeight(kToolbarHeight),
+          child: Obx(() {
+            String titleText;
+            if (controller.occupationType.value == 'Business') {
+              titleText = 'edit_business'.tr;
+            } else if (controller.occupationType.value == 'Job') {
+              titleText = 'edit_job'.tr;
+            } else {
+              titleText = 'occupation_details'.tr.isEmpty
+                  ? 'Work Profile'
+                  : 'occupation_details'.tr;
+            }
+            return GlassAppBar(titleText: titleText);
+          }),
         ),
         body: Stack(
           children: [
@@ -209,7 +220,7 @@ class EditWorkView extends GetView<EditWorkController> {
           child: Column(
             children: [
               Text(
-                'Business Logo / Document',
+                'business_logo'.tr,
                 style: GoogleFonts.outfit(
                   fontSize: AppSizes.fontSizeBodySmall.sp,
                   color: colors.textSecondary,
@@ -223,7 +234,8 @@ class EditWorkView extends GetView<EditWorkController> {
                   final pickedPath = controller.pickedBusinessLogoPath.value;
                   final hasPicked = pickedPath.isNotEmpty;
                   final existingLogo = controller.existingBusinessLogo.value;
-                  final hasExisting = existingLogo.isNotEmpty && existingLogo != 'null';
+                  final hasExisting =
+                      existingLogo.isNotEmpty && existingLogo != 'null';
 
                   Widget displayWidget;
                   if (hasPicked) {
@@ -231,7 +243,11 @@ class EditWorkView extends GetView<EditWorkController> {
                       displayWidget = Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.picture_as_pdf_rounded, color: Colors.redAccent, size: 40.r),
+                          Icon(
+                            Icons.picture_as_pdf_rounded,
+                            color: Colors.redAccent,
+                            size: 40.r,
+                          ),
                           SizedBox(height: 4.h),
                           Padding(
                             padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -264,7 +280,11 @@ class EditWorkView extends GetView<EditWorkController> {
                       displayWidget = Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.picture_as_pdf_rounded, color: Colors.redAccent, size: 40.r),
+                          Icon(
+                            Icons.picture_as_pdf_rounded,
+                            color: Colors.redAccent,
+                            size: 40.r,
+                          ),
                           SizedBox(height: 4.h),
                           Text(
                             'View PDF Document',
@@ -303,7 +323,7 @@ class EditWorkView extends GetView<EditWorkController> {
                         ),
                         SizedBox(height: AppSizes.spacingXS.h),
                         Text(
-                          'Upload Image or PDF',
+                          'upload_image_or_pdf'.tr,
                           style: GoogleFonts.outfit(
                             fontSize: AppSizes.fontSizeCaption.sp,
                             color: colors.textSecondary,
@@ -332,6 +352,206 @@ class EditWorkView extends GetView<EditWorkController> {
               ),
             ],
           ),
+        ),
+        SizedBox(height: AppSizes.spacingL.h),
+
+        // Business Banner Picker
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'business_banner'.tr,
+                style: GoogleFonts.outfit(
+                  fontSize: AppSizes.fontSizeBodySmall.sp,
+                  color: colors.textSecondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: AppSizes.spacingS.h),
+              GestureDetector(
+                onTap: controller.pickBusinessBanner,
+                child: Obx(() {
+                  final pickedPath = controller.pickedBusinessBannerPath.value;
+                  final hasPicked = pickedPath.isNotEmpty;
+                  final existingBanner =
+                      controller.existingBusinessBanner.value;
+                  final hasExisting =
+                      existingBanner.isNotEmpty && existingBanner != 'null';
+
+                  Widget displayWidget;
+                  if (hasPicked) {
+                    displayWidget = ClipRRect(
+                      borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                      child: Image.file(
+                        File(pickedPath),
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                    );
+                  } else if (hasExisting) {
+                    displayWidget = ClipRRect(
+                      borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                      child: Image.network(
+                        existingBanner,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                        errorBuilder: (context, error, stackTrace) => Icon(
+                          Icons.broken_image_outlined,
+                          color: colors.textSecondary,
+                          size: 32.r,
+                        ),
+                      ),
+                    );
+                  } else {
+                    displayWidget = Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.add_photo_alternate_outlined,
+                          color: colors.primary,
+                          size: 36.r,
+                        ),
+                        SizedBox(height: AppSizes.spacingXS.h),
+                        Text(
+                          'upload_business_banner'.tr,
+                          style: GoogleFonts.outfit(
+                            fontSize: AppSizes.fontSizeCaption.sp,
+                            color: colors.textSecondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+
+                  return Container(
+                    width: double.infinity,
+                    height: 110.h,
+                    decoration: BoxDecoration(
+                      color: colors.card,
+                      borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                      boxShadow: colors.neumorphicShadow(blur: 8, distance: 2),
+                      border: Border.all(
+                        color: colors.primary.withValues(alpha: 0.1),
+                        width: 2,
+                      ),
+                    ),
+                    child: Center(child: displayWidget),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(height: AppSizes.spacingL.h),
+
+        // Details Photos (Gallery) - Max 4
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'business_photos'.tr,
+              style: GoogleFonts.outfit(
+                fontSize: AppSizes.fontSizeBodySmall.sp,
+                color: colors.textSecondary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            SizedBox(height: AppSizes.spacingS.h),
+            Obx(() {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List.generate(4, (index) {
+                  final slot = controller.businessPhotosSlots[index];
+                  final hasImage = slot.hasImage;
+
+                  Widget imageWidget;
+                  if (slot.pickedPath != null && slot.pickedPath!.isNotEmpty) {
+                    imageWidget = Image.file(
+                      File(slot.pickedPath!),
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                    );
+                  } else if (slot.existingUrl != null &&
+                      slot.existingUrl!.isNotEmpty) {
+                    imageWidget = Image.network(
+                      slot.existingUrl!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: double.infinity,
+                      errorBuilder: (context, error, stackTrace) => Icon(
+                        Icons.broken_image_outlined,
+                        color: colors.textSecondary,
+                        size: 20.r,
+                      ),
+                    );
+                  } else {
+                    imageWidget = Icon(
+                      Icons.add_a_photo_outlined,
+                      color: colors.primary,
+                      size: 24.r,
+                    );
+                  }
+
+                  return Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () => controller.pickBusinessPhoto(index),
+                        child: Container(
+                          width: 70.w,
+                          height: 70.w,
+                          decoration: BoxDecoration(
+                            color: colors.card,
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radiusM.r,
+                            ),
+                            border: Border.all(
+                              color: colors.primary.withValues(alpha: 0.1),
+                              width: 1.5,
+                            ),
+                            boxShadow: colors.neumorphicShadow(
+                              blur: 4,
+                              distance: 1,
+                            ),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radiusM.r,
+                            ),
+                            child: Center(child: imageWidget),
+                          ),
+                        ),
+                      ),
+                      if (hasImage)
+                        Positioned(
+                          top: 2.r,
+                          right: 2.r,
+                          child: GestureDetector(
+                            onTap: () => controller.removeBusinessPhoto(index),
+                            child: Container(
+                              padding: EdgeInsets.all(2.r),
+                              decoration: const BoxDecoration(
+                                color: Colors.black54,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.close_rounded,
+                                color: Colors.white,
+                                size: 14,
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+              );
+            }),
+          ],
         ),
         SizedBox(height: AppSizes.spacingXL.h),
 
@@ -369,30 +589,70 @@ class EditWorkView extends GetView<EditWorkController> {
                 onChanged: (val) {
                   if (val != null) {
                     controller.businessCategory.value = val;
-                    controller.businessSubCategory.value = '';
+                    controller.businessSubCategories.clear();
                   }
                 },
               ),
-              SizedBox(height: AppSizes.spacingL.h),
-              NeomorphicDropdownField<String>(
-                value: controller.businessSubCategory.value.isEmpty
-                    ? null
-                    : controller.businessSubCategory.value,
-                labelText: 'sub_category'.tr,
-                prefixIcon: Icon(
-                  Icons.class_outlined,
-                  color: colors.textPrimary,
+              
+              // Multi-select chip list for subcategories
+              if (subCategories.isNotEmpty) ...[
+                SizedBox(height: AppSizes.spacingL.h),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: AppSizes.spacingS.h),
+                    child: Text(
+                      'sub_category'.tr,
+                      style: GoogleFonts.outfit(
+                        fontSize: AppSizes.fontSizeBodySmall.sp,
+                        color: colors.textSecondary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
                 ),
-                items: subCategories
-                    .map((c) => NeomorphicDropdownItem(value: c, label: c))
-                    .toList(),
-                onChanged: (val) {
-                  if (val != null) {
-                    controller.businessSubCategory.value = val;
-                  }
-                },
-              ),
-              if (controller.businessSubCategory.value == 'Other Jobs') ...[
+                Wrap(
+                  spacing: 8.w,
+                  runSpacing: 8.h,
+                  children: subCategories.map((sub) {
+                    final isSelected =
+                        controller.businessSubCategories.contains(sub);
+                    return FilterChip(
+                      selected: isSelected,
+                      label: Text(
+                        sub,
+                        style: GoogleFonts.outfit(
+                          color: isSelected ? colors.white : colors.textPrimary,
+                          fontWeight: isSelected
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                          fontSize: AppSizes.fontSizeBodySmall.sp,
+                        ),
+                      ),
+                      backgroundColor: colors.card,
+                      selectedColor: colors.primary,
+                      checkmarkColor: colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
+                        side: BorderSide(
+                          color: isSelected
+                              ? colors.primary
+                              : colors.primary.withValues(alpha: 0.15),
+                          width: 1,
+                        ),
+                      ),
+                      onSelected: (selected) {
+                        if (selected) {
+                          controller.businessSubCategories.add(sub);
+                        } else {
+                          controller.businessSubCategories.remove(sub);
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+              ],
+              if (controller.businessSubCategories.contains('Other Jobs')) ...[
                 SizedBox(height: AppSizes.spacingL.h),
                 NeomorphicTextField(
                   controller: controller.businessSubCategoryOtherController,
@@ -653,7 +913,7 @@ class EditWorkView extends GetView<EditWorkController> {
           Icon(Icons.info_outline_rounded, color: colors.primary, size: 36.r),
           SizedBox(height: AppSizes.spacingM.h),
           Text(
-            'No Work Details Set',
+            'no_work_details'.tr,
             style: GoogleFonts.outfit(
               fontWeight: FontWeight.bold,
               fontSize: AppSizes.fontSizeBodyLarge.sp,
@@ -662,7 +922,7 @@ class EditWorkView extends GetView<EditWorkController> {
           ),
           SizedBox(height: AppSizes.spacingS.h),
           Text(
-            'Please select Business or Job above to enter your professional details.',
+            'select_occupation_prompt'.tr,
             style: GoogleFonts.outfit(
               fontSize: AppSizes.fontSizeBodySmall.sp,
               color: colors.textSecondary,

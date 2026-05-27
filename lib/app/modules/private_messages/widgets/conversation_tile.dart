@@ -6,6 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/sizes.dart';
 import '../../../data/models/private_conversation_model.dart';
+import 'package:gondalia_family/core/config/app_config.dart';
 
 class ConversationTile extends StatelessWidget {
   final PrivateConversation conversation;
@@ -128,17 +129,40 @@ class ConversationTile extends StatelessWidget {
                           end: Alignment.bottomRight,
                         ),
                       ),
-                      child: Center(
-                        child: Text(
-                          initials,
-                          style: GoogleFonts.outfit(
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
-                            color: conversation.unreadCount > 0
-                                ? Colors.white
-                                : colors.textPrimary,
-                          ),
-                        ),
+                      child: ClipOval(
+                        child: (other.avatar != null &&
+                                other.avatar!.isNotEmpty &&
+                                other.avatar != 'null')
+                            ? Image.network(
+                                _resolveUrl(other.avatar!),
+                                width: 52.r,
+                                height: 52.r,
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) => Center(
+                                  child: Text(
+                                    initials,
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 16.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: conversation.unreadCount > 0
+                                          ? Colors.white
+                                          : colors.textPrimary,
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : Center(
+                                child: Text(
+                                  initials,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: conversation.unreadCount > 0
+                                        ? Colors.white
+                                        : colors.textPrimary,
+                                  ),
+                                ),
+                              ),
                       ),
                     ),
                     SizedBox(width: AppSizes.spacingL.w),
@@ -236,6 +260,20 @@ class ConversationTile extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _resolveUrl(String? url) {
+    if (url == null || url.isEmpty || url == 'null') return '';
+    if (url.startsWith('/uploads')) {
+      return '${AppConfig.baseUrl}$url';
+    }
+    if (url.contains('localhost:5000')) {
+      return url.replaceAll('http://localhost:5000', AppConfig.baseUrl);
+    }
+    if (url.contains('127.0.0.1:5000')) {
+      return url.replaceAll('http://127.0.0.1:5000', AppConfig.baseUrl);
+    }
+    return url;
   }
 
   String _formatMessageTime(DateTime? date) {

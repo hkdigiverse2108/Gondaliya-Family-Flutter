@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../data/models/user.dart';
+import '../../../data/models/enums.dart';
 import '../../../data/repositories/auth_repository.dart';
 import '../../../data/services/storage_service.dart';
 import '../../home/controllers/profile_controller.dart';
@@ -23,6 +24,18 @@ class EditWorkController extends GetxController {
   final pickedBusinessLogoPath = ''.obs;
   final existingBusinessLogo = ''.obs;
 
+  // Business Banner variables
+  final pickedBusinessBannerPath = ''.obs;
+  final existingBusinessBanner = ''.obs;
+
+  // Business Photos variables
+  final businessPhotosSlots = RxList<PhotoSlot>([
+    PhotoSlot(),
+    PhotoSlot(),
+    PhotoSlot(),
+    PhotoSlot(),
+  ]);
+
   // Job Details Controllers
   final companyNameController = TextEditingController();
   final companyAddressController = TextEditingController();
@@ -33,7 +46,7 @@ class EditWorkController extends GetxController {
   // Business Details Controllers
   final businessNameController = TextEditingController();
   final businessCategory = ''.obs;
-  final businessSubCategory = ''.obs;
+  final businessSubCategories = <String>[].obs;
   final businessSubCategoryOtherController = TextEditingController();
   final businessOwnerNameController = TextEditingController();
   final businessDescriptionController = TextEditingController();
@@ -71,10 +84,38 @@ class EditWorkController extends GetxController {
           final biz = wd.businessDetails!;
           businessNameController.text = biz.businessName;
           businessCategory.value = biz.category;
-          businessSubCategory.value = biz.subCategory;
+          
+          // Populating subcategories safely
+          businessSubCategories.clear();
+          final standardSubs = biz.category.isEmpty
+              ? <String>[]
+              : AppEnums.jobCategories[biz.category] ?? <String>[];
+          
+          for (final sub in biz.subCategory) {
+            if (standardSubs.contains(sub)) {
+              businessSubCategories.add(sub);
+            } else {
+              // It is a custom subcategory!
+              if (!businessSubCategories.contains('Other Jobs')) {
+                businessSubCategories.add('Other Jobs');
+              }
+              businessSubCategoryOtherController.text = sub;
+            }
+          }
+
           businessOwnerNameController.text = biz.ownerName;
           businessDescriptionController.text = biz.description;
           existingBusinessLogo.value = biz.businessLogo ?? '';
+          existingBusinessBanner.value = biz.businessBanner ?? '';
+
+          final photos = biz.businessPhotos ?? [];
+          for (int i = 0; i < 4; i++) {
+            if (i < photos.length) {
+              businessPhotosSlots[i] = PhotoSlot(existingUrl: photos[i]);
+            } else {
+              businessPhotosSlots[i] = PhotoSlot();
+            }
+          }
 
           if (biz.locations.isNotEmpty) {
             final loc = biz.locations.first;
@@ -122,13 +163,61 @@ class EditWorkController extends GetxController {
     } catch (e) {
       Get.printError(info: 'pickBusinessLogo error: $e');
       Get.snackbar(
-        'Error',
-        'Failed to pick logo',
+        'error'.tr,
+        'failed_to_pick_logo'.tr,
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
         colorText: Colors.white,
       );
     }
+  }
+
+  Future<void> pickBusinessBanner() async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+      );
+      if (result != null && result.files.single.path != null) {
+        pickedBusinessBannerPath.value = result.files.single.path!;
+      }
+    } catch (e) {
+      Get.printError(info: 'pickBusinessBanner error: $e');
+      Get.snackbar(
+        'error'.tr,
+        'failed_to_pick_banner'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  Future<void> pickBusinessPhoto(int index) async {
+    try {
+      final result = await FilePicker.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'webp', 'gif'],
+      );
+      if (result != null && result.files.single.path != null) {
+        businessPhotosSlots[index] = PhotoSlot(
+          pickedPath: result.files.single.path!,
+        );
+      }
+    } catch (e) {
+      Get.printError(info: 'pickBusinessPhoto error: $e');
+      Get.snackbar(
+        'error'.tr,
+        'failed_to_pick_photo'.tr,
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
+    }
+  }
+
+  void removeBusinessPhoto(int index) {
+    businessPhotosSlots[index] = PhotoSlot();
   }
 
   Future<void> saveWorkDetails() async {
@@ -147,8 +236,8 @@ class EditWorkController extends GetxController {
           uploadedLogoUrl = uploadResp.data!['url'] as String?;
         } else {
           Get.snackbar(
-            'Error',
-            uploadResp.message ?? 'Failed to upload business logo',
+            'error'.tr,
+            uploadResp.message ?? 'failed_to_upload_logo'.tr,
             snackPosition: SnackPosition.BOTTOM,
             backgroundColor: Colors.redAccent,
             colorText: Colors.white,
@@ -157,6 +246,55 @@ class EditWorkController extends GetxController {
           return;
         }
       }
+
+      // 1b. Upload business banner if a new one was picked
+      String? uploadedBannerUrl;
+      if (pickedBusinessBannerPath.value.isNotEmpty) {
+        final uploadResp = await _authRepo.uploadFile(
+          filePath: pickedBusinessBannerPath.value,
+          oldFileUrl: originalUser.workDetails?.businessDetails?.businessBanner,
+        );
+        if (uploadResp.success && uploadResp.data != null) {
+          uploadedBannerUrl = uploadResp.data!['url'] as String?;
+        } else {
+          Get.snackbar(
+            'error'.tr,
+            uploadResp.message ?? 'failed_to_upload_banner'.tr,
+            snackPosition: SnackPosition.BOTTOM,
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+          );
+          isLoading.value = false;
+          return;
+        }
+      }
+
+      // 1c. Upload details gallery photos if new ones were picked
+      final List<String> finalPhotosUrls = [];
+      for (final slot in businessPhotosSlots) {
+        if (slot.pickedPath != null && slot.pickedPath!.isNotEmpty) {
+          final uploadResp = await _authRepo.uploadFile(
+            filePath: slot.pickedPath!,
+          );
+          if (uploadResp.success && uploadResp.data != null) {
+            final url = uploadResp.data!['url'] as String;
+            finalPhotosUrls.add(url);
+          } else {
+            Get.snackbar(
+              'error'.tr,
+              uploadResp.message ?? 'failed_to_upload_photo'.tr,
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.redAccent,
+              colorText: Colors.white,
+            );
+            isLoading.value = false;
+            return;
+          }
+        } else if (slot.existingUrl != null && slot.existingUrl!.isNotEmpty) {
+          finalPhotosUrls.add(slot.existingUrl!);
+        }
+      }
+
       final workDetailsPayload = <String, dynamic>{
         'hasOwnBusiness': occupationType.value == 'Business',
       };
@@ -164,15 +302,22 @@ class EditWorkController extends GetxController {
       if (occupationType.value == 'Business') {
         workDetailsPayload['businessDetails'] = {
           'category': businessCategory.value,
-          'subCategory': businessSubCategory.value == 'Other Jobs'
-              ? businessSubCategoryOtherController.text.trim()
-              : businessSubCategory.value,
+          'subCategory': businessSubCategories.map((sub) {
+            if (sub == 'Other Jobs') {
+              return businessSubCategoryOtherController.text.trim();
+            }
+            return sub;
+          }).toList(),
           'businessName': businessNameController.text.trim(),
           'ownerName': businessOwnerNameController.text.trim(),
           'description': businessDescriptionController.text.trim(),
           'businessLogo':
               uploadedLogoUrl ??
               originalUser.workDetails?.businessDetails?.businessLogo,
+          'businessBanner':
+              uploadedBannerUrl ??
+              originalUser.workDetails?.businessDetails?.businessBanner,
+          'businessPhotos': finalPhotosUrls,
           'locations': [
             {
               'shopAddress': businessAddressController.text.trim(),
@@ -227,18 +372,16 @@ class EditWorkController extends GetxController {
 
         Get.back();
         Get.snackbar(
-          'Success',
-          'work_details_updated'.tr.isEmpty
-              ? 'Work details updated successfully'
-              : 'work_details_updated'.tr,
+          'success'.tr,
+          'work_details_updated'.tr,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.green,
           colorText: Colors.white,
         );
       } else {
         Get.snackbar(
-          'Error',
-          response.message ?? 'Failed to update work details',
+          'error'.tr,
+          response.message ?? 'failed_to_update_work'.tr,
           snackPosition: SnackPosition.BOTTOM,
           backgroundColor: Colors.redAccent,
           colorText: Colors.white,
@@ -247,7 +390,7 @@ class EditWorkController extends GetxController {
     } catch (e) {
       Get.printError(info: 'saveWorkDetails error: $e');
       Get.snackbar(
-        'Error',
+        'error'.tr,
         'An error occurred: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.redAccent,
@@ -279,4 +422,16 @@ class EditWorkController extends GetxController {
     businessPortfolioLinkController.dispose();
     super.onClose();
   }
+}
+
+class PhotoSlot {
+  final String? existingUrl;
+  final String? pickedPath;
+
+  PhotoSlot({this.existingUrl, this.pickedPath});
+
+  bool get isEmpty =>
+      (existingUrl == null || existingUrl!.isEmpty) &&
+      (pickedPath == null || pickedPath!.isEmpty);
+  bool get hasImage => !isEmpty;
 }

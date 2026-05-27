@@ -66,7 +66,8 @@ class HomeTabView extends StatelessWidget {
           onNotification: (ScrollNotification scrollInfo) {
             if (scrollInfo.metrics.pixels >=
                 scrollInfo.metrics.maxScrollExtent - 100) {
-              if (controller.businessSearchQuery.value.trim().isNotEmpty) {
+              if (controller.businessSearchQuery.value.trim().isNotEmpty ||
+                  controller.showAllBusinessMode.value) {
                 controller.searchBusinesses(
                   controller.businessSearchQuery.value,
                   loadMore: true,
@@ -97,12 +98,14 @@ class HomeTabView extends StatelessWidget {
                     ),
                     showValidationIcon: false,
                     suffixIcon: Obx(() {
-                      if (controller.businessSearchQuery.value.isNotEmpty) {
+                      if (controller.businessSearchQuery.value.isNotEmpty ||
+                          controller.showAllBusinessMode.value) {
                         return IconButton(
                           icon: Icon(Icons.clear, color: colors.textSecondary),
                           onPressed: () {
                             controller.businessSearchController.clear();
                             controller.businessSearchQuery.value = '';
+                            controller.resetBusinessMode();
                           },
                         );
                       }
@@ -114,7 +117,8 @@ class HomeTabView extends StatelessWidget {
                 SizedBox(height: AppSizes.spacingL.h),
 
                 Obx(() {
-                  if (controller.businessSearchQuery.value.trim().isEmpty) {
+                  if (controller.businessSearchQuery.value.trim().isEmpty &&
+                      !controller.showAllBusinessMode.value) {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -126,6 +130,7 @@ class HomeTabView extends StatelessWidget {
                           'verified_businesses'.tr,
                           'see_all'.tr,
                           colors,
+                          onTap: () => controller.loadAllBusinesses(),
                         ),
                         SizedBox(height: AppSizes.spacingM.h),
                         VerifiedBusinessesSection(colors: colors),
@@ -209,7 +214,9 @@ class HomeTabView extends StatelessWidget {
                         padding: EdgeInsets.only(top: 50.h),
                         child: Center(
                           child: Text(
-                            'No businesses found matching your search.',
+                            controller.showAllBusinessMode.value
+                                ? 'no_businesses_yet'.tr
+                                : 'No businesses found matching your search.',
                             style: GoogleFonts.outfit(
                               color: colors.textSecondary,
                             ),
@@ -329,27 +336,36 @@ class HomeTabView extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: 8.w,
-                                            vertical: 4.h,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: colors.primary.withValues(
-                                              alpha: 0.08,
+                                        Flexible(
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w,
+                                              vertical: 4.h,
                                             ),
-                                            borderRadius: BorderRadius.circular(
-                                              AppSizes.radiusS.r,
+                                            decoration: BoxDecoration(
+                                              color: colors.primary.withValues(
+                                                alpha: 0.08,
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                    AppSizes.radiusS.r,
+                                                  ),
                                             ),
-                                          ),
-                                          child: Text(
-                                            b.subCategory.isNotEmpty
-                                                ? b.subCategory
-                                                : b.category,
-                                            style: GoogleFonts.outfit(
-                                              fontSize: 10.sp,
-                                              fontWeight: FontWeight.bold,
-                                              color: colors.primary,
+                                            child: Text(
+                                              b.subCategory.isNotEmpty
+                                                  ? (b.subCategory.length <= 2
+                                                        ? b.subCategory.join(
+                                                            ', ',
+                                                          )
+                                                        : "${b.subCategory.take(2).join(', ')} +${b.subCategory.length - 2}")
+                                                  : b.category,
+                                              style: GoogleFonts.outfit(
+                                                fontSize: 10.sp,
+                                                fontWeight: FontWeight.bold,
+                                                color: colors.primary,
+                                              ),
+                                              maxLines: 1,
+                                              overflow: TextOverflow.ellipsis,
                                             ),
                                           ),
                                         ),

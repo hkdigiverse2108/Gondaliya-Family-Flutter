@@ -544,11 +544,16 @@ class _PremiumParivarCardState extends State<PremiumParivarCard> {
                             AppSizes.radiusM.r,
                           ),
                           onTap: () {
+                            final headName =
+                                '${head.firstName} ${head.lastName}';
                             if (f.linkedUserId != null &&
                                 f.linkedUserId!.isNotEmpty) {
                               Get.toNamed(
                                 Routes.family,
-                                arguments: {'userId': f.linkedUserId},
+                                arguments: {
+                                  'userId': f.linkedUserId,
+                                  'headName': headName,
+                                },
                               );
                             } else {
                               final dummyMember = FamilyMember(
@@ -566,7 +571,10 @@ class _PremiumParivarCardState extends State<PremiumParivarCard> {
                               );
                               Get.toNamed(
                                 Routes.family,
-                                arguments: {'member': dummyMember},
+                                arguments: {
+                                  'member': dummyMember,
+                                  'headName': headName,
+                                },
                               );
                             }
                           },

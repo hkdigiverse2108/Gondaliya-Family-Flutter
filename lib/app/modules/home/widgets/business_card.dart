@@ -44,6 +44,44 @@ class BusinessCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Business Banner Header
+            if (business.businessBanner != null && business.businessBanner!.isNotEmpty) ...[
+              Image.network(
+                business.businessBanner!,
+                height: 100.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 100.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colors.primary.withValues(alpha: 0.8),
+                        colors.secondary.withValues(alpha: 0.8),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                ),
+              ),
+            ] else ...[
+              Container(
+                height: 100.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colors.primary.withValues(alpha: 0.8),
+                      colors.secondary.withValues(alpha: 0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+            ],
             // Top branding/Name & Category row
             Padding(
               padding: EdgeInsets.all(AppSizes.spacingL.w),
@@ -51,15 +89,29 @@ class BusinessCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(10.w),
+                    width: 44.w,
+                    height: 44.w,
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(14.r),
                     ),
-                    child: Icon(
-                      Icons.storefront_rounded,
-                      color: AppColors.primary,
-                      size: AppSizes.spacingXXL.w,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14.r),
+                      child: (business.businessLogo != null && business.businessLogo!.isNotEmpty)
+                          ? Image.network(
+                              business.businessLogo!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Icon(
+                                Icons.storefront_rounded,
+                                color: AppColors.primary,
+                                size: 22.r,
+                              ),
+                            )
+                          : Icon(
+                              Icons.storefront_rounded,
+                              color: AppColors.primary,
+                              size: 22.r,
+                            ),
                     ),
                   ),
                   SizedBox(width: AppSizes.spacingM.w),

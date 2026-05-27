@@ -17,12 +17,12 @@ class PrivateConversation extends Equatable {
 
   @override
   List<Object?> get props => [
-        conversationId,
-        otherUser,
-        lastMessage,
-        lastMessageAt,
-        unreadCount,
-      ];
+    conversationId,
+    otherUser,
+    lastMessage,
+    lastMessageAt,
+    unreadCount,
+  ];
 
   factory PrivateConversation.fromJson(Map<String, dynamic> json) {
     final otherParticipant = json['otherParticipant'] as Map<String, dynamic>?;
@@ -77,10 +77,6 @@ class PrivateChatUser extends Equatable {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      '_id': userId,
-      'name': name,
-      if (avatar != null) 'avatar': avatar,
-    };
+    return {'_id': userId, 'name': name, if (avatar != null) 'avatar': avatar};
   }
 }

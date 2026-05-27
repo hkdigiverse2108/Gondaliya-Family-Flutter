@@ -9,10 +9,13 @@ class PrivateMessage extends Equatable {
   final String? senderName;
   final String? senderPhoto;
   final String receiverId;
-  final String message;
+  final String? message;
   final MessageType messageType;
   final bool isRead;
   final DateTime? createdAt;
+  final String? mediaUrl;
+  final String mediaType;
+  final int fileSize;
 
   const PrivateMessage({
     required this.messageId,
@@ -21,10 +24,13 @@ class PrivateMessage extends Equatable {
     this.senderName,
     this.senderPhoto,
     required this.receiverId,
-    required this.message,
+    this.message,
     required this.messageType,
     required this.isRead,
     this.createdAt,
+    this.mediaUrl,
+    this.mediaType = 'TEXT',
+    this.fileSize = 0,
   });
 
   @override
@@ -39,6 +45,9 @@ class PrivateMessage extends Equatable {
         messageType,
         isRead,
         createdAt,
+        mediaUrl,
+        mediaType,
+        fileSize,
       ];
 
   factory PrivateMessage.fromJson(Map<String, dynamic> json) {
@@ -77,12 +86,15 @@ class PrivateMessage extends Equatable {
       senderName: senderName,
       senderPhoto: senderPhoto,
       receiverId: json['receiverId'] as String? ?? '',
-      message: json['message'] as String? ?? '',
+      message: json['message'] as String?,
       messageType: type,
       isRead: json['isRead'] as bool? ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'] as String)
           : null,
+      mediaUrl: json['mediaUrl'] as String?,
+      mediaType: json['mediaType'] as String? ?? 'TEXT',
+      fileSize: (json['fileSize'] as num?)?.toInt() ?? 0,
     );
   }
 
@@ -94,10 +106,13 @@ class PrivateMessage extends Equatable {
       if (senderName != null) 'senderName': senderName,
       if (senderPhoto != null) 'senderPhoto': senderPhoto,
       'receiverId': receiverId,
-      'message': message,
+      if (message != null) 'message': message,
       'messageType': messageType.name,
       'isRead': isRead,
       if (createdAt != null) 'createdAt': createdAt?.toIso8601String(),
+      if (mediaUrl != null) 'mediaUrl': mediaUrl,
+      'mediaType': mediaType,
+      'fileSize': fileSize,
     };
   }
 }

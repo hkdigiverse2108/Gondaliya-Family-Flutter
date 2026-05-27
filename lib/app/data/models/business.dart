@@ -2,7 +2,7 @@ class Business {
   final String id;
   final String name;
   final String category;
-  final String subCategory;
+  final List<String> subCategory;
   final String address;
   final String city;
   final String contact;
@@ -10,6 +10,9 @@ class Business {
   final String? ownerId; // Links to FamilyMember id if applicable
   final DateTime createdAt;
   final String ownerName;
+  final String? businessLogo;
+  final String? businessBanner;
+  final List<String>? businessPhotos;
 
   Business({
     required this.id,
@@ -23,6 +26,9 @@ class Business {
     this.ownerId,
     required this.createdAt,
     required this.ownerName,
+    this.businessLogo,
+    this.businessBanner,
+    this.businessPhotos,
   });
 
   Map<String, dynamic> toJson() {
@@ -38,6 +44,9 @@ class Business {
       'ownerId': ownerId,
       'createdAt': createdAt.toIso8601String(),
       'ownerName': ownerName,
+      'businessLogo': businessLogo,
+      'businessBanner': businessBanner,
+      'businessPhotos': businessPhotos,
     };
   }
 
@@ -46,7 +55,12 @@ class Business {
       id: json['id'] as String? ?? '',
       name: json['name'] as String? ?? '',
       category: json['category'] as String? ?? '',
-      subCategory: json['subCategory'] as String? ?? '',
+      subCategory: json['subCategory'] is List
+          ? (json['subCategory'] as List).map((e) => e.toString()).toList()
+          : (json['subCategory'] != null &&
+                  json['subCategory'].toString().isNotEmpty)
+              ? [json['subCategory'].toString()]
+              : [],
       address: json['address'] as String? ?? '',
       city: json['city'] as String? ?? '',
       contact: json['contact'] as String? ?? '',
@@ -56,6 +70,11 @@ class Business {
           ? DateTime.parse(json['createdAt'] as String)
           : DateTime.now(),
       ownerName: json['ownerName'] as String? ?? '',
+      businessLogo: json['businessLogo'] as String?,
+      businessBanner: json['businessBanner'] as String?,
+      businessPhotos: (json['businessPhotos'] as List<dynamic>?)
+          ?.map((e) => e.toString())
+          .toList(),
     );
   }
 
@@ -63,7 +82,7 @@ class Business {
     String? id,
     String? name,
     String? category,
-    String? subCategory,
+    List<String>? subCategory,
     String? address,
     String? city,
     String? contact,
@@ -71,6 +90,9 @@ class Business {
     String? ownerId,
     DateTime? createdAt,
     String? ownerName,
+    String? businessLogo,
+    String? businessBanner,
+    List<String>? businessPhotos,
   }) {
     return Business(
       id: id ?? this.id,
@@ -84,6 +106,9 @@ class Business {
       ownerId: ownerId ?? this.ownerId,
       createdAt: createdAt ?? this.createdAt,
       ownerName: ownerName ?? this.ownerName,
+      businessLogo: businessLogo ?? this.businessLogo,
+      businessBanner: businessBanner ?? this.businessBanner,
+      businessPhotos: businessPhotos ?? this.businessPhotos,
     );
   }
 }

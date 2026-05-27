@@ -157,8 +157,11 @@ class SocketService extends GetxService {
   void sendPrivateMessage({
     required String conversationId,
     required String receiverId,
-    required String message,
+    String? message,
     required String messageType,
+    String? mediaUrl,
+    String? mediaType,
+    int? fileSize,
   }) {
     if (_socket != null && _socket!.connected) {
       _socket!.emit('send_private_message', {
@@ -166,6 +169,9 @@ class SocketService extends GetxService {
         'receiverId': receiverId,
         'message': message,
         'messageType': messageType,
+        'mediaUrl': mediaUrl,
+        'mediaType': mediaType,
+        'fileSize': fileSize,
       });
     }
   }

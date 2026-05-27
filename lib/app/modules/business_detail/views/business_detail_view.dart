@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:shimmer/shimmer.dart';
 
 import 'package:gondalia_family/app/data/models/user.dart';
 import 'package:gondalia_family/app/data/models/work_details.dart';
@@ -11,7 +12,9 @@ import 'package:gondalia_family/app/modules/home/controllers/profile_controller.
 
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import 'package:gondalia_family/core/config/app_config.dart';
 import 'package:gondalia_family/app/routes/app_pages.dart';
+import 'package:gondalia_family/app/global_widgets/full_screen_image_viewer.dart';
 import '../controllers/business_detail_controller.dart';
 
 class BusinessDetailView extends GetView<BusinessDetailController> {
@@ -25,7 +28,7 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Obx(() {
         if (controller.isLoading.value) {
-          return const Center(child: CircularProgressIndicator());
+          return _buildShimmerLoading(context, colors);
         }
 
         final owner = controller.owner.value;
@@ -114,15 +117,32 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: colors.primaryGradient,
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                    if (biz.businessBanner != null &&
+                        biz.businessBanner!.isNotEmpty &&
+                        biz.businessBanner != 'null')
+                      Image.network(
+                        _resolveUrl(biz.businessBanner),
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: colors.primaryGradient,
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: colors.primaryGradient,
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
                         ),
                       ),
-                    ),
                     // Aurora glow overlays
                     Positioned(
                       right: -50.w,
@@ -136,56 +156,19 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                         ),
                       ),
                     ),
-                    Positioned(
-                      left: 20.w,
-                      bottom: 20.h,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 10.w,
-                              vertical: 4.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.white24,
-                              borderRadius: BorderRadius.circular(
-                                AppSizes.radiusS.r,
-                              ),
-                            ),
-                            child: Text(
-                              biz.category.toUpperCase(),
-                              style: GoogleFonts.outfit(
-                                fontSize: AppSizes.fontSizeMicro.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                letterSpacing: 1.0,
-                              ),
-                            ),
+                    // Subtle bottom gradient overlay for premium touch
+                    Positioned.fill(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Colors.transparent,
+                              Colors.black.withValues(alpha: 0.35),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
                           ),
-                          SizedBox(height: 6.h),
-                          SizedBox(
-                            width: 280.w,
-                            child: Text(
-                              biz.businessName,
-                              style: GoogleFonts.outfit(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                shadows: [
-                                  const Shadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 2),
-                                  ),
-                                ],
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
                     ),
                   ],
@@ -197,36 +180,216 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
               padding: EdgeInsets.all(AppSizes.spacingL.w),
               sliver: SliverList(
                 delegate: SliverChildListDelegate([
-                  // Category Tag if subcategory exists
-                  if (biz.subCategory.isNotEmpty) ...[
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 12.w,
-                          vertical: 6.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: colors.primary.withValues(alpha: 0.08),
-                          borderRadius: BorderRadius.circular(
-                            AppSizes.radiusM.r,
-                          ),
-                          border: Border.all(
-                            color: colors.primary.withValues(alpha: 0.15),
-                          ),
-                        ),
-                        child: Text(
-                          biz.subCategory,
-                          style: GoogleFonts.outfit(
-                            fontSize: AppSizes.fontSizeBodySmall.sp,
-                            fontWeight: FontWeight.w600,
-                            color: colors.primary,
-                          ),
-                        ),
+                  // 1. Premium Business Profile Header Card
+                  Container(
+                    padding: EdgeInsets.all(AppSizes.spacingL.w),
+                    decoration: BoxDecoration(
+                      color: colors.card,
+                      borderRadius: BorderRadius.circular(24.r),
+                      border: Border.all(
+                        color: colors.primary.withValues(alpha: 0.08),
+                        width: 1.5.w,
                       ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: colors.primary.withValues(
+                            alpha: colors.isDark ? 0.08 : 0.03,
+                          ),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withValues(
+                            alpha: colors.isDark ? 0.15 : 0.02,
+                          ),
+                          blurRadius: 12,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: AppSizes.spacingL.h),
-                  ],
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // Business Logo Avatar with premium circular glowing frame
+                            Container(
+                              width: 64.w,
+                              height: 64.w,
+                              padding: EdgeInsets.all(3.w),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  colors: colors.primaryGradient,
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: colors.primary.withValues(
+                                      alpha: 0.25,
+                                    ),
+                                    blurRadius: 8,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: colors.card,
+                                  border: Border.all(
+                                    color: colors.card,
+                                    width: 1.5.w,
+                                  ),
+                                ),
+                                child: ClipOval(
+                                  child:
+                                      (biz.businessLogo != null &&
+                                          biz.businessLogo!.isNotEmpty &&
+                                          biz.businessLogo != 'null')
+                                      ? Image.network(
+                                          _resolveUrl(biz.businessLogo),
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) =>
+                                                  Icon(
+                                                    PhosphorIcons.storefront(
+                                                      PhosphorIconsStyle.fill,
+                                                    ),
+                                                    color: colors.primary,
+                                                    size: 26.sp,
+                                                  ),
+                                        )
+                                      : Icon(
+                                          PhosphorIcons.storefront(
+                                            PhosphorIconsStyle.fill,
+                                          ),
+                                          color: colors.primary,
+                                          size: 26.sp,
+                                        ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: AppSizes.spacingM.w),
+                            // Business Title details
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          biz.businessName,
+                                          style: GoogleFonts.outfit(
+                                            fontSize: 20.sp,
+                                            fontWeight: FontWeight.bold,
+                                            color: colors.textPrimary,
+                                            height: 1.15,
+                                            letterSpacing: -0.2,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Category & Subcategory tags Wrap (Moved here to have full width to wrap beautifully!)
+                        SizedBox(height: AppSizes.spacingM.h),
+                        Wrap(
+                          spacing: 8.w,
+                          runSpacing: 6.h,
+                          children: [
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 10.w,
+                                vertical: 4.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: colors.primary.withValues(alpha: 0.08),
+                                borderRadius: BorderRadius.circular(20.r),
+                                border: Border.all(
+                                  color: colors.primary.withValues(alpha: 0.15),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    PhosphorIcons.tag(PhosphorIconsStyle.bold),
+                                    color: colors.primary,
+                                    size: 10.sp,
+                                  ),
+                                  SizedBox(width: 4.w),
+                                  Text(
+                                    biz.category.toUpperCase(),
+                                    style: GoogleFonts.outfit(
+                                      fontSize: 9.sp,
+                                      fontWeight: FontWeight.bold,
+                                      color: colors.primary,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            ...biz.subCategory.map(
+                              (sub) => Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 10.w,
+                                  vertical: 4.h,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: colors.accent.withValues(alpha: 0.08),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  border: Border.all(
+                                    color: colors.accent.withValues(
+                                      alpha: 0.15,
+                                    ),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      PhosphorIcons.briefcase(
+                                        PhosphorIconsStyle.bold,
+                                      ),
+                                      color: colors.accent,
+                                      size: 10.sp,
+                                    ),
+                                    SizedBox(width: 4.w),
+                                    Text(
+                                      sub.toUpperCase(),
+                                      style: GoogleFonts.outfit(
+                                        fontSize: 9.sp,
+                                        fontWeight: FontWeight.bold,
+                                        color: colors.accent,
+                                        letterSpacing: 0.5,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: AppSizes.spacingXL.h),
 
                   // Quick Actions Bar: Call, WhatsApp, DM
                   if (!isOwner) ...[
@@ -571,6 +734,109 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                         ],
                       ),
                     ),
+                    SizedBox(height: AppSizes.spacingXL.h),
+                  ],
+
+                  // Photos Gallery — Premium Instagram-style 3-column Grid
+                  if (biz.businessPhotos != null &&
+                      biz.businessPhotos!.isNotEmpty) ...[
+                    _buildSectionHeader(
+                      'photos'.tr,
+                      PhosphorIcons.image(),
+                      colors,
+                    ),
+                    SizedBox(height: AppSizes.spacingM.h),
+                    Builder(
+                      builder: (context) {
+                        final photos = biz.businessPhotos!;
+                        final totalWidth =
+                            MediaQuery.of(context).size.width -
+                            AppSizes.spacingL.w * 2;
+                        final double spacing = 8.w;
+                        final double cellSize =
+                            (totalWidth - (spacing * 2)) / 3;
+
+                        return Wrap(
+                          spacing: spacing,
+                          runSpacing: spacing,
+                          children: List.generate(photos.length, (photoIndex) {
+                            return GestureDetector(
+                              onTap: () {
+                                Get.to(
+                                  () => FullScreenImageViewer(
+                                    imageUrls: photos,
+                                    initialIndex: photoIndex,
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: cellSize,
+                                height: cellSize,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.radiusM.r,
+                                  ),
+                                  border: Border.all(
+                                    color: colors.primary.withValues(
+                                      alpha: 0.1,
+                                    ),
+                                    width: 1,
+                                  ),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.03,
+                                      ),
+                                      blurRadius: 4,
+                                      offset: const Offset(0, 2),
+                                    ),
+                                  ],
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.radiusM.r - 1,
+                                  ),
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      Image.network(
+                                        _resolveUrl(photos[photoIndex]),
+                                        fit: BoxFit.cover,
+                                        errorBuilder:
+                                            (context, error, stackTrace) =>
+                                                Container(
+                                                  color: colors.card,
+                                                  child: Icon(
+                                                    Icons.broken_image_outlined,
+                                                    color: colors.textSecondary,
+                                                  ),
+                                                ),
+                                      ),
+                                      Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                          onTap: () {
+                                            Get.to(
+                                              () => FullScreenImageViewer(
+                                                imageUrls: photos,
+                                                initialIndex: photoIndex,
+                                              ),
+                                            );
+                                          },
+                                          splashColor: Colors.white.withValues(
+                                            alpha: 0.15,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          }),
+                        );
+                      },
+                    ),
                     SizedBox(height: AppSizes.spacing4XL.h),
                   ],
                 ]),
@@ -789,6 +1055,107 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                   ),
                 ],
               ),
+      ),
+    );
+  }
+
+  String _resolveUrl(String? url) {
+    if (url == null || url.isEmpty || url == 'null') return '';
+    if (url.startsWith('/uploads')) {
+      return '${AppConfig.baseUrl}$url';
+    }
+    if (url.contains('localhost:5000')) {
+      return url.replaceAll('http://localhost:5000', AppConfig.baseUrl);
+    }
+    if (url.contains('127.0.0.1:5000')) {
+      return url.replaceAll('http://127.0.0.1:5000', AppConfig.baseUrl);
+    }
+    return url;
+  }
+
+  Widget _buildShimmerLoading(BuildContext context, AppColorScheme colors) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      body: Shimmer.fromColors(
+        baseColor: colors.isDark ? Colors.grey[800]! : Colors.grey[300]!,
+        highlightColor: colors.isDark ? Colors.grey[700]! : Colors.grey[100]!,
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Banner placeholder
+              Container(
+                height: 180.h,
+                width: double.infinity,
+                color: Colors.white,
+              ),
+              Padding(
+                padding: EdgeInsets.all(AppSizes.spacingL.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Premium Header card placeholder
+                    Container(
+                      height: 150.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                      ),
+                    ),
+                    SizedBox(height: AppSizes.spacingXL.h),
+                    // Quick Action Row placeholder
+                    Row(
+                      children: List.generate(
+                        3,
+                        (index) => Expanded(
+                          child: Container(
+                            height: 70.h,
+                            margin: EdgeInsets.only(
+                              right: index < 2 ? AppSizes.spacingM.w : 0,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(
+                                AppSizes.radiusL.r,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: AppSizes.spacingXL.h),
+                    // Description header placeholder
+                    Container(height: 16.h, width: 120.w, color: Colors.white),
+                    SizedBox(height: AppSizes.spacingM.h),
+                    // Description body placeholder
+                    Container(
+                      height: 80.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                      ),
+                    ),
+                    SizedBox(height: AppSizes.spacingXL.h),
+                    // Owner placeholder
+                    Container(height: 16.h, width: 100.w, color: Colors.white),
+                    SizedBox(height: AppSizes.spacingM.h),
+                    Container(
+                      height: 70.h,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

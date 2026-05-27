@@ -48,7 +48,9 @@ class ParivarHead {
       village: json['village'] ?? '',
       phoneNumber: json['phoneNumber'] ?? '',
       workDetailsSummary: json['workDetailsSummary'],
-      profilePhoto: json['profilePhoto'] == 'null' ? null : json['profilePhoto'],
+      profilePhoto: json['profilePhoto'] == 'null'
+          ? null
+          : json['profilePhoto'],
     );
   }
 }
@@ -86,7 +88,9 @@ class ParivarFamilyMember {
       workDetailsSummary: json['workDetailsSummary'],
       isIndependent: json['isIndependent'] ?? false,
       linkedUserId: json['linkedUserId'],
-      profilePhoto: json['profilePhoto'] == 'null' ? null : json['profilePhoto'],
+      profilePhoto: json['profilePhoto'] == 'null'
+          ? null
+          : json['profilePhoto'],
     );
   }
 }
