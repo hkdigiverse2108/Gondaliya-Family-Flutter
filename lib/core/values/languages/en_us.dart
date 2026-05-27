@@ -25,6 +25,8 @@ const Map<String, String> enUs = {
   'back': 'Back',
   'next': 'Next',
   'logout': 'Log Out',
+  'logout_confirm_title': 'Log Out',
+  'logout_confirm_message': 'Are you sure you want to log out?',
   'call_now': 'Call Now',
 
   // ==========================================

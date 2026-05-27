@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../data/models/private_conversation_model.dart';
 import '../../../data/repositories/private_chat_repository.dart';
 import '../../../data/services/storage_service.dart';
+import '../../../data/services/socket_service.dart';
 import '../../home/home_repository.dart';
 import '../../../../core/network/api_service.dart';
 
@@ -26,6 +27,7 @@ class SelectableUser {
 class PrivateMessagesController extends GetxController {
   final _chatRepo = PrivateChatRepository();
   final _storage = Get.find<StorageService>();
+  final _socketService = Get.find<SocketService>();
 
   final conversations = <PrivateConversation>[].obs;
   final isLoading = false.obs;
@@ -43,12 +45,37 @@ class PrivateMessagesController extends GetxController {
   void onInit() {
     super.onInit();
     fetchConversations();
+    _socketService.on('private_message_notification', _onSocketNotification);
   }
 
   @override
   void onClose() {
+    _socketService.off('private_message_notification', _onSocketNotification);
     userSearchController.dispose();
     super.onClose();
+  }
+
+  void _onSocketNotification(dynamic data) {
+    fetchConversations();
+  }
+
+  /// Mark conversation as read locally to update the UI instantly
+  void markAsReadLocally(String conversationId) {
+    final index = conversations.indexWhere(
+      (c) => c.conversationId == conversationId,
+    );
+    if (index != -1) {
+      final convo = conversations[index];
+      if (convo.unreadCount > 0) {
+        conversations[index] = PrivateConversation(
+          conversationId: convo.conversationId,
+          otherUser: convo.otherUser,
+          lastMessage: convo.lastMessage,
+          lastMessageAt: convo.lastMessageAt,
+          unreadCount: 0,
+        );
+      }
+    }
   }
 
   /// Load all active conversations

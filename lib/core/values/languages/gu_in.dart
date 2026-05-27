@@ -25,6 +25,8 @@ const Map<String, String> guIn = {
   'back': 'પાછળ',
   'next': 'આગળ',
   'logout': 'લૉગ આઉટ',
+  'logout_confirm_title': 'લૉગ આઉટ',
+  'logout_confirm_message': 'શું તમે ખરેખર લૉગ આઉટ કરવા માંગો છો?',
   'call_now': 'ફોન કરો',
 
   // ==========================================

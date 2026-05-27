@@ -289,6 +289,7 @@ class _DropdownOverlayContentState<T>
 
     return Container(
       constraints: const BoxConstraints(maxHeight: 250),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(16),

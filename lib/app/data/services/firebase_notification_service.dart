@@ -175,6 +175,17 @@ class FirebaseNotificationService extends GetxService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       debugPrint('Received foreground message: ${message.notification?.title}');
 
+      // Skip local notification for private_chat — the SocketService
+      // already shows an in-app banner for DMs via the
+      // 'private_message_notification' event.
+      final msgType = message.data['type'] as String?;
+      if (msgType == 'private_chat') {
+        debugPrint(
+          'Skipping local notification for private_chat (handled by SocketService).',
+        );
+        return;
+      }
+
       final notification = message.notification;
       final android = message.notification?.android;
 
@@ -200,28 +211,6 @@ class FirebaseNotificationService extends GetxService {
             ),
           ),
           payload: message.data.toString(),
-        );
-      }
-
-      final title = message.notification?.title ?? 'Notification';
-      final body = message.notification?.body ?? '';
-
-      if (Get.context != null) {
-        Get.snackbar(
-          title,
-          body,
-          snackPosition: SnackPosition.TOP,
-          backgroundColor: Theme.of(
-            Get.context!,
-          ).colorScheme.primaryContainer.withValues(alpha: 0.9),
-          colorText: Theme.of(Get.context!).colorScheme.onPrimaryContainer,
-          margin: const EdgeInsets.all(12),
-          borderRadius: 16,
-          duration: const Duration(seconds: 4),
-          icon: Icon(
-            Icons.notifications_active,
-            color: Theme.of(Get.context!).colorScheme.primary,
-          ),
         );
       }
     });

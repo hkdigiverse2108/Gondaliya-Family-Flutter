@@ -171,10 +171,14 @@ class PrivateMessagesView extends GetView<PrivateMessagesController> {
                         final convo = filteredList[index];
                         return ConversationTile(
                           conversation: convo,
-                          onTap: () => Get.toNamed(
-                            '/private-chat/${convo.conversationId}',
-                            arguments: {'otherUser': convo.otherUser},
-                          ),
+                          onTap: () async {
+                            controller.markAsReadLocally(convo.conversationId);
+                            await Get.toNamed(
+                              '/private-chat/${convo.conversationId}',
+                              arguments: {'otherUser': convo.otherUser},
+                            );
+                            controller.fetchConversations();
+                          },
                           onDelete: () => controller.deleteConversation(
                             convo.conversationId,
                           ),
@@ -188,39 +192,6 @@ class PrivateMessagesView extends GetView<PrivateMessagesController> {
           ),
         ],
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     controller.loadSelectableUsers();
-      //     _showNewChatBottomSheet(context, colors);
-      //   },
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 0,
-      //   highlightElevation: 0,
-      //   child: Container(
-      //     width: 56.r,
-      //     height: 56.r,
-      //     decoration: BoxDecoration(
-      //       shape: BoxShape.circle,
-      //       gradient: LinearGradient(
-      //         colors: colors.primaryGradient,
-      //         begin: Alignment.topLeft,
-      //         end: Alignment.bottomRight,
-      //       ),
-      //       boxShadow: [
-      //         BoxShadow(
-      //           color: colors.primary.withValues(alpha: 0.4),
-      //           blurRadius: 16,
-      //           offset: const Offset(0, 6),
-      //         ),
-      //       ],
-      //     ),
-      //     child: Icon(
-      //       PhosphorIcons.chatCircleText(PhosphorIconsStyle.fill),
-      //       color: Colors.white,
-      //       size: 26.sp,
-      //     ),
-      //   ),
-      // ),
     );
   }
 

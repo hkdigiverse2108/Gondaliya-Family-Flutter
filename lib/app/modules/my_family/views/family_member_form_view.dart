@@ -98,6 +98,7 @@ class _FamilyMemberFormViewState extends State<FamilyMemberFormView> {
           style: GoogleFonts.outfit(
             fontWeight: FontWeight.bold,
             fontSize: 18.sp,
+            color: colors.textPrimary,
           ),
         ),
         centerTitle: true,

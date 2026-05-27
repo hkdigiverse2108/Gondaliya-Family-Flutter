@@ -19,7 +19,7 @@ class SplashController extends GetxController {
       permanent: true,
     );
 
-    await Future.delayed(const Duration(milliseconds: 2000));
+    // Removed the artificial 2000ms delay to load the app instantly
 
     final storageService = Get.find<StorageService>();
     final token = storageService.authToken;

@@ -25,18 +25,18 @@ class LoginView extends GetView<LoginController> {
         elevation: 0,
         scrolledUnderElevation: 0,
         actions: [
-          IconButton(
-            tooltip: controller.isDarkTheme.value
-                ? 'light_mode'.tr
-                : 'dark_mode'.tr,
-            icon: Icon(
-              controller.isDarkTheme.value
-                  ? Icons.light_mode_outlined
-                  : Icons.dark_mode_outlined,
-              color: colors.textPrimary,
-            ),
-            onPressed: controller.toggleTheme,
-          ),
+          // IconButton(
+          //   tooltip: controller.isDarkTheme.value
+          //       ? 'light_mode'.tr
+          //       : 'dark_mode'.tr,
+          //   icon: Icon(
+          //     controller.isDarkTheme.value
+          //         ? Icons.light_mode_outlined
+          //         : Icons.dark_mode_outlined,
+          //     color: colors.textPrimary,
+          //   ),
+          //   onPressed: controller.toggleTheme,
+          // ),
           // Language Toggle Button (Neumorphic style)
           Padding(
             padding: EdgeInsets.only(right: AppSizes.spacingL.w),

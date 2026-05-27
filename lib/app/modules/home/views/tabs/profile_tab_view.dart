@@ -422,6 +422,7 @@ class ProfileTabView extends StatelessWidget {
                       iconColor: Colors.redAccent,
                       titleColor: Colors.redAccent,
                       onTap: () => controller.logout(),
+                      isLogout: true,
                     ),
                   ],
                 ),
@@ -497,6 +498,7 @@ class ProfileTabView extends StatelessWidget {
     Color? iconColor,
     Color? titleColor,
     VoidCallback? onTap,
+    bool isLogout = false,
   }) {
     return InkWell(
       onTap: onTap,
@@ -541,12 +543,14 @@ class ProfileTabView extends StatelessWidget {
                 ],
               ),
             ),
-            trailing ??
-                Icon(
-                  PhosphorIcons.caretRight(),
-                  color: colors.textSecondary.withValues(alpha: 0.6),
-                  size: 14.r,
-                ),
+            isLogout
+                ? SizedBox.shrink()
+                : trailing ??
+                      Icon(
+                        PhosphorIcons.caretRight(),
+                        color: colors.textSecondary.withValues(alpha: 0.6),
+                        size: 14.r,
+                      ),
           ],
         ),
       ),
