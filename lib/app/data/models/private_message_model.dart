@@ -35,20 +35,20 @@ class PrivateMessage extends Equatable {
 
   @override
   List<Object?> get props => [
-        messageId,
-        conversationId,
-        senderId,
-        senderName,
-        senderPhoto,
-        receiverId,
-        message,
-        messageType,
-        isRead,
-        createdAt,
-        mediaUrl,
-        mediaType,
-        fileSize,
-      ];
+    messageId,
+    conversationId,
+    senderId,
+    senderName,
+    senderPhoto,
+    receiverId,
+    message,
+    messageType,
+    isRead,
+    createdAt,
+    mediaUrl,
+    mediaType,
+    fileSize,
+  ];
 
   factory PrivateMessage.fromJson(Map<String, dynamic> json) {
     String senderId = '';

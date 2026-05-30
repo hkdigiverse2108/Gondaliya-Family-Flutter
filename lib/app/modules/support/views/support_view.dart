@@ -187,38 +187,44 @@ class SupportView extends GetView<SupportController> {
                           SizedBox(height: AppSizes.spacingXL.h),
 
                           // Contact Numbers Card
-                          _buildContactCard(
-                            colors: colors,
-                            isDark: isDark,
-                            title: 'Phone Contacts',
-                            icon: PhosphorIcons.phone(PhosphorIconsStyle.fill),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                _buildContactItem(
-                                  colors: colors,
-                                  label: 'Primary Support',
-                                  value: support.phone,
-                                  onTap: () =>
-                                      controller.makeCall(support.phone),
-                                  actionIcon: PhosphorIcons.phoneCall(),
-                                ),
-                                if (support.phone2 != null &&
-                                    support.phone2!.trim().isNotEmpty) ...[
-                                  const Divider(height: 24),
-                                  _buildContactItem(
-                                    colors: colors,
-                                    label: 'Alternative Support',
-                                    value: support.phone2!,
-                                    onTap: () =>
-                                        controller.makeCall(support.phone2!),
-                                    actionIcon: PhosphorIcons.phoneCall(),
-                                  ),
-                                ],
-                              ],
+                          if (support.phones.isNotEmpty) ...[
+                            _buildContactCard(
+                              colors: colors,
+                              isDark: isDark,
+                              title: 'Phone Contacts',
+                              icon: PhosphorIcons.phone(
+                                PhosphorIconsStyle.fill,
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: support.phones.asMap().entries.map((
+                                  entry,
+                                ) {
+                                  final index = entry.key;
+                                  final phone = entry.value;
+                                  final isLast =
+                                      index == support.phones.length - 1;
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      _buildContactItem(
+                                        colors: colors,
+                                        label: index == 0
+                                            ? 'Primary Support'
+                                            : 'Alternative Support',
+                                        value: phone,
+                                        onTap: () => controller.makeCall(phone),
+                                        actionIcon: PhosphorIcons.phoneCall(),
+                                      ),
+                                      if (!isLast) const Divider(height: 24),
+                                    ],
+                                  );
+                                }).toList(),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: AppSizes.spacingXL.h),
+                            SizedBox(height: AppSizes.spacingXL.h),
+                          ],
 
                           // Email Support Card
                           _buildContactCard(

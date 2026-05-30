@@ -60,7 +60,7 @@ const Map<String, String> guIn = {
   'sign_up': 'નોંધણી કરો',
   'dont_have_account': 'એકાઉન્ટ નથી? અહીં નોંધણી કરો',
   'already_have_account': 'પહેલેથી જ એકાઉન્ટ છે? લૉગિન કરો',
-  'register_header': 'સમસ્ત ગોંડલીયા પાટીલ પરિવાર સુરત',
+  'register_header': 'સમસ્ત ગોંડલીયા પટેલ પરિવાર સુરત',
 
   // ==========================================
   // Validation Messages
