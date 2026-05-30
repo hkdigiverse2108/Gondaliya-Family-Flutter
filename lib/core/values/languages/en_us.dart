@@ -2,7 +2,7 @@ const Map<String, String> enUs = {
   // ==========================================
   // General & App Commons
   // ==========================================
-  'app_name': 'Gondalia Family',
+  'app_name': 'Gondaliya Family',
   'motto': 'Service • Cooperation • Organization',
   'welcome': 'Welcome!',
   'welcome_desc':

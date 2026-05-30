@@ -68,9 +68,9 @@ class BusinessDetails extends Equatable {
       subCategory: json['subCategory'] is List
           ? (json['subCategory'] as List).map((e) => e.toString()).toList()
           : (json['subCategory'] != null &&
-                  json['subCategory'].toString().isNotEmpty)
-              ? [json['subCategory'].toString()]
-              : [],
+                json['subCategory'].toString().isNotEmpty)
+          ? [json['subCategory'].toString()]
+          : [],
       businessName: json['businessName'] as String? ?? '',
       ownerName: json['ownerName'] as String? ?? '',
       description: json['description'] as String? ?? '',
