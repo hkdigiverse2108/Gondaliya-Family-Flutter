@@ -180,6 +180,8 @@ class RegisterView extends GetView<RegisterController> {
         return FamilyStep(
           controller: controller,
           onAddMember: () => showAddFamilySheet(context, controller),
+          onEditMember: (member) =>
+              showAddFamilySheet(context, controller, memberToEdit: member),
         );
       default:
         return const SizedBox.shrink();

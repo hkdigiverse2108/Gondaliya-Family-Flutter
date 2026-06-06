@@ -8,15 +8,18 @@ import '../../../global_widgets/generation_avatar.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../data/models/family_member.dart';
 
 class FamilyStep extends StatelessWidget {
   final RegisterController controller;
   final VoidCallback onAddMember;
+  final ValueChanged<FamilyMember> onEditMember;
 
   const FamilyStep({
     super.key,
     required this.controller,
     required this.onAddMember,
+    required this.onEditMember,
   });
 
   @override
@@ -175,6 +178,15 @@ class FamilyStep extends StatelessWidget {
                           ),
                         ],
                       ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.edit_outlined,
+                        color: isDark
+                            ? AppColors.white
+                            : AppColors.textLightPrimary,
+                      ),
+                      onPressed: () => onEditMember(member),
                     ),
                     IconButton(
                       icon: const Icon(

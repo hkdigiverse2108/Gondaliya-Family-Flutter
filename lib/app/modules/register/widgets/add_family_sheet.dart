@@ -10,18 +10,35 @@ import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import '../../../data/models/enums.dart';
 import '../../../global_widgets/neomorphic_dropdown_field.dart';
 import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../data/models/family_member.dart';
 
-void showAddFamilySheet(BuildContext context, RegisterController controller) {
+void showAddFamilySheet(
+  BuildContext context,
+  RegisterController controller, {
+  FamilyMember? memberToEdit,
+}) {
   final formKey = GlobalKey<FormState>();
-  final nameCtrl = TextEditingController();
-  final middleNameCtrl = TextEditingController();
-  final surnameCtrl = TextEditingController();
-  final phoneCtrl = TextEditingController();
-  final birthDateCtrl = TextEditingController();
-  final eduCtrl = TextEditingController();
-  var relationVal = AppEnums.relations.first.obs;
-  var bloodVal = AppEnums.bloodGroups.first.obs;
-  var isMarriedVal = AppEnums.maritalStatus.first.obs;
+  final nameCtrl = TextEditingController(text: memberToEdit?.firstName);
+  final middleNameCtrl = TextEditingController(text: memberToEdit?.middleName);
+  final surnameCtrl = TextEditingController(text: memberToEdit?.lastName);
+  final phoneCtrl = TextEditingController(text: memberToEdit?.phoneNumber);
+  final birthDateCtrl = TextEditingController(text: memberToEdit?.dob);
+  final eduCtrl = TextEditingController(text: memberToEdit?.education);
+
+  final initialRelation = memberToEdit != null && AppEnums.relations.contains(memberToEdit.relation)
+      ? memberToEdit.relation
+      : AppEnums.relations.first;
+  var relationVal = initialRelation.obs;
+
+  final initialBlood = memberToEdit != null && AppEnums.bloodGroups.contains(memberToEdit.bloodGroup)
+      ? memberToEdit.bloodGroup
+      : AppEnums.bloodGroups.first;
+  var bloodVal = initialBlood.obs;
+
+  final initialMarried = memberToEdit != null && AppEnums.maritalStatus.contains(memberToEdit.isMarried)
+      ? memberToEdit.isMarried
+      : AppEnums.maritalStatus.first;
+  var isMarriedVal = initialMarried.obs;
   final colors = context.appColors;
   final isDark = colors.isDark;
 
@@ -48,7 +65,9 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'add_family_member_to_table'.tr,
+                  memberToEdit != null
+                      ? 'edit_member'.tr
+                      : 'add_family_member_to_table'.tr,
                   style: GoogleFonts.outfit(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.sp,
@@ -223,25 +242,40 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                   ],
                 ),
                 SizedBox(height: AppSizes.spacingXL.h),
-                NeomorphicButton(
-                  text: 'add'.tr,
+                 NeomorphicButton(
+                  text: memberToEdit != null ? 'save'.tr : 'add'.tr,
                   isGradient: true,
                   gradientColors: colors.primaryGradient,
                   gradientBegin: Alignment.centerLeft,
                   gradientEnd: Alignment.centerRight,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      controller.addFamilyMemberDraft(
-                        firstName: nameCtrl.text.trim(),
-                        middleName: middleNameCtrl.text.trim(),
-                        lastName: surnameCtrl.text.trim(),
-                        relation: relationVal.value,
-                        phoneNumber: phoneCtrl.text.trim(),
-                        dob: birthDateCtrl.text.trim(),
-                        education: eduCtrl.text.trim(),
-                        isMarried: isMarriedVal.value,
-                        bloodGroup: bloodVal.value,
-                      );
+                      if (memberToEdit != null) {
+                        controller.updateFamilyMemberDraft(
+                          memberToEdit.id!,
+                          firstName: nameCtrl.text.trim(),
+                          middleName: middleNameCtrl.text.trim(),
+                          lastName: surnameCtrl.text.trim(),
+                          relation: relationVal.value,
+                          phoneNumber: phoneCtrl.text.trim(),
+                          dob: birthDateCtrl.text.trim(),
+                          education: eduCtrl.text.trim(),
+                          isMarried: isMarriedVal.value,
+                          bloodGroup: bloodVal.value,
+                        );
+                      } else {
+                        controller.addFamilyMemberDraft(
+                          firstName: nameCtrl.text.trim(),
+                          middleName: middleNameCtrl.text.trim(),
+                          lastName: surnameCtrl.text.trim(),
+                          relation: relationVal.value,
+                          phoneNumber: phoneCtrl.text.trim(),
+                          dob: birthDateCtrl.text.trim(),
+                          education: eduCtrl.text.trim(),
+                          isMarried: isMarriedVal.value,
+                          bloodGroup: bloodVal.value,
+                        );
+                      }
                       Get.back();
                     }
                   },

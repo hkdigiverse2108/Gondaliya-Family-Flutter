@@ -159,6 +159,39 @@ class RegisterController extends GetxController {
     );
   }
 
+  /// Updates a family member with named parameters matching the sheet widget.
+  void updateFamilyMemberDraft(
+    String id, {
+    required String firstName,
+    required String middleName,
+    required String lastName,
+    required String relation,
+    required String dob,
+    required String education,
+    required String isMarried,
+    required String bloodGroup,
+    required String phoneNumber,
+  }) {
+    final index = familyMembers.indexWhere((m) => m.id == id);
+    if (index != -1) {
+      final existing = familyMembers[index];
+      familyMembers[index] = FamilyMember(
+        id: existing.id,
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        relation: relation,
+        dob: dob,
+        education: education,
+        isMarried: isMarried,
+        bloodGroup: bloodGroup,
+        phoneNumber: phoneNumber,
+        createdAt: existing.createdAt,
+        profilePhoto: existing.profilePhoto,
+      );
+    }
+  }
+
   /// Removes by id — matches the delete button in family_step.dart.
   void removeFamilyMemberDraft(String id) =>
       familyMembers.removeWhere((m) => m.id == id);

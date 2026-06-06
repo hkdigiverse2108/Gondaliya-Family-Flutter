@@ -35,12 +35,14 @@ class ErrorInterceptor extends Interceptor {
           errorMessage = envelope.errorMessage;
         }
 
-        if (statusCode == 401) {
+        if (statusCode == 440) {
           Get.find<StorageService>().clearAuthToken();
           if (Get.currentRoute != Routes.login) {
             Get.offAllNamed(Routes.login);
             errorMessage = "Session expired. Please log in again.";
           }
+        } else if (statusCode == 401) {
+          errorMessage = "You are not authorized to access this resource.";
         } else if (statusCode == 403) {
           errorMessage = "You don't have permission to do this.";
         } else if (statusCode == 404) {
