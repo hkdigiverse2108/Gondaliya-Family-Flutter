@@ -4,11 +4,11 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import 'package:gondalia_family/app/data/models/user.dart';
-import 'package:gondalia_family/app/modules/home/controllers/profile_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
+import '../../../data/models/user.dart';
+import '../../home/controllers/profile_controller.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/job_detail_controller.dart';
 
 class JobDetailView extends GetView<JobDetailController> {
@@ -32,7 +32,7 @@ class JobDetailView extends GetView<JobDetailController> {
               title: Text('job'.tr),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => Get.back(),
+                onPressed: Get.back,
               ),
             ),
             body: Center(
@@ -71,7 +71,7 @@ class JobDetailView extends GetView<JobDetailController> {
                     Icons.arrow_back_rounded,
                     color: colors.textPrimary,
                   ),
-                  onPressed: () => Get.back(),
+                  onPressed: Get.back,
                 ),
               ),
               actions: [

@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/data/services/storage_service.dart';
+import '../../../app/data/services/storage_service.dart';
 import '../api_endpoints.dart';
 
 class AuthInterceptor extends Interceptor {

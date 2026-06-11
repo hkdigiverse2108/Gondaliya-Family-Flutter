@@ -94,7 +94,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.black45,
                       shape: BoxShape.circle,
                     ),
@@ -104,7 +104,7 @@ class _FullScreenImageViewerState extends State<FullScreenImageViewer> {
                         color: Colors.white,
                         size: 24,
                       ),
-                      onPressed: () => Get.back(),
+                      onPressed: Get.back,
                     ),
                   ),
                   if (widget.imageUrls.length > 1)

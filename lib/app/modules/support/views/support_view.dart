@@ -3,11 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
-import 'package:gondalia_family/app/global_widgets/neomorphic_card.dart';
-import 'package:gondalia_family/app/global_widgets/neomorphic_button.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../global_widgets/glass_app_bar.dart';
+import '../../../global_widgets/neomorphic_card.dart';
+import '../../../global_widgets/neomorphic_button.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 import '../controllers/support_controller.dart';
 
 class SupportView extends GetView<SupportController> {

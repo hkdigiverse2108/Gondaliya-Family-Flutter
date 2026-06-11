@@ -2,17 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../data/models/enums.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../../core/theme/app_color_scheme.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
+import '../../../../global_widgets/glass_app_bar.dart';
+import '../../../../routes/app_pages.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/global_widgets/neomorphic_text_field.dart';
+import '../../../../global_widgets/neomorphic_text_field.dart';
 import '../../widgets/verified_businesses_section.dart';
-// import '../../widgets/marketplace_section.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/app/modules/announcements/controllers/announcements_controller.dart';
-import 'package:gondalia_family/app/modules/announcements/views/announcements_view.dart';
+import '../../widgets/marketplace_section.dart';
+import '../../controllers/navigation_controller.dart';
+import '../../../../../core/values/sizes.dart';
+import '../../../announcements/controllers/announcements_controller.dart';
+import '../../../announcements/views/announcements_view.dart';
 import '../../controllers/home_controller.dart';
 
 class HomeTabView extends StatelessWidget {
@@ -130,10 +131,21 @@ class HomeTabView extends StatelessWidget {
                           'verified_businesses'.tr,
                           'see_all'.tr,
                           colors,
-                          onTap: () => controller.loadAllBusinesses(),
+                          onTap: controller.loadAllBusinesses,
                         ),
                         SizedBox(height: AppSizes.spacingM.h),
                         VerifiedBusinessesSection(colors: colors),
+
+                        SizedBox(height: AppSizes.spacingXXL.h),
+
+                        _buildSectionHeader(
+                          'hot_on_marketplace'.tr,
+                          'see_all'.tr,
+                          colors,
+                          onTap: () => Get.find<NavigationController>().changeTab(2),
+                        ),
+                        SizedBox(height: AppSizes.spacingM.h),
+                        MarketplaceSection(colors: colors),
 
                         SizedBox(height: AppSizes.spacingXXL.h),
 
@@ -322,7 +334,7 @@ class HomeTabView extends StatelessWidget {
                                               if (b.ownerName.isNotEmpty) ...[
                                                 SizedBox(height: 2.h),
                                                 Text(
-                                                  "By ${b.ownerName}",
+                                                  'By ${b.ownerName}',
                                                   style: GoogleFonts.outfit(
                                                     fontSize: 11.sp,
                                                     color: colors.textSecondary,
@@ -653,7 +665,7 @@ class HomeTabView extends StatelessWidget {
                   ),
                   IconButton(
                     icon: Icon(Icons.close, color: colors.textSecondary),
-                    onPressed: () => Get.back(),
+                    onPressed: Get.back,
                   ),
                 ],
               ),

@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../../../core/utils/extensions/safe_json_map_extensions.dart';
 import '../../../data/models/business.dart';
 import '../../../data/models/user.dart';
 import '../../../data/repositories/auth_repository.dart';
@@ -36,7 +39,7 @@ class HomeController extends GetxController {
     super.onInit();
     isDarkTheme.value = _storage.isDarkMode;
 
-    fetchBusinesses();
+    unawaited(fetchBusinesses());
 
     businessSearchController.addListener(() {
       businessSearchQuery.value = businessSearchController.text;
@@ -47,7 +50,7 @@ class HomeController extends GetxController {
       if (query.trim().isNotEmpty) {
         // When user types, disable showAllBusinessMode (it was set by See All)
         showAllBusinessMode.value = false;
-        searchBusinesses(query);
+        unawaited(searchBusinesses(query));
       } else if (!showAllBusinessMode.value) {
         // Only clear when NOT in showAll mode
         searchBusinessesList.clear();
@@ -75,8 +78,8 @@ class HomeController extends GetxController {
   }
 
   // --- Logout ---
-  void logout() {
-    Get.dialog(_buildLogoutDialog(), barrierDismissible: true);
+  void logout() async {
+    await Get.dialog(_buildLogoutDialog(), barrierDismissible: true);
   }
 
   Widget _buildLogoutDialog() {
@@ -131,7 +134,7 @@ class HomeController extends GetxController {
                 children: [
                   Expanded(
                     child: OutlinedButton(
-                      onPressed: () => Get.back(),
+                      onPressed: Get.back,
                       style: OutlinedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 12),
                         shape: RoundedRectangleBorder(
@@ -151,9 +154,9 @@ class HomeController extends GetxController {
                   const SizedBox(width: 12),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         Get.back(); // close dialog
-                        _performLogout();
+                        await _performLogout();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
@@ -182,7 +185,7 @@ class HomeController extends GetxController {
   Future<void> _performLogout() async {
     Get.find<SocketService>().disconnect();
     await _storage.clearAuthToken();
-    Get.offAllNamed(Routes.login);
+    await Get.offAllNamed(Routes.login);
   }
 
   // --- Businesses ---
@@ -197,14 +200,14 @@ class HomeController extends GetxController {
             if (item is Map<String, dynamic> && item.containsKey('business')) {
               final bizJson = item['business'] as Map<String, dynamic>;
               final ownerJson = item['owner'] as Map<String, dynamic>?;
-              final ownerId = ownerJson?['userId'] ?? '';
+              final ownerId = ownerJson?.getString('userId') ?? '';
 
               final locs = bizJson['locations'] as List<dynamic>?;
               final String shopAddress;
               final String city;
               if (locs != null && locs.isNotEmpty) {
                 final firstLoc = locs.first as Map<String, dynamic>;
-                city = firstLoc['areaCity'] ?? '';
+                city = firstLoc.getString('areaCity');
                 final addrParts = [
                   firstLoc['shopAddress'] ?? '',
                   firstLoc['areaCity'] ?? '',
@@ -219,12 +222,13 @@ class HomeController extends GetxController {
 
               final contactInfo =
                   bizJson['contactInfo'] as Map<String, dynamic>?;
-              final contact =
-                  contactInfo?['mobile1'] ?? ownerJson?['phoneNumber'] ?? '';
-              final ownerName = (ownerJson != null)
-                  ? "${ownerJson['firstName'] ?? ''} ${ownerJson['lastName'] ?? ''}"
+              final String contact =
+                  contactInfo?.getOrNull('mobile1') ??
+                  ownerJson!.getString('phoneNumber');
+              final String ownerName = (ownerJson != null)
+                  ? "${ownerJson.getString('firstName')} ${ownerJson.getString('lastName')}"
                         .trim()
-                  : (bizJson['ownerName'] ?? '');
+                  : (bizJson.getString('ownerName'));
 
               final businessLogo = bizJson['businessLogo'] as String?;
               final businessBanner = bizJson['businessBanner'] as String?;
@@ -236,8 +240,8 @@ class HomeController extends GetxController {
               list.add(
                 Business(
                   id: ownerId,
-                  name: bizJson['businessName'] ?? '',
-                  category: bizJson['category'] ?? '',
+                  name: bizJson.getString('businessName'),
+                  category: bizJson.getString('category'),
                   subCategory: bizJson['subCategory'] is List
                       ? (bizJson['subCategory'] as List)
                             .map((e) => e.toString())
@@ -249,7 +253,7 @@ class HomeController extends GetxController {
                   address: shopAddress,
                   city: city,
                   contact: contact,
-                  description: bizJson['description'] ?? '',
+                  description: bizJson.getString('description'),
                   ownerId: ownerId,
                   createdAt: DateTime.now(),
                   ownerName: ownerName,
@@ -343,19 +347,19 @@ class HomeController extends GetxController {
             if (item is Map<String, dynamic> && item.containsKey('business')) {
               final bizJson = item['business'] as Map<String, dynamic>;
               final ownerJson = item['owner'] as Map<String, dynamic>?;
-              final ownerId = ownerJson?['userId'] ?? '';
+              final ownerId = ownerJson?.getString('userId') ?? '';
 
               final locs = bizJson['locations'] as List<dynamic>?;
               final String shopAddress;
               final String city;
               if (locs != null && locs.isNotEmpty) {
                 final firstLoc = locs.first as Map<String, dynamic>;
-                city = firstLoc['areaCity'] ?? '';
+                city = firstLoc.getString('areaCity');
                 final addrParts = [
-                  firstLoc['shopAddress'] ?? '',
-                  firstLoc['areaCity'] ?? '',
-                  firstLoc['state'] ?? '',
-                  firstLoc['pincode'] ?? '',
+                  firstLoc.getString('shopAddress'),
+                  firstLoc.getString('areaCity'),
+                  firstLoc.getString('state'),
+                  firstLoc.getString('pincode'),
                 ].where((part) => part.toString().trim().isNotEmpty).toList();
                 shopAddress = addrParts.join(', ');
               } else {
@@ -365,15 +369,16 @@ class HomeController extends GetxController {
 
               final contactInfo =
                   bizJson['contactInfo'] as Map<String, dynamic>?;
-              final contact =
-                  contactInfo?['mobile1'] ?? ownerJson?['phoneNumber'] ?? '';
-              final ownerName = (ownerJson != null)
-                  ? "${ownerJson['firstName'] ?? ''} ${ownerJson['lastName'] ?? ''}"
+              final String contact =
+                  contactInfo?.getString('mobile1') ??
+                  ownerJson!.getString('phoneNumber');
+              final String ownerName = (ownerJson != null)
+                  ? "${ownerJson.getString('firstName')} ${ownerJson.getString('lastName')}"
                         .trim()
-                  : (bizJson['ownerName'] ?? '');
+                  : (bizJson.getString('ownerName'));
 
-              final businessLogo = bizJson['businessLogo'] as String?;
-              final businessBanner = bizJson['businessBanner'] as String?;
+              final businessLogo = bizJson.getString('businessLogo');
+              final businessBanner = bizJson.getString('businessBanner');
               final businessPhotos =
                   (bizJson['businessPhotos'] as List<dynamic>?)
                       ?.map((e) => e.toString())
@@ -382,8 +387,8 @@ class HomeController extends GetxController {
               list.add(
                 Business(
                   id: ownerId,
-                  name: bizJson['businessName'] ?? '',
-                  category: bizJson['category'] ?? '',
+                  name: bizJson.getString('businessName'),
+                  category: bizJson.getString('category'),
                   subCategory: bizJson['subCategory'] is List
                       ? (bizJson['subCategory'] as List)
                             .map((e) => e.toString())
@@ -395,7 +400,7 @@ class HomeController extends GetxController {
                   address: shopAddress,
                   city: city,
                   contact: contact,
-                  description: bizJson['description'] ?? '',
+                  description: bizJson.getString('description'),
                   ownerId: ownerId,
                   createdAt: DateTime.now(),
                   ownerName: ownerName,

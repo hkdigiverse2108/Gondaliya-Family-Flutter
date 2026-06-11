@@ -47,7 +47,7 @@ class AppPages {
 
   static const initial = Routes.splash;
 
-  static final routes = [
+  static final List<GetPage<dynamic>> routes = [
     GetPage(
       name: _Paths.splash,
       page: () => const SplashView(),

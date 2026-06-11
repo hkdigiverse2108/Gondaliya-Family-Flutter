@@ -6,10 +6,10 @@ import '../../../../core/values/colors.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_button.dart';
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 import '../../../data/models/enums.dart';
 import '../../../global_widgets/neomorphic_dropdown_field.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/values/sizes.dart';
 import '../../../data/models/family_member.dart';
 
 void showAddFamilySheet(
@@ -28,17 +28,17 @@ void showAddFamilySheet(
   final initialRelation = memberToEdit != null && AppEnums.relations.contains(memberToEdit.relation)
       ? memberToEdit.relation
       : AppEnums.relations.first;
-  var relationVal = initialRelation.obs;
+  final relationVal = initialRelation.obs;
 
   final initialBlood = memberToEdit != null && AppEnums.bloodGroups.contains(memberToEdit.bloodGroup)
       ? memberToEdit.bloodGroup
       : AppEnums.bloodGroups.first;
-  var bloodVal = initialBlood.obs;
+  final bloodVal = initialBlood.obs;
 
   final initialMarried = memberToEdit != null && AppEnums.maritalStatus.contains(memberToEdit.isMarried)
       ? memberToEdit.isMarried
       : AppEnums.maritalStatus.first;
-  var isMarriedVal = initialMarried.obs;
+  final isMarriedVal = initialMarried.obs;
   final colors = context.appColors;
   final isDark = colors.isDark;
 

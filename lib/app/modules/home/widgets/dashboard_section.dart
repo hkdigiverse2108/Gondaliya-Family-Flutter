@@ -6,8 +6,8 @@ import '../../../../core/values/colors.dart';
 
 import 'glass_stat_card.dart';
 import 'action_row.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 /// The full dashboard section containing the header banner, stats row,
 /// and quick-action items.

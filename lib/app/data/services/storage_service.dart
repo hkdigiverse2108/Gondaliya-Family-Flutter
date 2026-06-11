@@ -22,8 +22,8 @@ class StorageService extends GetxService {
   // --- Auth Token ---
   String? get authToken => _box.read<String>(_authTokenKey);
   Future<void> saveAuthToken(String token) async =>
-      await _box.write(_authTokenKey, token);
-  Future<void> clearAuthToken() async => await _box.remove(_authTokenKey);
+      _box.write(_authTokenKey, token);
+  Future<void> clearAuthToken() async => _box.remove(_authTokenKey);
 
   // --- User Data ---
   UserModel? get currentUser {
@@ -35,8 +35,8 @@ class StorageService extends GetxService {
   }
 
   Future<void> saveUser(UserModel user) async =>
-      await _box.write(_userKey, user.toJson());
-  Future<void> clearUser() async => await _box.remove(_userKey);
+      _box.write(_userKey, user.toJson());
+  Future<void> clearUser() async => _box.remove(_userKey);
 
   // --- Daily Chat Limit ---
   String _getDailyChatLimitKey(String userId) {

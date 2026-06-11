@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
+import '../../../global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -12,9 +12,9 @@ import '../../../global_widgets/full_screen_image_viewer.dart';
 import '../../../../core/values/colors.dart';
 import '../../../data/models/chat.dart';
 import '../controllers/chat_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/core/config/app_config.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../../core/config/app_config.dart';
 
 class ChatView extends GetView<ChatController> {
   const ChatView({super.key});
@@ -981,8 +981,8 @@ class ChatView extends GetView<ChatController> {
 
   String _formatBytes(int bytes) {
     if (bytes <= 0) return '0 B';
-    const suffixes = ["B", "KB", "MB", "GB"];
-    var i = (log(bytes) / log(1024)).floor();
+    const suffixes = ['B', 'KB', 'MB', 'GB'];
+    final i = (log(bytes) / log(1024)).floor();
     return '${(bytes / pow(1024, i)).toStringAsFixed(1)} ${suffixes[i]}';
   }
 

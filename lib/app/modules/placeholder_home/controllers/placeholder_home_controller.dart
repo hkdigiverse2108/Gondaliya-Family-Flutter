@@ -75,7 +75,7 @@ class PlaceholderHomeController extends GetxController {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => Get.back(),
+                        onPressed: Get.back,
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           shape: RoundedRectangleBorder(

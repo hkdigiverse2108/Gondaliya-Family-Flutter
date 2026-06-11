@@ -3,13 +3,13 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
-import 'package:gondalia_family/app/modules/home/controllers/profile_controller.dart';
-import 'package:gondalia_family/app/global_widgets/neomorphic_text_field.dart';
-import 'package:gondalia_family/app/data/models/user.dart';
-import 'package:gondalia_family/app/data/models/family_member.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../routes/app_pages.dart';
+import '../../home/controllers/profile_controller.dart';
+import '../../../global_widgets/neomorphic_text_field.dart';
+import '../../../data/models/user.dart';
+import '../../../data/models/family_member.dart';
 
 class MyFamilyView extends StatelessWidget {
   const MyFamilyView({super.key});
@@ -33,7 +33,7 @@ class MyFamilyView extends StatelessWidget {
         elevation: 0,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
-          onPressed: () => Get.back(),
+          onPressed: Get.back,
         ),
       ),
       body: Obx(() {
@@ -481,11 +481,11 @@ class MyFamilyView extends StatelessWidget {
         ),
         actions: [
           TextButton(
+            onPressed: Get.back,
             child: Text(
               'cancel'.tr,
               style: GoogleFonts.outfit(color: colors.textSecondary),
             ),
-            onPressed: () => Get.back(),
           ),
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent),

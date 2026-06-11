@@ -1,8 +1,9 @@
-import 'package:gondalia_family/core/network/api_service.dart';
-import 'package:gondalia_family/core/network/api_endpoints.dart';
-import 'package:gondalia_family/app/data/models/listing.dart';
+import '../../../core/network/api_service.dart';
+import '../../../core/network/api_endpoints.dart';
+import '../../../core/utils/extensions/safe_json_map_extensions.dart';
+import '../../data/models/listing.dart';
 import 'package:flutter/foundation.dart';
-import 'package:gondalia_family/app/data/models/parivar_directory.dart';
+import '../../data/models/parivar_directory.dart';
 
 class HomeRepository {
   final DioApiService _apiService;
@@ -16,7 +17,7 @@ class HomeRepository {
       );
 
       if (response.success && response.data != null) {
-        final List<dynamic> dataList = response.data!['data'] ?? [];
+        final List<dynamic> dataList = response.data!.getOrNull('data') ?? [];
         return dataList
             .map((e) => Listing.fromJson(e as Map<String, dynamic>))
             .toList();

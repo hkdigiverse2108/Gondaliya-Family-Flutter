@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/modules/home/controllers/parivar_controller.dart';
+import '../../controllers/parivar_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
-import 'package:gondalia_family/app/data/models/family_member.dart';
+import '../../../../routes/app_pages.dart';
+import '../../../../data/models/family_member.dart';
 
 import '../../../../../core/values/colors.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/app/data/models/parivar_directory.dart';
+import '../../../../../core/theme/app_color_scheme.dart';
+import '../../../../../core/values/sizes.dart';
+import '../../../../data/models/parivar_directory.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ParivarTabView extends StatelessWidget {

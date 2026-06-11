@@ -6,10 +6,10 @@ class PrivateMessagesBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<PrivateMessagesController>(
-      () => PrivateMessagesController(),
+      PrivateMessagesController.new,
     );
     Get.lazyPut<PrivateChatController>(
-      () => PrivateChatController(),
+      PrivateChatController.new,
     );
   }
 }

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
+import '../../../global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/values/colors.dart';
 import '../controllers/my_business_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 class MyBusinessView extends GetView<MyBusinessController> {
   const MyBusinessView({super.key});
@@ -191,7 +191,7 @@ class MyBusinessView extends GetView<MyBusinessController> {
             CircleAvatar(
               radius: AppSizes.radiusXXL.r,
               backgroundColor: AppColors.secondary.withValues(alpha: 0.2),
-              child: Icon(Icons.person_rounded, color: AppColors.secondary),
+              child: const Icon(Icons.person_rounded, color: AppColors.secondary),
             ),
             SizedBox(width: AppSizes.spacingL.w),
             Expanded(

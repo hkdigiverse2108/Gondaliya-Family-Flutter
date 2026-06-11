@@ -3,11 +3,11 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:gondalia_family/app/data/models/notification_model.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/utils/time_utils.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../data/models/notification_model.dart';
+import '../../../global_widgets/glass_app_bar.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/utils/time_utils.dart';
+import '../../../../core/values/sizes.dart';
 import '../controllers/notifications_controller.dart';
 
 class NotificationsView extends GetView<NotificationsController> {

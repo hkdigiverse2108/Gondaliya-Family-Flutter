@@ -29,7 +29,7 @@ class PrivateMessagesView extends GetView<PrivateMessagesController> {
           centerTitle: true,
           leading: IconButton(
             icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
-            onPressed: () => Get.back(),
+            onPressed: Get.back,
           ),
         ),
       ),
@@ -376,7 +376,7 @@ class PrivateMessagesView extends GetView<PrivateMessagesController> {
                       Icons.close_rounded,
                       color: colors.textSecondary,
                     ),
-                    onPressed: () => Get.back(),
+                    onPressed: Get.back,
                   ),
                 ],
               ),

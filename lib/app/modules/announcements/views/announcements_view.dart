@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gondalia_family/app/data/models/announcement.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
+import '../../../data/models/announcement.dart';
+import '../../../global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../controllers/announcements_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/core/utils/time_utils.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../../core/utils/time_utils.dart';
 
 class AnnouncementsView extends GetView<AnnouncementsController> {
   const AnnouncementsView({super.key});
@@ -19,7 +19,7 @@ class AnnouncementsView extends GetView<AnnouncementsController> {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      appBar: GlassAppBar(titleText: 'Announcements', centerTitle: true),
+      appBar: const GlassAppBar(titleText: 'Announcements', centerTitle: true),
       body: Obx(() {
         if (controller.isLoading.value && controller.announcements.isEmpty) {
           return const Center(child: CircularProgressIndicator());

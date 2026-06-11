@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/global_widgets/neomorphic_async_dropdown_field.dart';
+import '../../../global_widgets/neomorphic_async_dropdown_field.dart';
 import '../../../data/models/user.dart';
 import '../../../data/models/location_model.dart';
 import '../../../data/models/enums.dart';
@@ -111,7 +111,7 @@ class EditProfileController extends GetxController {
         .map(
           (loc) => NeomorphicAsyncDropdownItem(
             value: loc,
-            label: "${loc.village} (${loc.taluka})",
+            label: '${loc.village} (${loc.taluka})',
           ),
         )
         .toList();

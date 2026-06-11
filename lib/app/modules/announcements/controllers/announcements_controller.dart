@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/data/models/announcement.dart';
-import 'package:gondalia_family/core/network/api_service.dart';
-import 'package:gondalia_family/core/network/api_endpoints.dart';
+import '../../../data/models/announcement.dart';
+import '../../../../core/network/api_service.dart';
+import '../../../../core/network/api_endpoints.dart';
 
 class AnnouncementsController extends GetxController {
   final DioApiService _apiService = Get.find<DioApiService>();

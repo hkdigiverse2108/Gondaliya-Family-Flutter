@@ -1,5 +1,5 @@
-import 'package:gondalia_family/core/network/base_repository.dart';
-import 'package:gondalia_family/core/network/api_endpoints.dart';
+import '../../../core/network/base_repository.dart';
+import '../../../core/network/api_endpoints.dart';
 import '../models/location_model.dart';
 
 class LocationRepository extends BaseRepository {
@@ -16,7 +16,7 @@ class LocationRepository extends BaseRepository {
         'limit': limit,
         if (search.isNotEmpty) 'search': search,
       },
-      fromJson: (json) => json,
+      fromJson: (json) => json as Map<String, dynamic>,
     );
 
     if (response.success && response.data != null) {

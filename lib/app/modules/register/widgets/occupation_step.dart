@@ -6,12 +6,12 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 import '../../../data/models/enums.dart';
 import '../../../global_widgets/neomorphic_dropdown_field.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_card.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/values/sizes.dart';
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override

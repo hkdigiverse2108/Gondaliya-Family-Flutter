@@ -5,11 +5,11 @@ import 'package:get/get.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:gondalia_family/app/routes/app_pages.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/core/config/app_config.dart';
-import 'package:gondalia_family/app/data/models/business.dart';
+import '../../../routes/app_pages.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../../core/config/app_config.dart';
+import '../../../data/models/business.dart';
 import '../controllers/home_controller.dart';
 
 class VerifiedBusinessesSection extends StatefulWidget {
@@ -216,7 +216,7 @@ class BusinessCard extends StatelessWidget {
               : "${business.subCategory.take(2).join(', ')} +${business.subCategory.length - 2}")
         : '';
     final categoryText = subText.isNotEmpty
-        ? "${business.category} • $subText"
+        ? '${business.category} • $subText'
         : business.category;
 
     return GestureDetector(
@@ -356,7 +356,7 @@ class BusinessCard extends StatelessWidget {
                   if (business.ownerName.isNotEmpty) ...[
                     SizedBox(height: 1.h),
                     Text(
-                      "By ${business.ownerName}",
+                      'By ${business.ownerName}',
                       style: GoogleFonts.outfit(
                         fontSize: 9.sp,
                         color: colors.textSecondary,

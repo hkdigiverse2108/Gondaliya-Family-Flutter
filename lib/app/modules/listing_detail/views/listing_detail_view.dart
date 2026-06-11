@@ -5,9 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/core/utils/time_utils.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../../core/utils/time_utils.dart';
 import '../../../data/models/listing.dart';
 import '../controllers/listing_detail_controller.dart';
 
@@ -28,7 +28,7 @@ class ListingDetailView extends GetView<ListingDetailController> {
               title: Text('listing_details'.tr),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_rounded),
-                onPressed: () => Get.back(),
+                onPressed: Get.back,
               ),
             ),
             body: Center(
@@ -42,7 +42,7 @@ class ListingDetailView extends GetView<ListingDetailController> {
 
         final isSale = l.type.toUpperCase() == 'SALE';
         final availableDateStr =
-            "${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}";
+            '${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}';
 
         return Column(
           children: [
@@ -67,7 +67,7 @@ class ListingDetailView extends GetView<ListingDetailController> {
                           Icons.arrow_back_rounded,
                           color: colors.textPrimary,
                         ),
-                        onPressed: () => Get.back(),
+                        onPressed: Get.back,
                       ),
                     ),
                     flexibleSpace: FlexibleSpaceBar(

@@ -1,6 +1,6 @@
-import 'package:gondalia_family/core/network/api_response.dart';
-import 'package:gondalia_family/core/network/base_repository.dart';
-import 'package:gondalia_family/core/network/api_endpoints.dart';
+import '../../../core/network/api_response.dart';
+import '../../../core/network/base_repository.dart';
+import '../../../core/network/api_endpoints.dart';
 import 'package:dio/dio.dart';
 import '../models/user.dart';
 import '../models/support.dart';

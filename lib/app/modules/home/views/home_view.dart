@@ -4,15 +4,15 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
+import '../../../routes/app_pages.dart';
 
 import 'tabs/home_tab_view.dart';
 import 'tabs/parivar_tab_view.dart';
 import 'tabs/marketplace_tab_view.dart';
 import 'tabs/profile_tab_view.dart';
 import '../controllers/navigation_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -346,9 +346,7 @@ class _NavRouteButton extends StatelessWidget {
           horizontal: AppSizes.spacingM.w,
           vertical: AppSizes.spacingS.h,
         ),
-        decoration: const BoxDecoration(
-          color: Colors.transparent,
-        ),
+        decoration: const BoxDecoration(color: Colors.transparent),
         child: Icon(
           icon,
           color: colors.textSecondary,
@@ -358,4 +356,3 @@ class _NavRouteButton extends StatelessWidget {
     );
   }
 }
-

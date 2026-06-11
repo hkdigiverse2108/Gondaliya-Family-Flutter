@@ -5,9 +5,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../data/models/work_details.dart';
+import '../../../routes/app_pages.dart';
 import '../controllers/member_detail_controller.dart';
 
 class MemberDetailView extends GetView<MemberDetailController> {
@@ -33,7 +34,7 @@ class MemberDetailView extends GetView<MemberDetailController> {
               title: Text('member_details'.tr),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => Get.back(),
+                onPressed: Get.back,
               ),
             ),
             body: Center(
@@ -84,7 +85,7 @@ class MemberDetailView extends GetView<MemberDetailController> {
                     Icons.arrow_back_rounded,
                     color: colors.textPrimary,
                   ),
-                  onPressed: () => Get.back(),
+                  onPressed: Get.back,
                 ),
               ),
               flexibleSpace: FlexibleSpaceBar(
@@ -589,7 +590,11 @@ class MemberDetailView extends GetView<MemberDetailController> {
     );
   }
 
-  Widget _buildBusinessCard(dynamic biz, AppColorScheme colors, String userId) {
+  Widget _buildBusinessCard(
+    BusinessDetails biz,
+    AppColorScheme colors,
+    String userId,
+  ) {
     return Container(
       padding: EdgeInsets.all(AppSizes.spacingL.w),
       decoration: BoxDecoration(
@@ -659,8 +664,11 @@ class MemberDetailView extends GetView<MemberDetailController> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                Get.toNamed(Routes.business, arguments: {'userId': userId});
+              onPressed: () async {
+                await Get.toNamed(
+                  Routes.business,
+                  arguments: {'userId': userId},
+                );
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: colors.primary,
@@ -684,7 +692,7 @@ class MemberDetailView extends GetView<MemberDetailController> {
     );
   }
 
-  Widget _buildJobCard(dynamic job, AppColorScheme colors) {
+  Widget _buildJobCard(JobDetails job, AppColorScheme colors) {
     return Container(
       padding: EdgeInsets.all(AppSizes.spacingL.w),
       decoration: BoxDecoration(

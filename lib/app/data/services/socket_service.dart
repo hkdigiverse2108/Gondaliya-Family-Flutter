@@ -177,12 +177,12 @@ class SocketService extends GetxService {
   }
 
   // Subscribe to socket events
-  void on(String event, Function(dynamic) handler) {
+  void on(String event, void Function(dynamic) handler) {
     _socket?.on(event, handler);
   }
 
   // Unsubscribe from socket events
-  void off(String event, [Function(dynamic)? handler]) {
+  void off(String event, [void Function(dynamic)? handler]) {
     _socket?.off(event, handler);
   }
 }

@@ -8,7 +8,7 @@ import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/sizes.dart';
 import '../controllers/private_chat_controller.dart';
 import '../widgets/private_message_bubble.dart';
-import 'package:gondalia_family/core/config/app_config.dart';
+import '../../../../core/config/app_config.dart';
 
 class PrivateChatView extends GetView<PrivateChatController> {
   const PrivateChatView({super.key});
@@ -25,7 +25,7 @@ class PrivateChatView extends GetView<PrivateChatController> {
         elevation: 0.5,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
-          onPressed: () => Get.back(),
+          onPressed: Get.back,
         ),
         title: Obx(() {
           final other = controller.otherUser.value;
@@ -354,8 +354,8 @@ class PrivateChatView extends GetView<PrivateChatController> {
 
   String _formatBytes(int bytes) {
     if (bytes <= 0) return '0 B';
-    const suffixes = ["B", "KB", "MB", "GB"];
-    var i = (log(bytes) / log(1024)).floor();
+    const suffixes = ['B', 'KB', 'MB', 'GB'];
+    final i = (log(bytes) / log(1024)).floor();
     return '${(bytes / pow(1024, i)).toStringAsFixed(1)} ${suffixes[i]}';
   }
 }

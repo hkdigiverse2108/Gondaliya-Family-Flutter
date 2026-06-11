@@ -9,7 +9,7 @@ import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/sizes.dart';
 import '../../../data/models/private_message_model.dart';
 import '../../../../app/global_widgets/full_screen_image_viewer.dart';
-import 'package:gondalia_family/core/config/app_config.dart';
+import '../../../../core/config/app_config.dart';
 
 class PrivateMessageBubble extends StatelessWidget {
   final PrivateMessage message;
@@ -472,8 +472,8 @@ class PrivateMessageBubble extends StatelessWidget {
 
   String _formatBytes(int bytes) {
     if (bytes <= 0) return '0 B';
-    const suffixes = ["B", "KB", "MB", "GB"];
-    var i = (log(bytes) / log(1024)).floor();
+    const suffixes = ['B', 'KB', 'MB', 'GB'];
+    final i = (log(bytes) / log(1024)).floor();
     return '${(bytes / pow(1024, i)).toStringAsFixed(1)} ${suffixes[i]}';
   }
 

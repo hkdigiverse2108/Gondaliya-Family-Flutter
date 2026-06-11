@@ -106,7 +106,7 @@ class _FamilyMemberFormViewState extends State<FamilyMemberFormView> {
         elevation: 0.5,
         leading: IconButton(
           icon: Icon(Icons.arrow_back_rounded, color: colors.textPrimary),
-          onPressed: () => Get.back(),
+          onPressed: Get.back,
         ),
       ),
       body: SafeArea(

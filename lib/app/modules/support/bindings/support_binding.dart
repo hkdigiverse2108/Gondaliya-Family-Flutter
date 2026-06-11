@@ -5,7 +5,7 @@ class SupportBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<SupportController>(
-      () => SupportController(),
+      SupportController.new,
     );
   }
 }

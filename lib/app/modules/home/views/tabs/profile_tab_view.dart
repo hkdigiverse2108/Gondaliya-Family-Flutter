@@ -7,10 +7,10 @@ import '../../../../routes/app_pages.dart';
 import '../../../../global_widgets/neomorphic_button.dart';
 import '../../../../global_widgets/neomorphic_card.dart';
 import '../../../../global_widgets/neomorphic_text_field.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../../core/theme/app_color_scheme.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/profile_controller.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../../core/values/sizes.dart';
 
 class ProfileTabView extends StatelessWidget {
   const ProfileTabView({super.key});
@@ -353,8 +353,7 @@ class ProfileTabView extends StatelessWidget {
                         colors: colors,
                         trailing: Switch(
                           value: controller.isDarkTheme.value,
-                          onChanged: (val) {},
-                          // onChanged: (val) => controller.toggleTheme(),
+                          onChanged: (val) => controller.toggleTheme(),
                           activeThumbColor: colors.primary,
                           activeTrackColor: colors.primary.withValues(
                             alpha: 0.2,
@@ -421,7 +420,7 @@ class ProfileTabView extends StatelessWidget {
                       colors: colors,
                       iconColor: Colors.redAccent,
                       titleColor: Colors.redAccent,
-                      onTap: () => controller.logout(),
+                      onTap: controller.logout,
                       isLogout: true,
                     ),
                   ],
@@ -544,7 +543,7 @@ class ProfileTabView extends StatelessWidget {
               ),
             ),
             isLogout
-                ? SizedBox.shrink()
+                ? const SizedBox.shrink()
                 : trailing ??
                       Icon(
                         PhosphorIcons.caretRight(),
@@ -766,7 +765,7 @@ class _FeedbackBottomSheetContentState
                     Expanded(
                       child: NeomorphicButton(
                         text: 'cancel'.tr,
-                        onPressed: loading ? null : () => Get.back(),
+                        onPressed: loading ? null : Get.back,
                       ),
                     ),
                     SizedBox(width: AppSizes.spacingM.w),

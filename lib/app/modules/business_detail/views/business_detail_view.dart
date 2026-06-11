@@ -6,15 +6,15 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:gondalia_family/app/data/models/user.dart';
-import 'package:gondalia_family/app/data/models/work_details.dart';
-import 'package:gondalia_family/app/modules/home/controllers/profile_controller.dart';
+import '../../../data/models/user.dart';
+import '../../../data/models/work_details.dart';
+import '../../home/controllers/profile_controller.dart';
 
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/core/config/app_config.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
-import 'package:gondalia_family/app/global_widgets/full_screen_image_viewer.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../../core/config/app_config.dart';
+import '../../../routes/app_pages.dart';
+import '../../../global_widgets/full_screen_image_viewer.dart';
 import '../controllers/business_detail_controller.dart';
 
 class BusinessDetailView extends GetView<BusinessDetailController> {
@@ -38,7 +38,7 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
               title: Text('business'.tr),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
-                onPressed: () => Get.back(),
+                onPressed: Get.back,
               ),
             ),
             body: Center(
@@ -83,7 +83,7 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                     Icons.arrow_back_rounded,
                     color: colors.textPrimary,
                   ),
-                  onPressed: () => Get.back(),
+                  onPressed: Get.back,
                 ),
               ),
               actions: [
@@ -761,8 +761,8 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                           runSpacing: spacing,
                           children: List.generate(photos.length, (photoIndex) {
                             return GestureDetector(
-                              onTap: () {
-                                Get.to(
+                              onTap: () async {
+                                await Get.to(
                                   () => FullScreenImageViewer(
                                     imageUrls: photos,
                                     initialIndex: photoIndex,
@@ -815,8 +815,8 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                                       Material(
                                         color: Colors.transparent,
                                         child: InkWell(
-                                          onTap: () {
-                                            Get.to(
+                                          onTap: () async {
+                                            await Get.to(
                                               () => FullScreenImageViewer(
                                                 imageUrls: photos,
                                                 initialIndex: photoIndex,
@@ -996,8 +996,8 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
               label: 'dm'.tr,
               color: colors.accent,
               isLoading: controller.isStartingChat.value,
-              onTap: () {
-                controller.startDirectMessage();
+              onTap: () async {
+                await controller.startDirectMessage();
               },
               colors: colors,
             );

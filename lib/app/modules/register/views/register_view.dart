@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
+import '../../../global_widgets/glass_app_bar.dart';
 import '../../../../core/values/colors.dart';
 import '../../../global_widgets/neomorphic_button.dart';
 import '../widgets/account_step.dart';
@@ -10,8 +10,8 @@ import '../widgets/occupation_step.dart';
 import '../widgets/family_step.dart';
 import '../widgets/add_family_sheet.dart';
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 class RegisterView extends GetView<RegisterController> {
   const RegisterView({super.key});

@@ -1,3 +1,5 @@
+import '../../../core/utils/extensions/safe_json_map_extensions.dart';
+
 class LocationModel {
   final String id;
   final String village;
@@ -15,11 +17,11 @@ class LocationModel {
 
   factory LocationModel.fromJson(Map<String, dynamic> json) {
     return LocationModel(
-      id: json['_id'] ?? '',
-      village: json['village'] ?? '',
-      taluka: json['taluka'] ?? '',
-      district: json['district'] ?? '',
-      pincode: json['pincode'] ?? '',
+      id: json.getString('_id'),
+      village: json.getOrNull<String>('village') ?? '',
+      taluka: json.getOrNull<String>('taluka') ?? '',
+      district: json.getOrNull<String>('district') ?? '',
+      pincode: json.getOrNull<String>('pincode') ?? '',
     );
   }
 

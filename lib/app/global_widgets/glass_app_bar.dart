@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../core/theme/app_color_scheme.dart';
 
 class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;

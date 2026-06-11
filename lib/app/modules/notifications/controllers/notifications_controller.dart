@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/data/models/notification_model.dart';
-import 'package:gondalia_family/core/network/api_service.dart';
-import 'package:gondalia_family/core/network/api_endpoints.dart';
+import '../../../data/models/notification_model.dart';
+import '../../../../core/network/api_service.dart';
+import '../../../../core/network/api_endpoints.dart';
 
 class NotificationsController extends GetxController {
   final DioApiService _apiService = Get.find<DioApiService>();
@@ -74,7 +74,7 @@ class NotificationsController extends GetxController {
     try {
       final response = await _apiService.post<void>(
         ApiEndpoints.notificationsReadAll,
-        data: {},
+        data: <String, dynamic>{},
         fromJson: (_) {},
       );
 

@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../core/utils/extensions/safe_json_map_extensions.dart';
+
 class ListingLocation extends Equatable {
   final String city;
   final String pincode;
@@ -82,9 +84,12 @@ class Listing extends Equatable {
     String postedByVal = '';
     final rawPostedBy = json['postedBy'];
     if (rawPostedBy is Map<String, dynamic>) {
-      postedByVal = '${rawPostedBy['firstName'] ?? ''} ${rawPostedBy['lastName'] ?? ''}'.trim();
+      postedByVal =
+          '${rawPostedBy.getOrNull('firstName') ?? ''} ${rawPostedBy.getOrNull('lastName') ?? ''}'
+              .trim();
       if (postedByVal.isEmpty) {
-        postedByVal = rawPostedBy['_id'] ?? rawPostedBy['id'] ?? '';
+        postedByVal =
+            rawPostedBy.getOrNull('_id') ?? rawPostedBy.getOrNull('id') ?? '';
       }
     } else if (rawPostedBy is String) {
       postedByVal = rawPostedBy;

@@ -1,3 +1,5 @@
+import '../../../core/utils/extensions/safe_json_map_extensions.dart';
+
 class ParivarDirectory {
   final String id;
   final ParivarHead head;
@@ -11,15 +13,12 @@ class ParivarDirectory {
 
   factory ParivarDirectory.fromJson(Map<String, dynamic> json) {
     return ParivarDirectory(
-      id: json['_id'] ?? '',
-      head: ParivarHead.fromJson(json['head'] ?? {}),
-      familyMembers:
-          (json['familyMembers'] as List<dynamic>?)
-              ?.map(
-                (e) => ParivarFamilyMember.fromJson(e as Map<String, dynamic>),
-              )
-              .toList() ??
-          [],
+      id: json.getString('_id'),
+      head: ParivarHead.fromJson(json.getMap('head')),
+      familyMembers: (json
+          .getList<ParivarFamilyMember>('familyMembers')
+          .map((e) => ParivarFamilyMember.fromJson(e as Map<String, dynamic>))
+          .toList()),
     );
   }
 }
@@ -43,14 +42,14 @@ class ParivarHead {
 
   factory ParivarHead.fromJson(Map<String, dynamic> json) {
     return ParivarHead(
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
-      village: json['village'] ?? '',
-      phoneNumber: json['phoneNumber'] ?? '',
-      workDetailsSummary: json['workDetailsSummary'],
-      profilePhoto: json['profilePhoto'] == 'null'
+      firstName: json.getString('firstName'),
+      lastName: json.getString('lastName'),
+      village: json.getString('village'),
+      phoneNumber: json.getString('phoneNumber'),
+      workDetailsSummary: json.getString('workDetailsSummary'),
+      profilePhoto: json.getOrNull('profilePhoto') == null
           ? null
-          : json['profilePhoto'],
+          : json.getString('profilePhoto'),
     );
   }
 }
@@ -80,17 +79,17 @@ class ParivarFamilyMember {
 
   factory ParivarFamilyMember.fromJson(Map<String, dynamic> json) {
     return ParivarFamilyMember(
-      id: json['_id'] ?? json['id'] ?? '',
-      firstName: json['firstName'] ?? '',
-      lastName: json['lastName'] ?? '',
-      relation: json['relation'] ?? '',
-      phoneNumber: json['phoneNumber'],
-      workDetailsSummary: json['workDetailsSummary'],
-      isIndependent: json['isIndependent'] ?? false,
-      linkedUserId: json['linkedUserId'],
-      profilePhoto: json['profilePhoto'] == 'null'
+      id: json.getOrNull('_id') ?? json.getString('id'),
+      firstName: json.getString('firstName'),
+      lastName: json.getString('lastName'),
+      relation: json.getString('relation'),
+      phoneNumber: json.getString('phoneNumber'),
+      workDetailsSummary: json.getString('workDetailsSummary'),
+      isIndependent: json.getBool('isIndependent'),
+      linkedUserId: json.getOrNull('linkedUserId'),
+      profilePhoto: json.getOrNull('profilePhoto') == null
           ? null
-          : json['profilePhoto'],
+          : json.getString('profilePhoto'),
     );
   }
 }

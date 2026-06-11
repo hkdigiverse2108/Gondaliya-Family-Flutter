@@ -4,10 +4,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/utils/time_utils.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/utils/time_utils.dart';
 import '../../announcements/controllers/announcements_controller.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/values/sizes.dart';
 
 class CommunitySquareSection extends StatelessWidget {
   final AppColorScheme colors;
@@ -99,7 +99,7 @@ class CommunitySquareSection extends StatelessWidget {
                                 color: colors.textSecondary,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Text(
                               'View',
                               style: GoogleFonts.outfit(

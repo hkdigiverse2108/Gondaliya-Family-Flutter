@@ -5,7 +5,7 @@ class MemberDetailBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<MemberDetailController>(
-      () => MemberDetailController(),
+      MemberDetailController.new,
     );
   }
 }

@@ -7,6 +7,7 @@ import '../../../../core/values/sizes.dart';
 import '../../../global_widgets/generation_avatar.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
+// ignore: prefer_relative_imports
 import 'package:gondalia_family/core/theme/app_color_scheme.dart';
 import '../../../data/models/family_member.dart';
 

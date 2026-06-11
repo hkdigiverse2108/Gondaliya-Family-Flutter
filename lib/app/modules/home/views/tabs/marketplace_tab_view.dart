@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:phosphor_flutter/phosphor_flutter.dart';
 
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../../core/theme/app_color_scheme.dart';
+import '../../../../../core/values/sizes.dart';
 
-// Comments: Unused imports commented out to preserve them for the next update
-/*
-import 'package:gondalia_family/app/modules/home/controllers/marketplace_controller.dart';
-import 'package:gondalia_family/app/modules/home/widgets/marketplace_card.dart';
-import 'package:gondalia_family/core/utils/time_utils.dart';
+import '../../controllers/marketplace_controller.dart';
+import '../../widgets/marketplace_card.dart';
+import '../../../../../core/utils/time_utils.dart';
 import 'package:get/get.dart';
 import '../../../../data/models/listing.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
-*/
+import '../../../../global_widgets/glass_app_bar.dart';
+import '../../../../routes/app_pages.dart';
 
 class MarketplaceTabView extends StatefulWidget {
   const MarketplaceTabView({super.key});
@@ -25,8 +22,6 @@ class MarketplaceTabView extends StatefulWidget {
 
 class _MarketplaceTabViewState extends State<MarketplaceTabView>
     with SingleTickerProviderStateMixin {
-  // Comments: State logic and tabs commented out to preserve for the next update
-  /*
   late TabController _tabController;
 
   final List<String> _tabs = ['All', 'Rent', 'Rent / Sale', 'Sale'];
@@ -45,64 +40,47 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
     _tabController.dispose();
     super.dispose();
   }
-  */
 
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
+    final controller = Get.find<MarketplaceController>();
 
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingXL.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(24.w),
-                decoration: BoxDecoration(
-                  color: colors.primary.withValues(alpha: 0.08),
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: colors.primary.withValues(alpha: 0.15),
-                    width: 2,
-                  ),
-                ),
-                child: Icon(
-                  PhosphorIcons.storefront(PhosphorIconsStyle.fill),
-                  color: colors.primary,
-                  size: 48.sp,
-                ),
-              ),
-              SizedBox(height: 24.h),
-              Text(
-                'Coming Soon',
-                style: GoogleFonts.outfit(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.bold,
-                  color: colors.textPrimary,
-                ),
-              ),
-              SizedBox(height: 12.h),
-              Text(
-                'This feature is going to be added in the next update.',
-                textAlign: TextAlign.center,
-                style: GoogleFonts.outfit(
-                  fontSize: 14.sp,
-                  color: colors.textSecondary,
-                  height: 1.4,
-                ),
-              ),
-            ],
+      backgroundColor: Colors.transparent,
+      appBar: GlassAppBar(
+        titleText: 'Marketplace',
+        centerTitle: false,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+          labelStyle: GoogleFonts.outfit(
+            fontWeight: FontWeight.bold,
+            fontSize: 14.sp,
           ),
+          unselectedLabelStyle: GoogleFonts.outfit(
+            fontWeight: FontWeight.w500,
+            fontSize: 14.sp,
+          ),
+          labelColor: colors.primary,
+          unselectedLabelColor: colors.textSecondary,
+          indicatorColor: colors.primary,
+          indicatorSize: TabBarIndicatorSize.tab,
+          dividerColor: Colors.transparent,
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: _tabs.map((tab) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
+            child: _buildListing(colors, tab, controller),
+          );
+        }).toList(),
       ),
     );
   }
 
-  // Comments: Card and listing builders commented out to preserve them for the next update
-  /*
   Widget _buildListing(
     AppColorScheme colors,
     String category,
@@ -145,7 +123,7 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
 
   Widget _buildCard(AppColorScheme colors, Listing l) {
     final availableDateStr =
-        "${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}";
+        '${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}';
 
     return GestureDetector(
       onTap: () {
@@ -168,5 +146,4 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
       ),
     );
   }
-  */
 }

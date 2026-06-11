@@ -5,7 +5,7 @@ class ListingDetailBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<ListingDetailController>(
-      () => ListingDetailController(),
+      ListingDetailController.new,
     );
   }
 }

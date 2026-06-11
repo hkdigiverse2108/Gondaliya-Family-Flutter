@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/global_widgets/neomorphic_async_dropdown_field.dart';
+import '../../../global_widgets/neomorphic_async_dropdown_field.dart';
 import 'package:uuid/uuid.dart';
 import '../../../data/models/family_member.dart';
 import '../../../data/models/location_model.dart';
@@ -26,7 +26,7 @@ class RegisterController extends GetxController {
         .map(
           (loc) => NeomorphicAsyncDropdownItem(
             value: loc,
-            label: "${loc.village} (${loc.taluka})",
+            label: '${loc.village} (${loc.taluka})',
           ),
         )
         .toList();
@@ -305,8 +305,8 @@ class RegisterController extends GetxController {
         colorText: Colors.white,
       );
       FocusManager.instance.primaryFocus?.unfocus();
-      await Future.delayed(const Duration(milliseconds: 300));
-      Get.offAllNamed(Routes.login);
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      await Get.offAllNamed(Routes.login);
     } else {
       Get.snackbar(
         'Error',

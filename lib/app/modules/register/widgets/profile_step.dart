@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/data/models/location_model.dart';
-import 'package:gondalia_family/app/data/models/enums.dart';
+import '../../../data/models/location_model.dart';
+import '../../../data/models/enums.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/values/colors.dart';
 import '../../../../core/values/sizes.dart';
@@ -12,7 +12,7 @@ import '../../../global_widgets/neomorphic_async_dropdown_field.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 
 class ProfileStep extends StatelessWidget {
   final RegisterController controller;

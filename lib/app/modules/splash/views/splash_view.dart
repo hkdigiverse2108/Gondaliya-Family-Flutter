@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/colors.dart';
 import '../controllers/splash_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/values/sizes.dart';
 
 class SplashView extends GetView<SplashController> {
   const SplashView({super.key});
@@ -125,7 +125,7 @@ class SplashView extends GetView<SplashController> {
                 SizedBox(
                   width: 30.w,
                   height: 30.w,
-                  child: CircularProgressIndicator(
+                  child: const CircularProgressIndicator(
                     strokeWidth: 3,
                     valueColor: AlwaysStoppedAnimation<Color>(
                       AppColors.primary,

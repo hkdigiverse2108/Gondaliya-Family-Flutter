@@ -27,11 +27,11 @@ class SplashController extends GetxController {
       Get.find<SocketService>().connect();
       // Sync FCM Token with backend if service is initialized
       if (Get.isRegistered<FirebaseNotificationService>()) {
-        FirebaseNotificationService.to.uploadFcmToken();
+        await FirebaseNotificationService.to.uploadFcmToken();
       }
-      Get.offAllNamed(Routes.home);
+      await Get.offAllNamed(Routes.home);
     } else {
-      Get.offAllNamed(Routes.login);
+      await Get.offAllNamed(Routes.login);
     }
   }
 }

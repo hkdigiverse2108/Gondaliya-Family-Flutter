@@ -14,7 +14,7 @@ class NeomorphicTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final Function(String)? onChanged;
+  final void Function(String)? onChanged;
   final int maxLines;
   final bool enabled;
   final bool showValidationIcon;
@@ -141,7 +141,7 @@ class _NeomorphicTextFieldState extends State<NeomorphicTextField>
                 fontSize: AppSizes.fontSizeInputHint,
                 color: colors.textSecondary.withValues(alpha: 0.6),
               ),
-              contentPadding: EdgeInsets.symmetric(
+              contentPadding: const EdgeInsets.symmetric(
                 horizontal: 16,
                 vertical: 12,
               ),

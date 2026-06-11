@@ -4,6 +4,6 @@ import '../controllers/business_detail_controller.dart';
 class BusinessDetailBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<BusinessDetailController>(() => BusinessDetailController());
+    Get.lazyPut<BusinessDetailController>(BusinessDetailController.new);
   }
 }

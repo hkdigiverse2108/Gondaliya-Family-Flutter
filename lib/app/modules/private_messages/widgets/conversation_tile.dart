@@ -6,7 +6,7 @@ import 'package:phosphor_flutter/phosphor_flutter.dart';
 import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/sizes.dart';
 import '../../../data/models/private_conversation_model.dart';
-import 'package:gondalia_family/core/config/app_config.dart';
+import '../../../../core/config/app_config.dart';
 
 class ConversationTile extends StatelessWidget {
   final PrivateConversation conversation;
@@ -54,7 +54,7 @@ class ConversationTile extends StatelessWidget {
         ),
       ),
       confirmDismiss: (direction) async {
-        return await showDialog<bool>(
+        return showDialog<bool>(
           context: context,
           builder: (context) => AlertDialog(
             title: Text(

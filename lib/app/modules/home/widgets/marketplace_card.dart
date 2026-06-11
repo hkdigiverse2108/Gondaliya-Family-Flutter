@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../../core/theme/app_color_scheme.dart';
 import '../../../../../core/values/colors.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/values/sizes.dart';
 
 class MarketplaceCard extends StatelessWidget {
   final AppColorScheme colors;

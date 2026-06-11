@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../global_widgets/glass_app_bar.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 import '../controllers/placeholder_home_controller.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
+import '../../../../core/values/sizes.dart';
 
 class PlaceholderHomeView extends GetView<PlaceholderHomeController> {
   const PlaceholderHomeView({super.key});

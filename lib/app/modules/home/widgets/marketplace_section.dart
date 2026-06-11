@@ -3,12 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
-import 'package:gondalia_family/core/utils/time_utils.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/utils/time_utils.dart';
 import '../controllers/marketplace_controller.dart';
 import 'marketplace_card.dart';
-import 'package:gondalia_family/core/values/sizes.dart';
-import 'package:gondalia_family/app/routes/app_pages.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../routes/app_pages.dart';
 
 class MarketplaceSection extends StatelessWidget {
   final AppColorScheme colors;
@@ -44,7 +44,7 @@ class MarketplaceSection extends StatelessWidget {
           itemBuilder: (context, index) {
             final l = listings[index];
             final availableDateStr =
-                "${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}";
+                '${l.availableFrom.day} ${TimeUtils.getMonthName(l.availableFrom.month)} ${l.availableFrom.year}';
 
             return Padding(
               padding: EdgeInsets.only(bottom: AppSizes.spacingL.h),
@@ -65,7 +65,9 @@ class MarketplaceSection extends StatelessWidget {
                   contact: l.contactPhone,
                   name: l.postedBy,
                   isSale: l.type.toUpperCase() == 'SALE',
-                  imageUrl: l.photos?.isNotEmpty == true ? l.photos!.first : null,
+                  imageUrl: l.photos?.isNotEmpty == true
+                      ? l.photos!.first
+                      : null,
                 ),
               ),
             );
