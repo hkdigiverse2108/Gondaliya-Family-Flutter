@@ -23,15 +23,15 @@ class NotificationModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        title,
-        body,
-        type,
-        refId,
-        isRead,
-        createdAt,
-      ];
+    id,
+    userId,
+    title,
+    body,
+    type,
+    refId,
+    isRead,
+    createdAt,
+  ];
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
@@ -61,4 +61,3 @@ class NotificationModel extends Equatable {
     };
   }
 }
-

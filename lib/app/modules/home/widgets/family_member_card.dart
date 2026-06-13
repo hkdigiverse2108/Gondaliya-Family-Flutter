@@ -5,7 +5,8 @@ import 'package:get/get.dart';
 import '../../../../core/values/colors.dart';
 import '../../../data/models/family_member.dart';
 import '../../../global_widgets/generation_avatar.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 class FamilyMemberCard extends StatelessWidget {
   final FamilyMember member;
@@ -33,11 +34,8 @@ class FamilyMemberCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: colors.divider,
-          width: 1,
-        ),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
+        border: Border.all(color: colors.divider, width: 1),
         boxShadow: [
           BoxShadow(
             color: colors.shadow,
@@ -47,12 +45,12 @@ class FamilyMemberCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
         child: Column(
           children: [
             // Top Section (Generational avatar & Name)
             Padding(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(AppSizes.spacingL.w),
               child: Row(
                 children: [
                   GenerationAvatar(
@@ -60,7 +58,7 @@ class FamilyMemberCard extends StatelessWidget {
                     color: genColor,
                     radius: 22,
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSizes.spacingM.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,53 +67,58 @@ class FamilyMemberCard extends StatelessWidget {
                           '${member.firstName} ${member.lastName}',
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.sp,
+                            fontSize: AppSizes.fontSizeBodyLarge.sp,
                             color: isDark
                                 ? AppColors.white
                                 : AppColors.textLightPrimary,
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: AppSizes.spacingXS.h),
                         Row(
                           children: [
                             Container(
                               decoration: BoxDecoration(
                                 color: genColor.withValues(alpha: 0.15),
-                                borderRadius: BorderRadius.circular(8.r),
+                                borderRadius: BorderRadius.circular(
+                                  AppSizes.radiusS.r,
+                                ),
                               ),
                               padding: EdgeInsets.symmetric(
-                                horizontal: 8.w,
-                                vertical: 2.h,
+                                horizontal: AppSizes.spacingS.w,
+                                vertical: AppSizes.spacingXXS.h,
                               ),
                               child: Text(
                                 member.relation,
                                 style: GoogleFonts.outfit(
                                   color: genColor,
-                                  fontSize: 10.sp,
+                                  fontSize: AppSizes.fontSizeMicro.sp,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                            if (member.isMarried.toLowerCase() == 'married') ...[
-                              SizedBox(width: 8.w),
+                            if (member.isMarried.toLowerCase() ==
+                                'married') ...[
+                              SizedBox(width: AppSizes.spacingS.w),
                               Icon(
                                 Icons.favorite_rounded,
                                 color: AppColors.coralAccent,
-                                size: 12.w,
+                                size: AppSizes.spacingM.w,
                               ),
                             ],
                             if (member.bloodGroup.isNotEmpty) ...[
-                              SizedBox(width: 8.w),
+                              SizedBox(width: AppSizes.spacingS.w),
                               Container(
                                 decoration: BoxDecoration(
                                   color: AppColors.coralAccent.withValues(
                                     alpha: 0.15,
                                   ),
-                                  borderRadius: BorderRadius.circular(8.r),
+                                  borderRadius: BorderRadius.circular(
+                                    AppSizes.radiusS.r,
+                                  ),
                                 ),
                                 padding: EdgeInsets.symmetric(
                                   horizontal: 6.w,
-                                  vertical: 2.h,
+                                  vertical: AppSizes.spacingXXS.h,
                                 ),
                                 child: Text(
                                   member.bloodGroup,
@@ -152,7 +155,7 @@ class FamilyMemberCard extends StatelessWidget {
                         child: Row(
                           children: [
                             const Icon(Icons.edit_rounded, size: 18),
-                            SizedBox(width: 8.w),
+                            SizedBox(width: AppSizes.spacingS.w),
                             Text('edit'.tr, style: GoogleFonts.outfit()),
                           ],
                         ),
@@ -166,7 +169,7 @@ class FamilyMemberCard extends StatelessWidget {
                               color: AppColors.error,
                               size: 18,
                             ),
-                            SizedBox(width: 8.w),
+                            SizedBox(width: AppSizes.spacingS.w),
                             Text(
                               'delete'.tr,
                               style: GoogleFonts.outfit(color: AppColors.error),
@@ -180,14 +183,14 @@ class FamilyMemberCard extends StatelessWidget {
               ),
             ),
 
-            Container(
-              height: 1,
-              color: colors.divider,
-            ),
+            Container(height: 1, color: colors.divider),
 
             // Details section with icons & styling
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.spacingL.w,
+                vertical: AppSizes.spacingM.h,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -214,10 +217,7 @@ class FamilyMemberCard extends StatelessWidget {
             ),
 
             if (member.phoneNumber.isNotEmpty) ...[
-              Container(
-                height: 1,
-                color: colors.divider,
-              ),
+              Container(height: 1, color: colors.divider),
               Container(
                 width: double.infinity,
                 color: isDark ? AppColors.primaryDeep : AppColors.bgLight,
@@ -228,12 +228,14 @@ class FamilyMemberCard extends StatelessWidget {
                     '${'call_now'.tr} (${member.phoneNumber})',
                     style: GoogleFonts.outfit(
                       fontWeight: FontWeight.bold,
-                      fontSize: 13.sp,
+                      fontSize: AppSizes.fontSizeInputHint.sp,
                     ),
                   ),
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.primaryLight,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppSizes.spacingM.h,
+                    ),
                   ),
                 ),
               ),
@@ -255,7 +257,7 @@ class FamilyMemberCard extends StatelessWidget {
     return Expanded(
       child: Row(
         children: [
-          Icon(icon, size: 16.w, color: AppColors.primaryLight),
+          Icon(icon, size: AppSizes.spacingL.w, color: AppColors.primaryLight),
           SizedBox(width: 6.w),
           Expanded(
             child: Column(
@@ -273,7 +275,7 @@ class FamilyMemberCard extends StatelessWidget {
                 Text(
                   value.isNotEmpty ? value : '-',
                   style: GoogleFonts.outfit(
-                    fontSize: 12.sp,
+                    fontSize: AppSizes.fontSizeBodySmall.sp,
                     fontWeight: FontWeight.bold,
                     color: isDark
                         ? AppColors.white

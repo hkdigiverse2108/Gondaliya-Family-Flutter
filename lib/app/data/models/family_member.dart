@@ -16,6 +16,7 @@ class FamilyMember extends Equatable {
   final String? skills;
   final String phoneNumber;
   final WorkDetails? workDetails;
+  final String? linkedUserId;
   final DateTime? createdAt;
 
   const FamilyMember({
@@ -33,6 +34,7 @@ class FamilyMember extends Equatable {
     this.skills,
     required this.phoneNumber,
     this.workDetails,
+    this.linkedUserId,
     this.createdAt,
   });
 
@@ -52,6 +54,7 @@ class FamilyMember extends Equatable {
       'skills': skills,
       'phoneNumber': phoneNumber,
       'workDetails': workDetails?.toJson() ?? {},
+      if (linkedUserId != null) 'linkedUserId': linkedUserId,
       if (createdAt != null) 'createdAt': createdAt?.toIso8601String(),
     };
   }
@@ -62,7 +65,9 @@ class FamilyMember extends Equatable {
       firstName: json['firstName'] as String? ?? '',
       middleName: json['middleName'] as String? ?? '',
       lastName: json['lastName'] as String? ?? '',
-      profilePhoto: json['profilePhoto'] == 'null' ? null : json['profilePhoto'] as String?,
+      profilePhoto: json['profilePhoto'] == 'null'
+          ? null
+          : json['profilePhoto'] as String?,
       relation: json['relation'] as String? ?? '',
       dob: json['dob'] as String? ?? '',
       education: json['education'] as String? ?? '',
@@ -71,9 +76,11 @@ class FamilyMember extends Equatable {
       bloodGroup: json['bloodGroup'] as String? ?? '',
       skills: json['skills'] as String?,
       phoneNumber: json['phoneNumber'] as String? ?? '',
-      workDetails: json['workDetails'] != null && json['workDetails'].toString() != '{}'
+      workDetails:
+          json['workDetails'] != null && json['workDetails'].toString() != '{}'
           ? WorkDetails.fromJson(json['workDetails'] as Map<String, dynamic>)
           : null,
+      linkedUserId: json['linkedUserId'] as String?,
       createdAt: json['createdAt'] != null
           ? DateTime.tryParse(json['createdAt'] as String)
           : null,
@@ -95,6 +102,7 @@ class FamilyMember extends Equatable {
     String? skills,
     String? phoneNumber,
     WorkDetails? workDetails,
+    String? linkedUserId,
     DateTime? createdAt,
   }) {
     return FamilyMember(
@@ -112,6 +120,7 @@ class FamilyMember extends Equatable {
       skills: skills ?? this.skills,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       workDetails: workDetails ?? this.workDetails,
+      linkedUserId: linkedUserId ?? this.linkedUserId,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -132,6 +141,7 @@ class FamilyMember extends Equatable {
     skills,
     phoneNumber,
     workDetails,
+    linkedUserId,
     createdAt,
   ];
 

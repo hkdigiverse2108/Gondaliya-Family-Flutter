@@ -25,41 +25,48 @@ class LoginView extends GetView<LoginController> {
         elevation: 0,
         scrolledUnderElevation: 0,
         actions: [
-          IconButton(
-            tooltip: controller.isDarkTheme.value
-                ? 'light_mode'.tr
-                : 'dark_mode'.tr,
-            icon: Icon(
-              controller.isDarkTheme.value
-                  ? Icons.light_mode_outlined
-                  : Icons.dark_mode_outlined,
-              color: colors.textPrimary,
-            ),
-            onPressed: controller.toggleTheme,
-          ),
+          // IconButton(
+          //   tooltip: controller.isDarkTheme.value
+          //       ? 'light_mode'.tr
+          //       : 'dark_mode'.tr,
+          //   icon: Icon(
+          //     controller.isDarkTheme.value
+          //         ? Icons.light_mode_outlined
+          //         : Icons.dark_mode_outlined,
+          //     color: colors.textPrimary,
+          //   ),
+          //   onPressed: controller.toggleTheme,
+          // ),
           // Language Toggle Button (Neumorphic style)
           Padding(
-            padding: EdgeInsets.only(right: 16.w),
+            padding: EdgeInsets.only(right: AppSizes.spacingL.w),
             child: GestureDetector(
               onTap: controller.toggleLanguage,
               child: Container(
                 decoration: BoxDecoration(
                   color: colors.card,
-                  borderRadius: BorderRadius.circular(20.r),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
                   boxShadow: colors.neumorphicShadow(blur: 10, distance: 2),
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.spacingM.w,
+                  vertical: 6.h,
+                ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.language, color: colors.textPrimary, size: 16.w),
+                    Icon(
+                      Icons.language,
+                      color: colors.textPrimary,
+                      size: AppSizes.spacingL.w,
+                    ),
                     SizedBox(width: 6.w),
                     Text(
                       Get.locale?.languageCode == 'gu' ? 'English' : 'ગુજરાતી',
                       style: GoogleFonts.outfit(
                         color: colors.textPrimary,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12.sp,
+                        fontSize: AppSizes.fontSizeBodySmall.sp,
                       ),
                     ),
                   ],
@@ -117,14 +124,18 @@ class LoginView extends GetView<LoginController> {
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: EdgeInsets.symmetric(
+                  horizontal: AppSizes.spacingXXL.w,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // Header Logo & Branding Container
                     Container(
-                      padding: EdgeInsets.symmetric(vertical: 16.h),
+                      padding: EdgeInsets.symmetric(
+                        vertical: AppSizes.spacingL.h,
+                      ),
                       child: Column(
                         children: [
                           Image.asset(
@@ -166,7 +177,7 @@ class LoginView extends GetView<LoginController> {
                             'register_header'.tr,
                             textAlign: TextAlign.center,
                             style: GoogleFonts.outfit(
-                              fontSize: 22.sp,
+                              fontSize: AppSizes.fontSizeTitleLarge.sp,
                               fontWeight: FontWeight.bold,
                               color: colors.isDark
                                   ? colors.white
@@ -193,7 +204,7 @@ class LoginView extends GetView<LoginController> {
                     // Neumorphic Card for Login fields
                     NeomorphicCard(
                       borderRadius: AppSizes.radiusXXL.w,
-                      padding: EdgeInsets.all(24.w),
+                      padding: EdgeInsets.all(AppSizes.spacingXXL.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -288,7 +299,7 @@ class LoginView extends GetView<LoginController> {
                         ),
                       ),
                     ),
-                    SizedBox(height: 20.h),
+                    SizedBox(height: AppSizes.spacingXL.h),
                   ],
                 ),
               ),

@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:get/get.dart';
 import '../../../../core/values/colors.dart';
 import '../../../data/models/business.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 class BusinessCard extends StatelessWidget {
   final Business business;
@@ -28,39 +29,92 @@ class BusinessCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: colors.card,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(
-          color: colors.divider,
-          width: 1,
-        ),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
+        border: Border.all(color: colors.divider, width: 1),
         boxShadow: [
           BoxShadow(
             color: colors.shadow,
             offset: const Offset(0, 6),
             blurRadius: 16,
-          )
+          ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Business Banner Header
+            if (business.businessBanner != null && business.businessBanner!.isNotEmpty) ...[
+              Image.network(
+                business.businessBanner!,
+                height: 100.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => Container(
+                  height: 100.h,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        colors.primary.withValues(alpha: 0.8),
+                        colors.secondary.withValues(alpha: 0.8),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                  ),
+                ),
+              ),
+            ] else ...[
+              Container(
+                height: 100.h,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      colors.primary.withValues(alpha: 0.8),
+                      colors.secondary.withValues(alpha: 0.8),
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+              ),
+            ],
             // Top branding/Name & Category row
             Padding(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.all(AppSizes.spacingL.w),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    padding: EdgeInsets.all(10.w),
+                    width: 44.w,
+                    height: 44.w,
                     decoration: BoxDecoration(
                       color: AppColors.primary.withValues(alpha: 0.15),
                       borderRadius: BorderRadius.circular(14.r),
                     ),
-                    child: Icon(Icons.storefront_rounded, color: AppColors.primary, size: 24.w),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(14.r),
+                      child: (business.businessLogo != null && business.businessLogo!.isNotEmpty)
+                          ? Image.network(
+                              business.businessLogo!,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) => Icon(
+                                Icons.storefront_rounded,
+                                color: AppColors.primary,
+                                size: 22.r,
+                              ),
+                            )
+                          : Icon(
+                              Icons.storefront_rounded,
+                              color: AppColors.primary,
+                              size: 22.r,
+                            ),
+                    ),
                   ),
-                  SizedBox(width: 12.w),
+                  SizedBox(width: AppSizes.spacingM.w),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,22 +123,27 @@ class BusinessCard extends StatelessWidget {
                           business.name,
                           style: GoogleFonts.outfit(
                             fontWeight: FontWeight.bold,
-                            fontSize: 16.sp,
+                            fontSize: AppSizes.fontSizeBodyLarge.sp,
                             color: colors.textPrimary,
                           ),
                         ),
-                        SizedBox(height: 4.h),
+                        SizedBox(height: AppSizes.spacingXS.h),
                         Container(
                           decoration: BoxDecoration(
                             color: AppColors.secondary.withValues(alpha: 0.15),
-                            borderRadius: BorderRadius.circular(8.r),
+                            borderRadius: BorderRadius.circular(
+                              AppSizes.radiusS.r,
+                            ),
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 2.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: AppSizes.spacingS.w,
+                            vertical: AppSizes.spacingXXS.h,
+                          ),
                           child: Text(
                             business.category,
                             style: GoogleFonts.outfit(
                               color: colors.secondary,
-                              fontSize: 10.sp,
+                              fontSize: AppSizes.fontSizeMicro.sp,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -93,7 +152,10 @@ class BusinessCard extends StatelessWidget {
                     ),
                   ),
                   PopupMenuButton<String>(
-                    icon: Icon(Icons.more_vert_rounded, color: colors.textSecondary),
+                    icon: Icon(
+                      Icons.more_vert_rounded,
+                      color: colors.textSecondary,
+                    ),
                     onSelected: (value) {
                       if (value == 'edit') {
                         onEdit();
@@ -107,7 +169,7 @@ class BusinessCard extends StatelessWidget {
                         child: Row(
                           children: [
                             const Icon(Icons.edit_rounded, size: 18),
-                            SizedBox(width: 8.w),
+                            SizedBox(width: AppSizes.spacingS.w),
                             Text('edit'.tr, style: GoogleFonts.outfit()),
                           ],
                         ),
@@ -116,8 +178,12 @@ class BusinessCard extends StatelessWidget {
                         value: 'delete',
                         child: Row(
                           children: [
-                            const Icon(Icons.delete_rounded, color: AppColors.error, size: 18),
-                            SizedBox(width: 8.w),
+                            const Icon(
+                              Icons.delete_rounded,
+                              color: AppColors.error,
+                              size: 18,
+                            ),
+                            SizedBox(width: AppSizes.spacingS.w),
                             Text(
                               'delete'.tr,
                               style: GoogleFonts.outfit(color: AppColors.error),
@@ -133,34 +199,35 @@ class BusinessCard extends StatelessWidget {
 
             // Description block
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
               child: Text(
                 business.description,
                 style: GoogleFonts.outfit(
-                  fontSize: 13.sp,
+                  fontSize: AppSizes.fontSizeInputHint.sp,
                   color: colors.textSecondary,
                 ),
               ),
             ),
-            SizedBox(height: 12.h),
+            SizedBox(height: AppSizes.spacingM.h),
 
-            Container(
-              height: 1,
-              color: colors.divider,
-            ),
+            Container(height: 1, color: colors.divider),
 
             // Address Row
             Padding(
-              padding: EdgeInsets.all(12.w),
+              padding: EdgeInsets.all(AppSizes.spacingM.w),
               child: Row(
                 children: [
-                  const Icon(Icons.location_on_outlined, color: AppColors.coralAccent, size: 18),
-                  SizedBox(width: 8.w),
+                  const Icon(
+                    Icons.location_on_outlined,
+                    color: AppColors.coralAccent,
+                    size: 18,
+                  ),
+                  SizedBox(width: AppSizes.spacingS.w),
                   Expanded(
                     child: Text(
                       business.address,
                       style: GoogleFonts.outfit(
-                        fontSize: 12.sp,
+                        fontSize: AppSizes.fontSizeBodySmall.sp,
                         color: colors.textPrimary,
                       ),
                     ),
@@ -171,10 +238,7 @@ class BusinessCard extends StatelessWidget {
 
             // Action Button Row at Bottom
             if (business.contact.isNotEmpty) ...[
-              Container(
-                height: 1,
-                color: colors.divider,
-              ),
+              Container(height: 1, color: colors.divider),
               Container(
                 width: double.infinity,
                 color: isDark ? AppColors.primaryDeep : AppColors.bgLight,
@@ -183,11 +247,16 @@ class BusinessCard extends StatelessWidget {
                   icon: const Icon(Icons.phone_enabled_rounded, size: 16),
                   label: Text(
                     '${'call_now'.tr} (${business.contact})',
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 13.sp),
+                    style: GoogleFonts.outfit(
+                      fontWeight: FontWeight.bold,
+                      fontSize: AppSizes.fontSizeInputHint.sp,
+                    ),
                   ),
                   style: TextButton.styleFrom(
                     foregroundColor: AppColors.secondary,
-                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    padding: EdgeInsets.symmetric(
+                      vertical: AppSizes.spacingM.h,
+                    ),
                   ),
                 ),
               ),

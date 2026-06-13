@@ -16,6 +16,8 @@ class NeomorphicButton extends StatefulWidget {
   final List<Color>? gradientColors;
   final AlignmentGeometry? gradientBegin;
   final AlignmentGeometry? gradientEnd;
+  final double? fontSize;
+  final double? iconSize;
 
   const NeomorphicButton({
     super.key,
@@ -31,6 +33,8 @@ class NeomorphicButton extends StatefulWidget {
     this.gradientColors,
     this.gradientBegin,
     this.gradientEnd,
+    this.fontSize,
+    this.iconSize,
   });
 
   @override
@@ -134,7 +138,7 @@ class _NeomorphicButtonState extends State<NeomorphicButton>
                               if (widget.icon != null) ...[
                                 Icon(
                                   widget.icon,
-                                  size: 20,
+                                  size: widget.iconSize ?? 20,
                                   color: contentColor,
                                 ),
                                 const SizedBox(width: 8),
@@ -142,7 +146,7 @@ class _NeomorphicButtonState extends State<NeomorphicButton>
                               Text(
                                 widget.text,
                                 style: GoogleFonts.outfit(
-                                  fontSize: AppSizes.fontSizeButton,
+                                  fontSize: widget.fontSize ?? AppSizes.fontSizeButton,
                                   fontWeight: FontWeight.w600,
                                   color: contentColor,
                                 ),

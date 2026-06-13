@@ -4,6 +4,6 @@ import '../controllers/placeholder_home_controller.dart';
 class PlaceholderHomeBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<PlaceholderHomeController>(() => PlaceholderHomeController());
+    Get.lazyPut<PlaceholderHomeController>(PlaceholderHomeController.new);
   }
 }

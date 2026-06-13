@@ -8,7 +8,7 @@ import '../../../../core/values/sizes.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 
 class AccountStep extends StatelessWidget {
   final RegisterController controller;
@@ -23,7 +23,7 @@ class AccountStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         NeomorphicCard(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(AppSizes.spacingL.w),
           child: Form(
             key: controller.accountFormKey,
             child: Column(

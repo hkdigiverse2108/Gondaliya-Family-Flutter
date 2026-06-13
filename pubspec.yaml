@@ -46,6 +46,13 @@ dependencies:
   dio: ^5.7.0
   pretty_dio_logger: ^1.4.0
   retrofit: ^4.4.1
+  phosphor_flutter: ^2.1.0
+  intl: ^0.20.2
+  socket_io_client: ^2.0.3
+  firebase_core: ^3.1.0
+  firebase_messaging: ^15.0.0
+  flutter_local_notifications: ^17.2.1
+  file_picker: ^11.0.2
 
 dev_dependencies:
   flutter_test:
@@ -60,6 +67,7 @@ dev_dependencies:
   retrofit_generator: ^9.1.1
   build_runner: ^2.4.0
   flutter_launcher_icons: ^0.14.2
+  flutter_native_splash: ^2.4.7
 
 flutter_launcher_icons:
   android: true

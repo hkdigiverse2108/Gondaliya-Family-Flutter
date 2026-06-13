@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../../data/repositories/auth_repository.dart';
+import '../../../data/services/firebase_notification_service.dart';
+import '../../../data/services/socket_service.dart';
 import '../../../data/services/storage_service.dart';
 import '../../../routes/app_pages.dart';
 
@@ -36,9 +39,20 @@ class LoginController extends GetxController {
     }
 
     isLoading.value = true;
+    String? fcmToken;
+    if (Get.isRegistered<FirebaseNotificationService>() &&
+        FirebaseNotificationService.to.isInitialized) {
+      try {
+        fcmToken = await FirebaseMessaging.instance.getToken();
+      } catch (e) {
+        debugPrint('Error getting FCM Token during login: $e');
+      }
+    }
+
     final response = await _authRepo.login(
       phoneNumber: phone,
       password: password,
+      deviceToken: fcmToken,
     );
     isLoading.value = false;
 
@@ -68,7 +82,11 @@ class LoginController extends GetxController {
         }
       }
 
-      Get.offAllNamed(Routes.placeholderHome);
+      Get.find<SocketService>().connect();
+      if (Get.isRegistered<FirebaseNotificationService>()) {
+        FirebaseNotificationService.to.uploadFcmToken();
+      }
+      Get.offAllNamed(Routes.home);
     } else {
       Get.snackbar(
         'Error',

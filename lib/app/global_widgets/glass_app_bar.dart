@@ -1,7 +1,6 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../core/theme/app_color_scheme.dart';
 
 class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? title;
@@ -40,16 +39,11 @@ class GlassAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: centerTitle,
       actions: actions,
       leading: leading,
-      backgroundColor: colors.background.withValues(alpha: 0.75),
+      backgroundColor: colors.background,
       elevation: 0,
       scrolledUnderElevation: 0,
       iconTheme: IconThemeData(color: colors.textPrimary),
-      flexibleSpace: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
-          child: Container(color: Colors.transparent),
-        ),
-      ),
+      flexibleSpace: const SizedBox.shrink(),
       bottom: bottom,
     );
   }

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 import '../../../../core/values/colors.dart';
 import '../controllers/splash_controller.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/values/sizes.dart';
 
 class SplashView extends GetView<SplashController> {
   const SplashView({super.key});
@@ -13,11 +14,11 @@ class SplashView extends GetView<SplashController> {
   Widget build(BuildContext context) {
     // Just touching the controller to ensure it is initialized immediately
     controller.toString();
-    
-    // During very early init, we can assume a basic background, 
+
+    // During very early init, we can assume a basic background,
     // but context.appColors works if ThemeMode is system default.
     final colors = context.appColors;
-    
+
     return Scaffold(
       backgroundColor: colors.background,
       body: Stack(
@@ -33,7 +34,9 @@ class SplashView extends GetView<SplashController> {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.primary.withValues(alpha: colors.isDark ? 0.05 : 0.15),
+                    AppColors.primary.withValues(
+                      alpha: colors.isDark ? 0.05 : 0.15,
+                    ),
                     Colors.transparent,
                   ],
                   radius: 0.8,
@@ -51,7 +54,9 @@ class SplashView extends GetView<SplashController> {
                 shape: BoxShape.circle,
                 gradient: RadialGradient(
                   colors: [
-                    AppColors.secondary.withValues(alpha: colors.isDark ? 0.05 : 0.15),
+                    AppColors.secondary.withValues(
+                      alpha: colors.isDark ? 0.05 : 0.15,
+                    ),
                     Colors.transparent,
                   ],
                   radius: 0.8,
@@ -94,7 +99,7 @@ class SplashView extends GetView<SplashController> {
                     },
                   ),
                 ),
-                SizedBox(height: 24.h),
+                SizedBox(height: AppSizes.spacingXXL.h),
                 Text(
                   'Samast Gondaliya Patel\nParivar Surat',
                   textAlign: TextAlign.center,
@@ -105,24 +110,26 @@ class SplashView extends GetView<SplashController> {
                     height: 1.2,
                   ),
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: AppSizes.spacingS.h),
                 Text(
                   'Service • Cooperation • Organization',
                   textAlign: TextAlign.center,
                   style: GoogleFonts.outfit(
-                    fontSize: 14.sp,
+                    fontSize: AppSizes.fontSizeBodyMedium.sp,
                     fontWeight: FontWeight.w500,
                     fontStyle: FontStyle.italic,
                     color: colors.textSecondary,
                   ),
                 ),
-                SizedBox(height: 40.h),
+                SizedBox(height: AppSizes.spacing4XL.h),
                 SizedBox(
                   width: 30.w,
                   height: 30.w,
-                  child: CircularProgressIndicator(
+                  child: const CircularProgressIndicator(
                     strokeWidth: 3,
-                    valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      AppColors.primary,
+                    ),
                   ),
                 ),
               ],

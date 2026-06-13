@@ -2,8 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class Support extends Equatable {
   final String id;
-  final String phone;
-  final String? phone2;
+  final List<String> phones;
   final String email;
   final String? address;
   final DateTime? createdAt;
@@ -11,8 +10,7 @@ class Support extends Equatable {
 
   const Support({
     required this.id,
-    required this.phone,
-    this.phone2,
+    required this.phones,
     required this.email,
     this.address,
     this.createdAt,
@@ -20,21 +18,16 @@ class Support extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-    id,
-    phone,
-    phone2,
-    email,
-    address,
-    createdAt,
-    updatedAt,
-  ];
+  List<Object?> get props => [id, phones, email, address, createdAt, updatedAt];
 
   factory Support.fromJson(Map<String, dynamic> json) {
     return Support(
       id: json['_id'] as String? ?? json['id'] as String? ?? '',
-      phone: json['phone'] as String? ?? '',
-      phone2: json['phone2'] as String?,
+      phones:
+          (json['phones'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
       email: json['email'] as String? ?? '',
       address: json['address'] as String?,
       createdAt: json['createdAt'] != null
@@ -49,8 +42,7 @@ class Support extends Equatable {
   Map<String, dynamic> toJson() {
     return {
       if (id.isNotEmpty) '_id': id,
-      'phone': phone,
-      if (phone2 != null) 'phone2': phone2,
+      'phones': phones,
       'email': email,
       if (address != null) 'address': address,
       if (createdAt != null) 'createdAt': createdAt?.toIso8601String(),

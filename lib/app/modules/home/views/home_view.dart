@@ -1,18 +1,20 @@
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:phosphor_flutter/phosphor_flutter.dart';
+import '../../../routes/app_pages.dart';
 
 import 'tabs/home_tab_view.dart';
 import 'tabs/parivar_tab_view.dart';
 import 'tabs/marketplace_tab_view.dart';
 import 'tabs/profile_tab_view.dart';
-import '../widgets/home_dialogs.dart';
-import '../controllers/home_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../controllers/navigation_controller.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
-class HomeView extends GetView<HomeController> {
+class HomeView extends StatelessWidget {
   const HomeView({super.key});
 
   @override
@@ -20,183 +22,337 @@ class HomeView extends GetView<HomeController> {
     final colors = context.appColors;
     final isDark = colors.isDark;
 
-    return Obx(() {
-      return SafeArea(
-        top: false,
-        child: Scaffold(
-          extendBodyBehindAppBar: true,
-          appBar: GlassAppBar(
-            title: Row(
-              children: [
-                // _buildAppBarLogo(),
-                // SizedBox(width: 10.w),
-                Text(
-                  'app_name'.tr,
-                  style: GoogleFonts.outfit(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18.sp,
-                    color: colors.textPrimary,
-                  ),
-                ),
-              ],
-            ),
-            actions: [
-              IconButton(
-                tooltip: 'select_language'.tr,
-                icon: Icon(Icons.language, color: colors.textPrimary),
-                onPressed: () => showLanguageDialog(context, controller),
-              ),
-              IconButton(
-                tooltip: controller.isDarkTheme.value
-                    ? 'light_mode'.tr
-                    : 'dark_mode'.tr,
-                icon: Icon(
-                  controller.isDarkTheme.value
-                      ? Icons.light_mode_outlined
-                      : Icons.dark_mode_outlined,
-                  color: colors.textPrimary,
-                ),
-                onPressed: controller.toggleTheme,
-              ),
-              IconButton(
-                tooltip: 'logout'.tr,
-                icon: Icon(Icons.logout_rounded, color: colors.textPrimary),
-                onPressed: controller.logout,
-              ),
-              SizedBox(width: 8.w),
-            ],
-          ),
-          body: Stack(
-            children: [
-              // Aurora Background Glows (visible on Home Tab)
-              if (controller.currentIndex.value == 0) ...[
-                Positioned(
-                  top: -80.h,
-                  left: -80.w,
-                  child: Container(
-                    width: 260.w,
-                    height: 260.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          colors.primaryVariant.withValues(
-                            alpha: isDark ? 0.08 : 0.15,
-                          ),
-                          colors.transparent,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 250.h,
-                  right: -100.w,
-                  child: Container(
-                    width: 320.w,
-                    height: 320.w,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: RadialGradient(
-                        colors: [
-                          colors.secondary.withValues(
-                            alpha: isDark ? 0.06 : 0.12,
-                          ),
-                          colors.transparent,
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+    // Ensure NavigationController is available
+    Get.put(NavigationController());
 
-              // Main Views
-              IndexedStack(
-                index: controller.currentIndex.value,
-                children: const [
-                  HomeTabView(),
-                  ParivarTabView(),
-                  MarketplaceTabView(),
-                  ProfileTabView(),
-                ],
+    return SafeArea(
+      top: false,
+      child: Scaffold(
+        body: Stack(
+          children: [
+            // Background Gradient blobs to simulate aurora glow (outside reactive builder)
+            _buildAuroraBlob(
+              colors: colors,
+              isDark: isDark,
+              top: -100.h,
+              left: -100.w,
+              size: 300.w,
+              alphaPrimary: isDark ? 0.25 : 0.15,
+              alphaGradient: 0.4,
+              isPrimary: true,
+            ),
+            _buildAuroraBlob(
+              colors: colors,
+              isDark: isDark,
+              top: 200.h,
+              right: -150.w,
+              size: 400.w,
+              alphaPrimary: isDark ? 0.2 : 0.1,
+              alphaGradient: 0.35,
+              isPrimary: false,
+            ),
+
+            // Reactive tab content using IndexedStack
+            Obx(() {
+              final navController = Get.find<NavigationController>();
+              return IndexedStack(
+                index: navController.currentIndex.value,
+                children: List.generate(4, (index) {
+                  final isVisited = navController.visitedIndices.contains(
+                    index,
+                  );
+
+                  if (!isVisited) {
+                    return const SizedBox.shrink();
+                  }
+
+                  return const [
+                    HomeTabView(),
+                    ParivarTabView(),
+                    MarketplaceTabView(),
+                    ProfileTabView(),
+                  ][index];
+                }),
+              );
+            }),
+          ],
+        ),
+        extendBody: true,
+        bottomNavigationBar: _FloatingNavBar(colors: colors, isDark: isDark),
+      ),
+    );
+  }
+
+  Widget _buildAuroraBlob({
+    required AppColorScheme colors,
+    required bool isDark,
+    double? top,
+    double? bottom,
+    double? left,
+    double? right,
+    required double size,
+    required double alphaPrimary,
+    required double alphaGradient,
+    required bool isPrimary,
+  }) {
+    final baseColor = isPrimary ? colors.primary : colors.secondary;
+    return Positioned(
+      top: top,
+      bottom: bottom,
+      left: left,
+      right: right,
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: baseColor.withValues(alpha: alphaPrimary),
+          gradient: RadialGradient(
+            colors: [
+              baseColor.withValues(alpha: alphaGradient),
+              colors.transparent,
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _FloatingNavBar extends StatelessWidget {
+  final AppColorScheme colors;
+  final bool isDark;
+
+  const _FloatingNavBar({required this.colors, required this.isDark});
+
+  @override
+  Widget build(BuildContext context) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween<double>(begin: 1.0, end: 0.0),
+      duration: const Duration(milliseconds: 1000),
+      curve: Curves.elasticOut,
+      builder: (context, value, child) {
+        return Transform.translate(
+          offset: Offset(0, value * 100),
+          child: child,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.only(
+          left: AppSizes.spacingXL.w,
+          right: AppSizes.spacingXL.w,
+          bottom: AppSizes.spacingXL.h + MediaQuery.of(context).padding.bottom,
+        ),
+        decoration: BoxDecoration(
+          color: colors.card.withValues(alpha: 0.8),
+          borderRadius: BorderRadius.circular(30.r),
+          boxShadow: colors.neumorphicShadow(blur: 15, distance: 4),
+          border: Border.all(
+            color: Colors.white.withValues(alpha: isDark ? 0.05 : 0.2),
+            width: 1.5,
+          ),
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(30.r),
+          child: BackdropFilter(
+            filter: ui.ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.spacingS.w,
+                vertical: AppSizes.spacingS.h,
+              ),
+              child: Builder(
+                builder: (context) {
+                  final navController = Get.find<NavigationController>();
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      _NavItem(
+                        index: 0,
+                        icon: PhosphorIcons.house(),
+                        activeIcon: PhosphorIcons.house(
+                          PhosphorIconsStyle.fill,
+                        ),
+                        label: 'Home',
+                        navController: navController,
+                        colors: colors,
+                      ),
+                      _NavItem(
+                        index: 1,
+                        icon: PhosphorIcons.users(),
+                        activeIcon: PhosphorIcons.users(
+                          PhosphorIconsStyle.fill,
+                        ),
+                        label: 'Parivar',
+                        navController: navController,
+                        colors: colors,
+                      ),
+                      _NavItem(
+                        index: 2,
+                        icon: PhosphorIcons.storefront(),
+                        activeIcon: PhosphorIcons.storefront(
+                          PhosphorIconsStyle.fill,
+                        ),
+                        label: 'Market',
+                        navController: navController,
+                        colors: colors,
+                      ),
+                      _NavRouteButton(
+                        icon: PhosphorIcons.chatCircleDots(),
+                        label: 'Messages',
+                        colors: colors,
+                        onTap: () => Get.toNamed(Routes.privateMessages),
+                      ),
+                      _NavItem(
+                        index: 3,
+                        icon: PhosphorIcons.user(),
+                        activeIcon: PhosphorIcons.user(PhosphorIconsStyle.fill),
+                        label: 'Profile',
+                        navController: navController,
+                        colors: colors,
+                      ),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _NavItem extends StatelessWidget {
+  final int index;
+  final IconData icon;
+  final IconData activeIcon;
+  final String label;
+  final NavigationController navController;
+  final AppColorScheme colors;
+
+  const _NavItem({
+    required this.index,
+    required this.icon,
+    required this.activeIcon,
+    required this.label,
+    required this.navController,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      final isSelected = navController.currentIndex.value == index;
+      return GestureDetector(
+        onTap: () {
+          if (!isSelected) {
+            navController.changeTab(index);
+          } else {
+            // TODO: Implement scroll to top logic for the active tab
+          }
+        },
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeOutBack,
+          padding: EdgeInsets.symmetric(
+            horizontal: isSelected ? AppSizes.spacingL.w : AppSizes.spacingM.w,
+            vertical: AppSizes.spacingS.h,
+          ),
+          decoration: BoxDecoration(
+            color: isSelected
+                ? colors.primary.withValues(alpha: 0.1)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
+          ),
+          child: Row(
+            children: [
+              AnimatedScale(
+                scale: isSelected ? 1.1 : 1.0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOutBack,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 250),
+                  transitionBuilder: (child, animation) {
+                    return ScaleTransition(
+                      scale: animation,
+                      child: FadeTransition(opacity: animation, child: child),
+                    );
+                  },
+                  child: Icon(
+                    isSelected ? activeIcon : icon,
+                    key: ValueKey<bool>(isSelected),
+                    color: isSelected ? colors.primary : colors.textSecondary,
+                    size: AppSizes.spacingXXL.w,
+                  ),
+                ),
+              ),
+              AnimatedSize(
+                duration: const Duration(milliseconds: 350),
+                curve: Curves.easeOutCubic,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (isSelected) ...[
+                      SizedBox(width: AppSizes.spacingS.w),
+                      ShaderMask(
+                        shaderCallback: (bounds) => LinearGradient(
+                          colors: colors.primaryGradient,
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ).createShader(bounds),
+                        child: Text(
+                          label,
+                          style: GoogleFonts.outfit(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: AppSizes.fontSizeBodySmall.sp,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
               ),
             ],
           ),
-          bottomNavigationBar: Container(
-            decoration: BoxDecoration(
-              border: Border(top: BorderSide(color: colors.divider, width: 1)),
-            ),
-            child: BottomNavigationBar(
-              currentIndex: controller.currentIndex.value,
-              onTap: controller.changeTab,
-              selectedItemColor: colors.accent,
-              unselectedItemColor: isDark ? Colors.white54 : Colors.black45,
-              backgroundColor: colors.card,
-              elevation: 8,
-              type: BottomNavigationBarType.fixed,
-              selectedLabelStyle: GoogleFonts.outfit(
-                fontWeight: FontWeight.bold,
-                fontSize: 12.sp,
-              ),
-              unselectedLabelStyle: GoogleFonts.outfit(fontSize: 11.sp),
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined),
-                  activeIcon: Icon(Icons.home_rounded),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.people_outline_rounded),
-                  activeIcon: Icon(Icons.people_rounded),
-                  label: 'Parivar',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.storefront_outlined),
-                  activeIcon: Icon(Icons.storefront_rounded),
-                  label: 'Market',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person_outline_rounded),
-                  activeIcon: Icon(Icons.person_rounded),
-                  label: 'Profile',
-                ),
-              ],
-            ),
-          ),
-          floatingActionButton: controller.currentIndex.value == 0
-              ? FloatingActionButton(
-                  onPressed: () {
-                    // TODO: Navigate to create post view
-                  },
-                  backgroundColor: colors.primary,
-                  elevation: 4,
-                  child: const Icon(Icons.edit_rounded, color: Colors.white),
-                )
-              : null,
         ),
       );
     });
   }
+}
 
-  // Widget _buildAppBarLogo() {
-  //   return Image.asset(
-  //     'assets/images/logo.png',
-  //     height: 32.h,
-  //     width: 32.w,
-  //     errorBuilder: (context, error, stackTrace) {
-  //       return Container(
-  //         decoration: const BoxDecoration(
-  //           color: AppColors.white,
-  //           shape: BoxShape.circle,
-  //         ),
-  //         padding: EdgeInsets.all(4.w),
-  //         child: Icon(
-  //           Icons.nature_people_rounded,
-  //           size: 20.w,
-  //           color: AppColors.primary,
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+class _NavRouteButton extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final VoidCallback onTap;
+  final AppColorScheme colors;
+
+  const _NavRouteButton({
+    required this.icon,
+    required this.label,
+    required this.onTap,
+    required this.colors,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: AppSizes.spacingM.w,
+          vertical: AppSizes.spacingS.h,
+        ),
+        decoration: const BoxDecoration(color: Colors.transparent),
+        child: Icon(
+          icon,
+          color: colors.textSecondary,
+          size: AppSizes.spacingXXL.w,
+        ),
+      ),
+    );
+  }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
+import '../../../global_widgets/glass_app_bar.dart';
 import '../../../../core/values/colors.dart';
 import '../../../global_widgets/neomorphic_button.dart';
 import '../widgets/account_step.dart';
@@ -10,7 +10,8 @@ import '../widgets/occupation_step.dart';
 import '../widgets/family_step.dart';
 import '../widgets/add_family_sheet.dart';
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 class RegisterView extends GetView<RegisterController> {
   const RegisterView({super.key});
@@ -53,19 +54,19 @@ class RegisterView extends GetView<RegisterController> {
                     height:
                         kToolbarHeight +
                         MediaQuery.of(context).padding.top +
-                        20.h,
+                        AppSizes.spacingXL.h,
                   ),
                   _buildCustomStepperHeader(
                     controller.currentStep.value,
                     colors,
                     isDark,
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: AppSizes.spacingL.h),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.symmetric(
-                        horizontal: 20.w,
-                        vertical: 8.h,
+                        horizontal: AppSizes.spacingXL.w,
+                        vertical: AppSizes.spacingS.h,
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -75,9 +76,9 @@ class RegisterView extends GetView<RegisterController> {
                             controller,
                             context,
                           ),
-                          SizedBox(height: 32.h),
+                          SizedBox(height: AppSizes.spacing3XL.h),
                           _buildControls(controller, colors, isDark),
-                          SizedBox(height: 32.h),
+                          SizedBox(height: AppSizes.spacing3XL.h),
                         ],
                       ),
                     ),
@@ -104,7 +105,7 @@ class RegisterView extends GetView<RegisterController> {
     ];
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 32.w),
+      padding: EdgeInsets.symmetric(horizontal: AppSizes.spacing3XL.w),
       child: Row(
         children: List.generate(icons.length * 2 - 1, (index) {
           if (index % 2 != 0) {
@@ -113,7 +114,7 @@ class RegisterView extends GetView<RegisterController> {
             final isActive = currentStep > stepIndex;
             return Expanded(
               child: Container(
-                height: 2.h,
+                height: AppSizes.spacingXXS.h,
                 color: isActive
                     ? AppColors.primary
                     : (isDark ? Colors.grey.shade800 : Colors.grey.shade300),
@@ -154,7 +155,7 @@ class RegisterView extends GetView<RegisterController> {
                 color: isActive
                     ? Colors.white
                     : (isDark ? Colors.grey.shade500 : Colors.grey.shade400),
-                size: 20.w,
+                size: AppSizes.spacingXL.w,
               ),
             );
           }
@@ -179,6 +180,8 @@ class RegisterView extends GetView<RegisterController> {
         return FamilyStep(
           controller: controller,
           onAddMember: () => showAddFamilySheet(context, controller),
+          onEditMember: (member) =>
+              showAddFamilySheet(context, controller, memberToEdit: member),
         );
       default:
         return const SizedBox.shrink();
@@ -204,7 +207,8 @@ class RegisterView extends GetView<RegisterController> {
               textColor: isDark ? AppColors.white : AppColors.textLightPrimary,
             ),
           ),
-        if (controller.currentStep.value > 0) SizedBox(width: 12.w),
+        if (controller.currentStep.value > 0)
+          SizedBox(width: AppSizes.spacingM.w),
         Expanded(
           child: Obx(
             () => NeomorphicButton(

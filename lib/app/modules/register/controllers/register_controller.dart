@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/global_widgets/neomorphic_async_dropdown_field.dart';
+import '../../../global_widgets/neomorphic_async_dropdown_field.dart';
 import 'package:uuid/uuid.dart';
 import '../../../data/models/family_member.dart';
 import '../../../data/models/location_model.dart';
@@ -26,7 +26,7 @@ class RegisterController extends GetxController {
         .map(
           (loc) => NeomorphicAsyncDropdownItem(
             value: loc,
-            label: "${loc.village} (${loc.taluka})",
+            label: '${loc.village} (${loc.taluka})',
           ),
         )
         .toList();
@@ -81,7 +81,7 @@ class RegisterController extends GetxController {
   // Business Details
   final businessNameController = TextEditingController();
   final businessCategory = ''.obs;
-  final businessSubCategory = ''.obs;
+  final businessSubCategories = <String>[].obs;
   final businessSubCategoryOtherController = TextEditingController();
   final businessOwnerNameController = TextEditingController();
   final businessDescriptionController = TextEditingController();
@@ -109,52 +109,6 @@ class RegisterController extends GetxController {
     phoneController.addListener(() {
       mobile1Controller.text = phoneController.text;
     });
-  }
-
-  @override
-  void onClose() {
-    for (final c in [
-      phoneController,
-      passwordController,
-      confirmPasswordController,
-      mobile1Controller,
-      mobile2Controller,
-      nameController,
-      surnameController,
-      fatherNameController,
-      currentAddressController,
-      villageController,
-      pincodeController,
-      talukaController,
-      districtController,
-      dobController,
-      educationController,
-      nativeVillageController,
-      nativeTalukaController,
-      nativeDistrictController,
-      currentCityController,
-      currentStateController,
-      businessNameController,
-      businessOwnerNameController,
-      businessDescriptionController,
-      businessAddressController,
-      businessCityController,
-      businessStateController,
-      businessPincodeController,
-      businessGoogleMapLinkController,
-      businessMobile1Controller,
-      businessMobile2Controller,
-      businessEmailController,
-      businessWebsiteController,
-      businessPortfolioLinkController,
-      companyNameController,
-      companyAddressController,
-      jobRoleOtherController,
-      businessSubCategoryOtherController,
-    ]) {
-      // c.dispose(); // Commented out to prevent "used after being disposed" during route transitions
-    }
-    super.onClose();
   }
 
   // --- Stepper ---
@@ -203,6 +157,39 @@ class RegisterController extends GetxController {
         createdAt: DateTime.now(),
       ),
     );
+  }
+
+  /// Updates a family member with named parameters matching the sheet widget.
+  void updateFamilyMemberDraft(
+    String id, {
+    required String firstName,
+    required String middleName,
+    required String lastName,
+    required String relation,
+    required String dob,
+    required String education,
+    required String isMarried,
+    required String bloodGroup,
+    required String phoneNumber,
+  }) {
+    final index = familyMembers.indexWhere((m) => m.id == id);
+    if (index != -1) {
+      final existing = familyMembers[index];
+      familyMembers[index] = FamilyMember(
+        id: existing.id,
+        firstName: firstName,
+        middleName: middleName,
+        lastName: lastName,
+        relation: relation,
+        dob: dob,
+        education: education,
+        isMarried: isMarried,
+        bloodGroup: bloodGroup,
+        phoneNumber: phoneNumber,
+        createdAt: existing.createdAt,
+        profilePhoto: existing.profilePhoto,
+      );
+    }
   }
 
   /// Removes by id — matches the delete button in family_step.dart.
@@ -259,9 +246,12 @@ class RegisterController extends GetxController {
               if (occupationType.value == 'Business')
                 'businessDetails': {
                   'category': businessCategory.value,
-                  'subCategory': businessSubCategory.value == 'Other Jobs'
-                      ? businessSubCategoryOtherController.text.trim()
-                      : businessSubCategory.value,
+                  'subCategory': businessSubCategories.map((sub) {
+                    if (sub == 'Other Jobs') {
+                      return businessSubCategoryOtherController.text.trim();
+                    }
+                    return sub;
+                  }).toList(),
                   'businessName': businessNameController.text.trim(),
                   'ownerName': businessOwnerNameController.text.trim(),
                   'description': businessDescriptionController.text.trim(),
@@ -315,8 +305,8 @@ class RegisterController extends GetxController {
         colorText: Colors.white,
       );
       FocusManager.instance.primaryFocus?.unfocus();
-      await Future.delayed(const Duration(milliseconds: 300));
-      Get.offAllNamed(Routes.login);
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      await Get.offAllNamed(Routes.login);
     } else {
       Get.snackbar(
         'Error',

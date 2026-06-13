@@ -1,13 +1,12 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../core/utils/extensions/safe_json_map_extensions.dart';
+
 class ListingLocation extends Equatable {
   final String city;
   final String pincode;
 
-  const ListingLocation({
-    required this.city,
-    required this.pincode,
-  });
+  const ListingLocation({required this.city, required this.pincode});
 
   @override
   List<Object?> get props => [city, pincode];
@@ -20,10 +19,7 @@ class ListingLocation extends Equatable {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'city': city,
-      'pincode': pincode,
-    };
+    return {'city': city, 'pincode': pincode};
   }
 }
 
@@ -66,39 +62,59 @@ class Listing extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        postedBy,
-        type,
-        title,
-        description,
-        photos,
-        price,
-        priceUnit,
-        availableFrom,
-        availableTo,
-        location,
-        contactPhone,
-        status,
-        isDeleted,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    postedBy,
+    type,
+    title,
+    description,
+    photos,
+    price,
+    priceUnit,
+    availableFrom,
+    availableTo,
+    location,
+    contactPhone,
+    status,
+    isDeleted,
+    createdAt,
+    updatedAt,
+  ];
 
   factory Listing.fromJson(Map<String, dynamic> json) {
+    String postedByVal = '';
+    final rawPostedBy = json['postedBy'];
+    if (rawPostedBy is Map<String, dynamic>) {
+      postedByVal =
+          '${rawPostedBy.getOrNull('firstName') ?? ''} ${rawPostedBy.getOrNull('lastName') ?? ''}'
+              .trim();
+      if (postedByVal.isEmpty) {
+        postedByVal =
+            rawPostedBy.getOrNull('_id') ?? rawPostedBy.getOrNull('id') ?? '';
+      }
+    } else if (rawPostedBy is String) {
+      postedByVal = rawPostedBy;
+    }
+
     return Listing(
       id: json['_id'] as String? ?? json['id'] as String? ?? '',
-      postedBy: json['postedBy'] as String? ?? '',
+      postedBy: postedByVal,
       type: json['type'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
-      photos: (json['photos'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      photos: (json['photos'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
       price: json['price'] as num? ?? 0,
       priceUnit: json['priceUnit'] as String? ?? '',
-      availableFrom: DateTime.tryParse(json['availableFrom'] as String? ?? '') ?? DateTime.now(),
+      availableFrom:
+          DateTime.tryParse(json['availableFrom'] as String? ?? '') ??
+          DateTime.now(),
       availableTo: json['availableTo'] != null
           ? DateTime.tryParse(json['availableTo'] as String)
           : null,
-      location: ListingLocation.fromJson(json['location'] as Map<String, dynamic>? ?? {}),
+      location: ListingLocation.fromJson(
+        json['location'] as Map<String, dynamic>? ?? {},
+      ),
       contactPhone: json['contactPhone'] as String? ?? '',
       status: json['status'] as String? ?? 'ACTIVE',
       isDeleted: json['isDeleted'] as bool? ?? false,
@@ -132,4 +148,3 @@ class Listing extends Equatable {
     };
   }
 }
-

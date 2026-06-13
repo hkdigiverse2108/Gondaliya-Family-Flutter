@@ -163,7 +163,7 @@ class _NeomorphicDropdownFieldState<T>
                   borderRadius: BorderRadius.circular(12),
                   child: InputDecorator(
                     isFocused: _isFocused,
-                    isEmpty: field.value == null,
+                    isEmpty: displayLabel.isEmpty,
                     decoration: InputDecoration(
                       labelText: widget.labelText,
                       prefixIcon: widget.prefixIcon,
@@ -289,6 +289,7 @@ class _DropdownOverlayContentState<T>
 
     return Container(
       constraints: const BoxConstraints(maxHeight: 250),
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
         color: colors.card,
         borderRadius: BorderRadius.circular(16),

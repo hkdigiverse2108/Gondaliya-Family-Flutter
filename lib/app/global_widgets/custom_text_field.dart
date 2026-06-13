@@ -14,7 +14,7 @@ class CustomTextField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  final Function(String)? onChanged;
+  final void Function(String)? onChanged;
   final int maxLines;
   final bool enabled;
 

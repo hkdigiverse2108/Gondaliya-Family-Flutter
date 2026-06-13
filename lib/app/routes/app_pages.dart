@@ -18,6 +18,28 @@ import '../modules/splash/views/splash_view.dart';
 import '../modules/placeholder_home/bindings/placeholder_home_binding.dart';
 import '../modules/placeholder_home/views/placeholder_home_view.dart';
 
+import '../modules/business_detail/bindings/business_detail_binding.dart';
+import '../modules/business_detail/views/business_detail_view.dart';
+import '../modules/member_detail/bindings/member_detail_binding.dart';
+import '../modules/member_detail/views/member_detail_view.dart';
+import '../modules/my_family/views/my_family_view.dart';
+import '../modules/listing_detail/bindings/listing_detail_binding.dart';
+import '../modules/listing_detail/views/listing_detail_view.dart';
+import '../modules/edit_profile/bindings/edit_profile_binding.dart';
+import '../modules/edit_profile/views/edit_profile_view.dart';
+import '../modules/support/bindings/support_binding.dart';
+import '../modules/support/views/support_view.dart';
+import '../modules/edit_work/bindings/edit_work_binding.dart';
+import '../modules/edit_work/views/edit_work_view.dart';
+import '../modules/job_detail/bindings/job_detail_binding.dart';
+import '../modules/job_detail/views/job_detail_view.dart';
+import '../modules/notifications/bindings/notifications_binding.dart';
+import '../modules/notifications/views/notifications_view.dart';
+import '../modules/private_messages/bindings/private_messages_binding.dart';
+import '../modules/private_messages/views/private_messages_view.dart';
+import '../modules/private_messages/views/private_chat_view.dart';
+import '../modules/my_family/views/family_member_form_view.dart';
+
 part 'app_routes.dart';
 
 class AppPages {
@@ -25,7 +47,7 @@ class AppPages {
 
   static const initial = Routes.splash;
 
-  static final routes = [
+  static final List<GetPage<dynamic>> routes = [
     GetPage(
       name: _Paths.splash,
       page: () => const SplashView(),
@@ -65,6 +87,66 @@ class AppPages {
       name: _Paths.placeholderHome,
       page: () => const PlaceholderHomeView(),
       binding: PlaceholderHomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.business,
+      page: () => const BusinessDetailView(),
+      binding: BusinessDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.family,
+      page: () => const MemberDetailView(),
+      binding: MemberDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.familyMembers,
+      page: () => const MyFamilyView(),
+      binding: HomeBinding(), // ProfileController is initialized in HomeBinding
+    ),
+    GetPage(
+      name: _Paths.listingDetail,
+      page: () => const ListingDetailView(),
+      binding: ListingDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.editProfile,
+      page: () => const EditProfileView(),
+      binding: EditProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.support,
+      page: () => const SupportView(),
+      binding: SupportBinding(),
+    ),
+    GetPage(
+      name: _Paths.editWork,
+      page: () => const EditWorkView(),
+      binding: EditWorkBinding(),
+    ),
+    GetPage(
+      name: _Paths.jobDetail,
+      page: () => const JobDetailView(),
+      binding: JobDetailBinding(),
+    ),
+    GetPage(
+      name: _Paths.notifications,
+      page: () => const NotificationsView(),
+      binding: NotificationsBinding(),
+    ),
+    GetPage(
+      name: _Paths.privateMessages,
+      page: () => const PrivateMessagesView(),
+      binding: PrivateMessagesBinding(),
+    ),
+    GetPage(
+      name: _Paths.privateChat,
+      page: () => const PrivateChatView(),
+      binding: PrivateMessagesBinding(),
+    ),
+    GetPage(
+      name: _Paths.addFamilyMember,
+      page: () => const FamilyMemberFormView(),
+      binding: HomeBinding(),
     ),
   ];
 }

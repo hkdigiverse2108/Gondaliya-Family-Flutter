@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:gondalia_family/app/data/models/location_model.dart';
-import 'package:gondalia_family/app/data/models/enums.dart';
+import '../../../data/models/location_model.dart';
+import '../../../data/models/enums.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/values/colors.dart';
 import '../../../../core/values/sizes.dart';
@@ -12,7 +12,7 @@ import '../../../global_widgets/neomorphic_async_dropdown_field.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_card.dart';
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 
 class ProfileStep extends StatelessWidget {
   final RegisterController controller;
@@ -27,7 +27,7 @@ class ProfileStep extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         NeomorphicCard(
-          padding: EdgeInsets.all(16.w),
+          padding: EdgeInsets.all(AppSizes.spacingL.w),
           child: Form(
             key: controller.profileFormKey,
             child: Column(
@@ -133,7 +133,7 @@ class ProfileStep extends StatelessWidget {
                     },
                   ),
                 ),
-                SizedBox(height: 12.w),
+                SizedBox(height: AppSizes.spacingM.w),
                 Obx(
                   () => NeomorphicDropdownField<String>(
                     value: controller.isMarried.value,
@@ -192,7 +192,7 @@ class ProfileStep extends StatelessWidget {
                             : null,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: NeomorphicTextField(
                         controller: controller.currentStateController,
@@ -289,7 +289,7 @@ class ProfileStep extends StatelessWidget {
                             : null,
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: NeomorphicTextField(
                         controller: controller.districtController,
@@ -327,7 +327,7 @@ class ProfileStep extends StatelessWidget {
                         labelText: 'Native Taluka',
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: NeomorphicTextField(
                         controller: controller.nativeDistrictController,

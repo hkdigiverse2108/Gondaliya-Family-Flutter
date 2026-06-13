@@ -4,8 +4,6 @@ import '../controllers/announcements_controller.dart';
 class AnnouncementsBinding extends Bindings {
   @override
   void dependencies() {
-    Get.lazyPut<AnnouncementsController>(
-      () => AnnouncementsController(),
-    );
+    Get.lazyPut<AnnouncementsController>(AnnouncementsController.new, fenix: true);
   }
 }

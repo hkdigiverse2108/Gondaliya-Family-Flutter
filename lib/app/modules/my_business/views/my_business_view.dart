@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gondalia_family/app/global_widgets/glass_app_bar.dart';
+import '../../../global_widgets/glass_app_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/values/colors.dart';
 import '../controllers/my_business_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
+import '../../../../core/values/sizes.dart';
 
 class MyBusinessView extends GetView<MyBusinessController> {
   const MyBusinessView({super.key});
@@ -28,7 +29,7 @@ class MyBusinessView extends GetView<MyBusinessController> {
             unselectedLabelColor: colors.textSecondary,
             labelStyle: GoogleFonts.outfit(
               fontWeight: FontWeight.bold,
-              fontSize: 14.sp,
+              fontSize: AppSizes.fontSizeBodyMedium.sp,
             ),
             tabs: const [
               Tab(text: 'My Listings'),
@@ -37,7 +38,10 @@ class MyBusinessView extends GetView<MyBusinessController> {
           ),
         ),
         body: TabBarView(
-          children: [_buildMyListings(colors, context), _buildInquiries(colors, context)],
+          children: [
+            _buildMyListings(colors, context),
+            _buildInquiries(colors, context),
+          ],
         ),
         floatingActionButton: FloatingActionButton.extended(
           onPressed: () {
@@ -60,19 +64,23 @@ class MyBusinessView extends GetView<MyBusinessController> {
   Widget _buildMyListings(AppColorScheme colors, BuildContext context) {
     return ListView.builder(
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + kToolbarHeight + kTextTabBarHeight + 16.h,
-        left: 16.w,
-        right: 16.w,
-        bottom: 16.h,
+        top:
+            MediaQuery.of(context).padding.top +
+            kToolbarHeight +
+            kTextTabBarHeight +
+            AppSizes.spacingL.h,
+        left: AppSizes.spacingL.w,
+        right: AppSizes.spacingL.w,
+        bottom: AppSizes.spacingL.h,
       ),
       itemCount: 3,
       itemBuilder: (context, index) {
         return Container(
-          margin: EdgeInsets.only(bottom: 16.h),
-          padding: EdgeInsets.all(12.w),
+          margin: EdgeInsets.only(bottom: AppSizes.spacingL.h),
+          padding: EdgeInsets.all(AppSizes.spacingM.w),
           decoration: BoxDecoration(
             color: colors.card,
-            borderRadius: BorderRadius.circular(16.r),
+            borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.05),
@@ -88,15 +96,15 @@ class MyBusinessView extends GetView<MyBusinessController> {
                 height: 80.w,
                 decoration: BoxDecoration(
                   color: Colors.grey.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(AppSizes.radiusM.r),
                 ),
                 child: Icon(
                   Icons.image_outlined,
                   color: Colors.grey,
-                  size: 32.r,
+                  size: AppSizes.radius3XL.r,
                 ),
               ),
-              SizedBox(width: 16.w),
+              SizedBox(width: AppSizes.spacingL.w),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,31 +113,31 @@ class MyBusinessView extends GetView<MyBusinessController> {
                       'My Listing Item $index',
                       style: GoogleFonts.outfit(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16.sp,
+                        fontSize: AppSizes.fontSizeBodyLarge.sp,
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: AppSizes.spacingXS.h),
                     Text(
                       'Rent • Active',
                       style: GoogleFonts.outfit(
-                        fontSize: 12.sp,
+                        fontSize: AppSizes.fontSizeBodySmall.sp,
                         color: Colors.green,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: 8.h),
+                    SizedBox(height: AppSizes.spacingS.h),
                     Row(
                       children: [
                         Icon(
                           Icons.remove_red_eye_outlined,
-                          size: 14.sp,
+                          size: AppSizes.fontSizeBodyMedium.sp,
                           color: Colors.grey,
                         ),
-                        SizedBox(width: 4.w),
+                        SizedBox(width: AppSizes.spacingXS.w),
                         Text(
                           '124 views',
                           style: GoogleFonts.outfit(
-                            fontSize: 12.sp,
+                            fontSize: AppSizes.fontSizeBodySmall.sp,
                             color: Colors.grey,
                           ),
                         ),
@@ -163,23 +171,29 @@ class MyBusinessView extends GetView<MyBusinessController> {
   Widget _buildInquiries(AppColorScheme colors, BuildContext context) {
     return ListView.separated(
       padding: EdgeInsets.only(
-        top: MediaQuery.of(context).padding.top + kToolbarHeight + kTextTabBarHeight + 16.h,
-        left: 16.w,
-        right: 16.w,
-        bottom: 16.h,
+        top:
+            MediaQuery.of(context).padding.top +
+            kToolbarHeight +
+            kTextTabBarHeight +
+            AppSizes.spacingL.h,
+        left: AppSizes.spacingL.w,
+        right: AppSizes.spacingL.w,
+        bottom: AppSizes.spacingL.h,
       ),
       itemCount: 5,
-      separatorBuilder: (context, index) =>
-          Divider(height: 32.h, color: Colors.grey.withValues(alpha: 0.2)),
+      separatorBuilder: (context, index) => Divider(
+        height: AppSizes.spacing3XL.h,
+        color: Colors.grey.withValues(alpha: 0.2),
+      ),
       itemBuilder: (context, index) {
         return Row(
           children: [
             CircleAvatar(
-              radius: 24.r,
+              radius: AppSizes.radiusXXL.r,
               backgroundColor: AppColors.secondary.withValues(alpha: 0.2),
-              child: Icon(Icons.person_rounded, color: AppColors.secondary),
+              child: const Icon(Icons.person_rounded, color: AppColors.secondary),
             ),
-            SizedBox(width: 16.w),
+            SizedBox(width: AppSizes.spacingL.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,14 +202,14 @@ class MyBusinessView extends GetView<MyBusinessController> {
                     'Inquirer Name',
                     style: GoogleFonts.outfit(
                       fontWeight: FontWeight.bold,
-                      fontSize: 16.sp,
+                      fontSize: AppSizes.fontSizeBodyLarge.sp,
                     ),
                   ),
-                  SizedBox(height: 4.h),
+                  SizedBox(height: AppSizes.spacingXS.h),
                   Text(
                     'Interested in "My Listing Item $index"',
                     style: GoogleFonts.outfit(
-                      fontSize: 14.sp,
+                      fontSize: AppSizes.fontSizeBodyMedium.sp,
                       color: colors.textSecondary,
                     ),
                     maxLines: 1,
@@ -205,17 +219,20 @@ class MyBusinessView extends GetView<MyBusinessController> {
               ),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+              padding: EdgeInsets.symmetric(
+                horizontal: AppSizes.spacingM.w,
+                vertical: AppSizes.spacingS.h,
+              ),
               decoration: BoxDecoration(
                 color: AppColors.primary,
-                borderRadius: BorderRadius.circular(20.r),
+                borderRadius: BorderRadius.circular(AppSizes.radiusXL.r),
               ),
               child: Text(
                 'Reply',
                 style: GoogleFonts.outfit(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
-                  fontSize: 12.sp,
+                  fontSize: AppSizes.fontSizeBodySmall.sp,
                 ),
               ),
             ),

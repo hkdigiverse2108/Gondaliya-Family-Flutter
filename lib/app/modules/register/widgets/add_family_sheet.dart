@@ -6,21 +6,39 @@ import '../../../../core/values/colors.dart';
 import '../../../global_widgets/neomorphic_text_field.dart';
 import '../../../global_widgets/neomorphic_button.dart';
 import '../controllers/register_controller.dart';
-import 'package:gondalia_family/core/theme/app_color_scheme.dart';
+import '../../../../core/theme/app_color_scheme.dart';
 import '../../../data/models/enums.dart';
 import '../../../global_widgets/neomorphic_dropdown_field.dart';
+import '../../../../core/values/sizes.dart';
+import '../../../data/models/family_member.dart';
 
-void showAddFamilySheet(BuildContext context, RegisterController controller) {
+void showAddFamilySheet(
+  BuildContext context,
+  RegisterController controller, {
+  FamilyMember? memberToEdit,
+}) {
   final formKey = GlobalKey<FormState>();
-  final nameCtrl = TextEditingController();
-  final middleNameCtrl = TextEditingController();
-  final surnameCtrl = TextEditingController();
-  final phoneCtrl = TextEditingController();
-  final birthDateCtrl = TextEditingController();
-  final eduCtrl = TextEditingController();
-  var relationVal = AppEnums.relations.first.obs;
-  var bloodVal = AppEnums.bloodGroups.first.obs;
-  var isMarriedVal = AppEnums.maritalStatus.first.obs;
+  final nameCtrl = TextEditingController(text: memberToEdit?.firstName);
+  final middleNameCtrl = TextEditingController(text: memberToEdit?.middleName);
+  final surnameCtrl = TextEditingController(text: memberToEdit?.lastName);
+  final phoneCtrl = TextEditingController(text: memberToEdit?.phoneNumber);
+  final birthDateCtrl = TextEditingController(text: memberToEdit?.dob);
+  final eduCtrl = TextEditingController(text: memberToEdit?.education);
+
+  final initialRelation = memberToEdit != null && AppEnums.relations.contains(memberToEdit.relation)
+      ? memberToEdit.relation
+      : AppEnums.relations.first;
+  final relationVal = initialRelation.obs;
+
+  final initialBlood = memberToEdit != null && AppEnums.bloodGroups.contains(memberToEdit.bloodGroup)
+      ? memberToEdit.bloodGroup
+      : AppEnums.bloodGroups.first;
+  final bloodVal = initialBlood.obs;
+
+  final initialMarried = memberToEdit != null && AppEnums.maritalStatus.contains(memberToEdit.isMarried)
+      ? memberToEdit.isMarried
+      : AppEnums.maritalStatus.first;
+  final isMarriedVal = initialMarried.obs;
   final colors = context.appColors;
   final isDark = colors.isDark;
 
@@ -33,10 +51,11 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         ),
         padding: EdgeInsets.only(
-          left: 16.w,
-          right: 16.w,
-          top: 20.h,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20.h,
+          left: AppSizes.spacingL.w,
+          right: AppSizes.spacingL.w,
+          top: AppSizes.spacingXL.h,
+          bottom:
+              MediaQuery.of(context).viewInsets.bottom + AppSizes.spacingXL.h,
         ),
         child: SingleChildScrollView(
           child: Form(
@@ -46,7 +65,9 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  'add_family_member_to_table'.tr,
+                  memberToEdit != null
+                      ? 'edit_member'.tr
+                      : 'add_family_member_to_table'.tr,
                   style: GoogleFonts.outfit(
                     fontWeight: FontWeight.bold,
                     fontSize: 18.sp,
@@ -56,9 +77,9 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                   ),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 8.h),
+                SizedBox(height: AppSizes.spacingS.h),
                 const Divider(),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: nameCtrl,
                   labelText: 'first_name'.tr,
@@ -70,7 +91,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                       ? 'field_required'.tr
                       : null,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: middleNameCtrl,
                   labelText: 'middle_name'.tr,
@@ -79,7 +100,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     color: colors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: surnameCtrl,
                   labelText: 'last_name'.tr,
@@ -91,7 +112,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                       ? 'field_required'.tr
                       : null,
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 Row(
                   children: [
                     Expanded(
@@ -119,7 +140,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     ),
                   ],
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: phoneCtrl,
                   labelText: 'phone_number'.tr,
@@ -135,7 +156,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     return null;
                   },
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 Obx(
                   () => NeomorphicDropdownField<String>(
                     value: isMarriedVal.value,
@@ -155,7 +176,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     },
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 NeomorphicTextField(
                   controller: eduCtrl,
                   labelText: 'education'.tr,
@@ -164,7 +185,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     color: colors.textPrimary,
                   ),
                 ),
-                SizedBox(height: 12.h),
+                SizedBox(height: AppSizes.spacingM.h),
                 Row(
                   children: [
                     Expanded(
@@ -190,7 +211,7 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                         ),
                       ),
                     ),
-                    SizedBox(width: 12.w),
+                    SizedBox(width: AppSizes.spacingM.w),
                     Expanded(
                       child: InkWell(
                         onTap: () async {
@@ -220,26 +241,41 @@ void showAddFamilySheet(BuildContext context, RegisterController controller) {
                     ),
                   ],
                 ),
-                SizedBox(height: 20.h),
-                NeomorphicButton(
-                  text: 'add'.tr,
+                SizedBox(height: AppSizes.spacingXL.h),
+                 NeomorphicButton(
+                  text: memberToEdit != null ? 'save'.tr : 'add'.tr,
                   isGradient: true,
                   gradientColors: colors.primaryGradient,
                   gradientBegin: Alignment.centerLeft,
                   gradientEnd: Alignment.centerRight,
                   onPressed: () {
                     if (formKey.currentState!.validate()) {
-                      controller.addFamilyMemberDraft(
-                        firstName: nameCtrl.text.trim(),
-                        middleName: middleNameCtrl.text.trim(),
-                        lastName: surnameCtrl.text.trim(),
-                        relation: relationVal.value,
-                        phoneNumber: phoneCtrl.text.trim(),
-                        dob: birthDateCtrl.text.trim(),
-                        education: eduCtrl.text.trim(),
-                        isMarried: isMarriedVal.value,
-                        bloodGroup: bloodVal.value,
-                      );
+                      if (memberToEdit != null) {
+                        controller.updateFamilyMemberDraft(
+                          memberToEdit.id!,
+                          firstName: nameCtrl.text.trim(),
+                          middleName: middleNameCtrl.text.trim(),
+                          lastName: surnameCtrl.text.trim(),
+                          relation: relationVal.value,
+                          phoneNumber: phoneCtrl.text.trim(),
+                          dob: birthDateCtrl.text.trim(),
+                          education: eduCtrl.text.trim(),
+                          isMarried: isMarriedVal.value,
+                          bloodGroup: bloodVal.value,
+                        );
+                      } else {
+                        controller.addFamilyMemberDraft(
+                          firstName: nameCtrl.text.trim(),
+                          middleName: middleNameCtrl.text.trim(),
+                          lastName: surnameCtrl.text.trim(),
+                          relation: relationVal.value,
+                          phoneNumber: phoneCtrl.text.trim(),
+                          dob: birthDateCtrl.text.trim(),
+                          education: eduCtrl.text.trim(),
+                          isMarried: isMarriedVal.value,
+                          bloodGroup: bloodVal.value,
+                        );
+                      }
                       Get.back();
                     }
                   },
