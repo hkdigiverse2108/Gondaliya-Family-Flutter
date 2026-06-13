@@ -1,40 +1,36 @@
 import 'package:equatable/equatable.dart';
 
 class WorkDetails extends Equatable {
-  final bool hasOwnBusiness;
-  final BusinessDetails? businessDetails;
   final JobDetails? jobDetails;
+  final BusinessDetails? businessDetails;
 
   const WorkDetails({
-    required this.hasOwnBusiness,
-    this.businessDetails,
     this.jobDetails,
+    this.businessDetails,
   });
+
+  bool get hasOwnBusiness => businessDetails != null;
 
   factory WorkDetails.fromJson(Map<String, dynamic> json) {
     return WorkDetails(
-      hasOwnBusiness: json['hasOwnBusiness'] as bool? ?? false,
-      businessDetails: json['businessDetails'] != null
-          ? BusinessDetails.fromJson(
-              json['businessDetails'] as Map<String, dynamic>,
-            )
-          : null,
       jobDetails: json['jobDetails'] != null
           ? JobDetails.fromJson(json['jobDetails'] as Map<String, dynamic>)
+          : null,
+      businessDetails: json['businessDetails'] != null
+          ? BusinessDetails.fromJson(json['businessDetails'] as Map<String, dynamic>)
           : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'hasOwnBusiness': hasOwnBusiness,
-      'businessDetails': businessDetails?.toJson(),
       'jobDetails': jobDetails?.toJson(),
+      'businessDetails': businessDetails?.toJson(),
     };
   }
 
   @override
-  List<Object?> get props => [hasOwnBusiness, businessDetails, jobDetails];
+  List<Object?> get props => [jobDetails, businessDetails];
 }
 
 class BusinessDetails extends Equatable {

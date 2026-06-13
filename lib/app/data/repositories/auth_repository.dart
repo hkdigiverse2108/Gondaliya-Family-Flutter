@@ -155,4 +155,63 @@ class AuthRepository extends BaseRepository {
       fromJson: (json) => json as Map<String, dynamic>,
     );
   }
+
+  /// Fetch user's own businesses
+  Future<ApiResponse<List<dynamic>>> getMyBusinesses() {
+    return api.get<List<dynamic>>(
+      '/businesses/my',
+      fromJson: (json) {
+        if (json is Map<String, dynamic> && json.containsKey('data')) {
+          return json['data'] as List<dynamic>;
+        } else if (json is List<dynamic>) {
+          return json;
+        }
+        return [];
+      },
+    );
+  }
+
+  /// Fetch business by ID
+  Future<ApiResponse<dynamic>> getBusinessById(String id, {String? familyMemberId}) {
+    final Map<String, dynamic> queryParams = {};
+    if (familyMemberId != null) {
+      queryParams['familyMemberId'] = familyMemberId;
+    }
+    return api.get<dynamic>(
+      ApiEndpoints.replaceId(ApiEndpoints.business, id),
+      queryParams: queryParams.isNotEmpty ? queryParams : null,
+      fromJson: (json) {
+        if (json is Map<String, dynamic> && json.containsKey('data')) {
+          return json['data'];
+        }
+        return json;
+      },
+    );
+  }
+
+  /// Create a business
+  Future<ApiResponse<dynamic>> createBusiness(Map<String, dynamic> payload) {
+    return api.post<dynamic>(
+      '/businesses',
+      data: payload,
+      fromJson: (json) => json,
+    );
+  }
+
+  /// Update a business
+  Future<ApiResponse<dynamic>> updateBusiness(String id, Map<String, dynamic> payload) {
+    return api.put<dynamic>(
+      '/businesses/$id',
+      data: payload,
+      fromJson: (json) => json,
+    );
+  }
+
+  /// Delete a business
+  Future<ApiResponse<dynamic>> deleteBusiness(String id) {
+    return api.delete<dynamic>(
+      '/businesses/$id',
+      fromJson: (json) => json,
+    );
+  }
 }

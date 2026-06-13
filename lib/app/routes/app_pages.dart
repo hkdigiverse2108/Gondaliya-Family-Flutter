@@ -39,6 +39,14 @@ import '../modules/private_messages/bindings/private_messages_binding.dart';
 import '../modules/private_messages/views/private_messages_view.dart';
 import '../modules/private_messages/views/private_chat_view.dart';
 import '../modules/my_family/views/family_member_form_view.dart';
+import '../modules/my_businesses/bindings/my_businesses_binding.dart';
+import '../modules/my_businesses/views/my_businesses_view.dart';
+import '../modules/my_businesses/bindings/edit_business_binding.dart';
+import '../modules/my_businesses/views/edit_business_view.dart';
+import '../modules/my_listings/bindings/my_listings_binding.dart';
+import '../modules/my_listings/views/my_listings_view.dart';
+import '../modules/listing_form/bindings/listing_form_binding.dart';
+import '../modules/listing_form/views/listing_form_view.dart';
 
 part 'app_routes.dart';
 
@@ -147,6 +155,26 @@ class AppPages {
       name: _Paths.addFamilyMember,
       page: () => const FamilyMemberFormView(),
       binding: HomeBinding(),
+    ),
+    GetPage(
+      name: _Paths.myBusinesses,
+      page: () => const MyBusinessesView(),
+      binding: MyBusinessesBinding(),
+    ),
+    GetPage(
+      name: _Paths.editBusiness,
+      page: () => const EditBusinessView(),
+      binding: EditBusinessBinding(),
+    ),
+    GetPage(
+      name: _Paths.myListings,
+      page: () => const MyListingsView(),
+      binding: MyListingsBinding(),
+    ),
+    GetPage(
+      name: _Paths.listingForm,
+      page: () => const ListingFormView(),
+      binding: ListingFormBinding(),
     ),
   ];
 }

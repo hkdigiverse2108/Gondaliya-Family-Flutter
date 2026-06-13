@@ -72,10 +72,7 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
       body: TabBarView(
         controller: _tabController,
         children: _tabs.map((tab) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
-            child: _buildListing(colors, tab, controller),
-          );
+          return _buildListing(colors, tab, controller);
         }).toList(),
       ),
     );
@@ -109,7 +106,10 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
       }
 
       return ListView.separated(
-        padding: EdgeInsets.symmetric(vertical: AppSizes.spacingS.h),
+        padding: EdgeInsets.symmetric(
+          vertical: AppSizes.spacingS.h,
+          horizontal: 0,
+        ),
         itemCount: filteredList.length,
         separatorBuilder: (context, index) =>
             SizedBox(height: AppSizes.spacingM.h),

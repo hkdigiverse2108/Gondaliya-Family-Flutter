@@ -273,72 +273,52 @@ class ProfileTabView extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Obx(() {
-                  final user = profileController.currentUser.value;
-                  final hasBusiness =
-                      user?.workDetails?.hasOwnBusiness == true &&
-                      user?.workDetails?.businessDetails != null;
-                  final hasJob =
-                      user?.workDetails?.hasOwnBusiness == false &&
-                      user?.workDetails?.jobDetails != null;
-
-                  return _buildMenuGroup(
-                    title: 'manage'.tr,
-                    colors: colors,
-                    children: [
-                      if (hasBusiness)
-                        _buildMenuTile(
-                          icon: PhosphorIcons.briefcase(),
-                          title: 'business_profile'.tr,
-                          subtitle: 'business_profile_desc'.tr,
-                          colors: colors,
-                          onTap: () {
-                            Get.toNamed(
-                              Routes.business,
-                              arguments: {'userId': user!.id, 'user': user},
-                            );
-                          },
-                        )
-                      else if (hasJob)
-                        _buildMenuTile(
-                          icon: PhosphorIcons.briefcase(),
-                          title: 'my_job'.tr,
-                          subtitle: 'my_job_desc'.tr,
-                          colors: colors,
-                          onTap: () {
-                            Get.toNamed(
-                              Routes.jobDetail,
-                              arguments: {'userId': user!.id, 'user': user},
-                            );
-                          },
-                        )
-                      else
-                        _buildMenuTile(
-                          icon: PhosphorIcons.briefcase(),
-                          title: 'setup_work_profile'.tr,
-                          subtitle: 'setup_work_profile_desc'.tr,
-                          colors: colors,
-                          onTap: () {
-                            Get.toNamed(Routes.editWork);
-                          },
-                        ),
-                      _buildMenuTile(
-                        icon: PhosphorIcons.users(),
-                        title: 'family_members'.tr,
-                        subtitle: 'family_members_desc'.tr,
-                        colors: colors,
-                        onTap: () => Get.toNamed(Routes.familyMembers),
-                      ),
-                      // _buildMenuTile(
-                      //   icon: PhosphorIcons.storefront(),
-                      //   title: 'my_business'.tr,
-                      //   subtitle: 'my_business_desc'.tr,
-                      //   colors: colors,
-                      //   onTap: () => Get.toNamed(Routes.myBusiness),
-                      // ),
-                    ],
-                  );
-                }),
+                _buildMenuGroup(
+                  title: 'manage'.tr,
+                  colors: colors,
+                  children: [
+                    _buildMenuTile(
+                      icon: PhosphorIcons.briefcase(),
+                      title: 'my_job_profile'.tr.isEmpty ? 'My Job Profile' : 'my_job_profile'.tr,
+                      subtitle: 'my_job_profile_desc'.tr.isEmpty
+                          ? 'Setup or edit your professional job details'
+                          : 'my_job_profile_desc'.tr,
+                      colors: colors,
+                      onTap: () {
+                        Get.toNamed(Routes.editWork);
+                      },
+                    ),
+                    _buildMenuTile(
+                      icon: PhosphorIcons.storefront(),
+                      title: 'my_businesses'.tr.isEmpty ? 'My Businesses' : 'my_businesses'.tr,
+                      subtitle: 'my_businesses_desc'.tr.isEmpty
+                          ? 'Manage multiple business listings'
+                          : 'my_businesses_desc'.tr,
+                      colors: colors,
+                      onTap: () {
+                        Get.toNamed(Routes.myBusinesses);
+                      },
+                    ),
+                    _buildMenuTile(
+                      icon: PhosphorIcons.shoppingBag(),
+                      title: 'my_listings'.tr.isEmpty ? 'My Listings' : 'my_listings'.tr,
+                      subtitle: 'my_listings_desc'.tr.isEmpty
+                          ? 'Manage your marketplace listings'
+                          : 'my_listings_desc'.tr,
+                      colors: colors,
+                      onTap: () {
+                        Get.toNamed(Routes.myListings);
+                      },
+                    ),
+                    _buildMenuTile(
+                      icon: PhosphorIcons.users(),
+                      title: 'family_members'.tr,
+                      subtitle: 'family_members_desc'.tr,
+                      colors: colors,
+                      onTap: () => Get.toNamed(Routes.familyMembers),
+                    ),
+                  ],
+                ),
                 SizedBox(height: AppSizes.spacingXL.h),
 
                 Obx(

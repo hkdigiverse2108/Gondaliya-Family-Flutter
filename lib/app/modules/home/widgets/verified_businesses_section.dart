@@ -221,7 +221,13 @@ class BusinessCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        Get.toNamed(Routes.business, arguments: {'userId': business.ownerId});
+        Get.toNamed(
+          Routes.business,
+          arguments: {
+            'businessId': business.id,
+            'userId': business.ownerId,
+          },
+        );
       },
       child: Container(
         width: 260.w,

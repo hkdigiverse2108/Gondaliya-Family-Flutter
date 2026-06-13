@@ -237,9 +237,11 @@ class HomeController extends GetxController {
                       ?.map((e) => e.toString())
                       .toList();
 
+              final String businessId = bizJson.getOrNull<String>('_id') ?? bizJson.getOrNull<String>('id') ?? ownerId;
+
               list.add(
                 Business(
-                  id: ownerId,
+                  id: businessId,
                   name: bizJson.getString('businessName'),
                   category: bizJson.getString('category'),
                   subCategory: bizJson['subCategory'] is List
@@ -384,9 +386,11 @@ class HomeController extends GetxController {
                       ?.map((e) => e.toString())
                       .toList();
 
+              final String businessId = bizJson.getOrNull<String>('_id') ?? bizJson.getOrNull<String>('id') ?? ownerId;
+
               list.add(
                 Business(
-                  id: ownerId,
+                  id: businessId,
                   name: bizJson.getString('businessName'),
                   category: bizJson.getString('category'),
                   subCategory: bizJson['subCategory'] is List

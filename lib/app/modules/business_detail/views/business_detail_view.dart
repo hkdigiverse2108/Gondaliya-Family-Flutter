@@ -8,6 +8,7 @@ import 'package:shimmer/shimmer.dart';
 
 import '../../../data/models/user.dart';
 import '../../../data/models/work_details.dart';
+import '../../../data/models/business.dart';
 import '../../home/controllers/profile_controller.dart';
 
 import '../../../../core/theme/app_color_scheme.dart';
@@ -102,7 +103,29 @@ class BusinessDetailView extends GetView<BusinessDetailController> {
                       ),
                       child: IconButton(
                         icon: Icon(Icons.edit_rounded, color: colors.primary),
-                        onPressed: () => Get.toNamed(Routes.editWork),
+                        onPressed: () {
+                          final biz = owner.workDetails!.businessDetails!;
+                          final businessModelObj = Business(
+                            id: controller.businessId ?? '',
+                            name: biz.businessName,
+                            category: biz.category,
+                            subCategory: biz.subCategory,
+                            address: biz.locations.isNotEmpty ? biz.locations.first.shopAddress : '',
+                            city: biz.locations.isNotEmpty ? biz.locations.first.areaCity : '',
+                            contact: biz.contactInfo?.mobile1 ?? owner.phoneNumber,
+                            description: biz.description,
+                            ownerId: owner.id,
+                            createdAt: DateTime.now(),
+                            ownerName: biz.ownerName,
+                            businessLogo: biz.businessLogo,
+                            businessBanner: biz.businessBanner,
+                            businessPhotos: biz.businessPhotos,
+                          );
+                          Get.toNamed(
+                            Routes.editBusiness,
+                            arguments: {'business': businessModelObj},
+                          );
+                        },
                       ),
                     );
                   }

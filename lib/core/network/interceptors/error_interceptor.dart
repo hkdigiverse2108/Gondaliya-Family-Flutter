@@ -16,7 +16,10 @@ class AppException implements Exception {
 
 class ErrorInterceptor extends Interceptor {
   @override
-  Future<void> onError(DioException err, ErrorInterceptorHandler handler) async {
+  Future<void> onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) async {
     String errorMessage = 'An unexpected error occurred.';
     final int? statusCode = err.response?.statusCode;
     final data = err.response?.data;
@@ -30,12 +33,16 @@ class ErrorInterceptor extends Interceptor {
         break;
       case DioExceptionType.badResponse:
         // Parse the standard server envelope to get the right message
+        int? envelopeStatus;
         if (data != null && data is Map<String, dynamic>) {
           final envelope = ApiBaseResponse.fromJson(data);
           errorMessage = envelope.errorMessage;
+          envelopeStatus = envelope.status;
         }
 
-        if (statusCode == 440) {
+        // Check if the backend explicitly returned a 440 Token Expired status.
+        // This prevents network proxies (like IIS) returning a 440 HTML error from logging the user out.
+        if (statusCode == 440 && envelopeStatus == 440) {
           await Get.find<StorageService>().clearAuthToken();
           if (Get.currentRoute != Routes.login) {
             await Get.offAllNamed(Routes.login);

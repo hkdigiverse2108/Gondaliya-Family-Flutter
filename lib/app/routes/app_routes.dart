@@ -23,6 +23,10 @@ abstract class Routes {
   static const privateMessages = _Paths.privateMessages;
   static const privateChat = _Paths.privateChat;
   static const addFamilyMember = _Paths.addFamilyMember;
+  static const myBusinesses = _Paths.myBusinesses;
+  static const editBusiness = _Paths.editBusiness;
+  static const myListings = _Paths.myListings;
+  static const listingForm = _Paths.listingForm;
 }
 
 abstract class _Paths {
@@ -48,4 +52,8 @@ abstract class _Paths {
   static const privateMessages = '/private-messages';
   static const privateChat = '/private-chat/:conversationId';
   static const addFamilyMember = '/add-family-member';
+  static const myBusinesses = '/my-businesses';
+  static const editBusiness = '/edit-business';
+  static const myListings = '/my-listings';
+  static const listingForm = '/listing-form';
 }

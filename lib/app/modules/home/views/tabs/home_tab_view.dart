@@ -286,12 +286,15 @@ class HomeTabView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(
                                 AppSizes.radiusM.r,
                               ),
-                              onTap: () {
-                                Get.toNamed(
-                                  Routes.business,
-                                  arguments: {'userId': b.ownerId},
-                                );
-                              },
+                                onTap: () {
+                                  Get.toNamed(
+                                    Routes.business,
+                                    arguments: {
+                                      'userId': b.ownerId,
+                                      'businessId': b.id,
+                                    },
+                                  );
+                                },
                               child: Padding(
                                 padding: EdgeInsets.all(AppSizes.spacingM.w),
                                 child: Column(
