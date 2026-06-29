@@ -279,7 +279,9 @@ class ProfileTabView extends StatelessWidget {
                   children: [
                     _buildMenuTile(
                       icon: PhosphorIcons.briefcase(),
-                      title: 'my_job_profile'.tr.isEmpty ? 'My Job Profile' : 'my_job_profile'.tr,
+                      title: 'my_job_profile'.tr.isEmpty
+                          ? 'My Job Profile'
+                          : 'my_job_profile'.tr,
                       subtitle: 'my_job_profile_desc'.tr.isEmpty
                           ? 'Setup or edit your professional job details'
                           : 'my_job_profile_desc'.tr,
@@ -290,7 +292,9 @@ class ProfileTabView extends StatelessWidget {
                     ),
                     _buildMenuTile(
                       icon: PhosphorIcons.storefront(),
-                      title: 'my_businesses'.tr.isEmpty ? 'My Businesses' : 'my_businesses'.tr,
+                      title: 'my_businesses'.tr.isEmpty
+                          ? 'My Businesses'
+                          : 'my_businesses'.tr,
                       subtitle: 'my_businesses_desc'.tr.isEmpty
                           ? 'Manage multiple business listings'
                           : 'my_businesses_desc'.tr,
@@ -299,17 +303,17 @@ class ProfileTabView extends StatelessWidget {
                         Get.toNamed(Routes.myBusinesses);
                       },
                     ),
-                    _buildMenuTile(
-                      icon: PhosphorIcons.shoppingBag(),
-                      title: 'my_listings'.tr.isEmpty ? 'My Listings' : 'my_listings'.tr,
-                      subtitle: 'my_listings_desc'.tr.isEmpty
-                          ? 'Manage your marketplace listings'
-                          : 'my_listings_desc'.tr,
-                      colors: colors,
-                      onTap: () {
-                        Get.toNamed(Routes.myListings);
-                      },
-                    ),
+                    // _buildMenuTile(
+                    //   icon: PhosphorIcons.shoppingBag(),
+                    //   title: 'my_listings'.tr.isEmpty ? 'My Listings' : 'my_listings'.tr,
+                    //   subtitle: 'my_listings_desc'.tr.isEmpty
+                    //       ? 'Manage your marketplace listings'
+                    //       : 'my_listings_desc'.tr,
+                    //   colors: colors,
+                    //   onTap: () {
+                    //     Get.toNamed(Routes.myListings);
+                    //   },
+                    // ),
                     _buildMenuTile(
                       icon: PhosphorIcons.users(),
                       title: 'family_members'.tr,
@@ -333,7 +337,10 @@ class ProfileTabView extends StatelessWidget {
                         colors: colors,
                         trailing: Switch(
                           value: controller.isDarkTheme.value,
-                          onChanged: (val) => controller.toggleTheme(),
+                          onChanged: (val) {
+                            return;
+                            // controller.toggleTheme();
+                          },
                           activeThumbColor: colors.primary,
                           activeTrackColor: colors.primary.withValues(
                             alpha: 0.2,

@@ -4,10 +4,7 @@ class WorkDetails extends Equatable {
   final JobDetails? jobDetails;
   final BusinessDetails? businessDetails;
 
-  const WorkDetails({
-    this.jobDetails,
-    this.businessDetails,
-  });
+  const WorkDetails({this.jobDetails, this.businessDetails});
 
   bool get hasOwnBusiness => businessDetails != null;
 
@@ -17,7 +14,9 @@ class WorkDetails extends Equatable {
           ? JobDetails.fromJson(json['jobDetails'] as Map<String, dynamic>)
           : null,
       businessDetails: json['businessDetails'] != null
-          ? BusinessDetails.fromJson(json['businessDetails'] as Map<String, dynamic>)
+          ? BusinessDetails.fromJson(
+              json['businessDetails'] as Map<String, dynamic>,
+            )
           : null,
     );
   }

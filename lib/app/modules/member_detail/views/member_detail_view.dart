@@ -513,6 +513,63 @@ class MemberDetailView extends GetView<MemberDetailController> {
                   else if (workDetails != null &&
                       workDetails.jobDetails != null)
                     _buildJobCard(workDetails.jobDetails!, colors)
+                  else if (m?.occupation != null &&
+                      m!.occupation!.trim().isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.all(AppSizes.spacingL.w),
+                      decoration: BoxDecoration(
+                        color: colors.card,
+                        borderRadius: BorderRadius.circular(AppSizes.radiusL.r),
+                        boxShadow: colors.neumorphicShadow(
+                          blur: 10,
+                          distance: 2,
+                        ),
+                        border: Border.all(
+                          color: colors.primary.withValues(alpha: 0.08),
+                          width: 1,
+                        ),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(8.w),
+                            decoration: BoxDecoration(
+                              color: colors.primary.withValues(alpha: 0.08),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              PhosphorIcons.briefcase(PhosphorIconsStyle.fill),
+                              color: colors.primary,
+                              size: 20.sp,
+                            ),
+                          ),
+                          SizedBox(width: AppSizes.spacingM.w),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'occupation'.tr,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: AppSizes.fontSizeCaption.sp,
+                                    color: colors.textSecondary,
+                                  ),
+                                ),
+                                SizedBox(height: 4.h),
+                                Text(
+                                  m.occupation!,
+                                  style: GoogleFonts.outfit(
+                                    fontSize: AppSizes.fontSizeBodyLarge.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: colors.textPrimary,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
                   else
                     Container(
                       padding: EdgeInsets.all(AppSizes.spacingL.w),

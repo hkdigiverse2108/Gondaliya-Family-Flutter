@@ -44,37 +44,61 @@ class _MarketplaceTabViewState extends State<MarketplaceTabView>
   @override
   Widget build(BuildContext context) {
     final colors = context.appColors;
-    final controller = Get.find<MarketplaceController>();
+    // final controller = Get.find<MarketplaceController>();
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      appBar: GlassAppBar(
+      appBar: const GlassAppBar(
         titleText: 'Marketplace',
         centerTitle: false,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
-          labelStyle: GoogleFonts.outfit(
-            fontWeight: FontWeight.bold,
-            fontSize: 14.sp,
+        // bottom: TabBar(
+        //   controller: _tabController,
+        //   tabs: _tabs.map((tab) => Tab(text: tab)).toList(),
+        //   labelStyle: GoogleFonts.outfit(
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 14.sp,
+        //   ),
+        //   unselectedLabelStyle: GoogleFonts.outfit(
+        //     fontWeight: FontWeight.w500,
+        //     fontSize: 14.sp,
+        //   ),
+        //   labelColor: colors.primary,
+        //   unselectedLabelColor: colors.textSecondary,
+        //   indicatorColor: colors.primary,
+        //   indicatorSize: TabBarIndicatorSize.tab,
+        //   dividerColor: Colors.transparent,
+        // ),
+      ),
+      body: Padding(
+        padding: EdgeInsets.symmetric(horizontal: AppSizes.spacingL.w),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.shopping_bag_outlined,
+                size: 60.sp,
+                color: colors.textSecondary,
+              ),
+              SizedBox(height: AppSizes.spacingM.h),
+              Text(
+                'Comming sone',
+                style: GoogleFonts.outfit(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.bold,
+                  color: colors.textPrimary,
+                ),
+              ),
+            ],
           ),
-          unselectedLabelStyle: GoogleFonts.outfit(
-            fontWeight: FontWeight.w500,
-            fontSize: 14.sp,
-          ),
-          labelColor: colors.primary,
-          unselectedLabelColor: colors.textSecondary,
-          indicatorColor: colors.primary,
-          indicatorSize: TabBarIndicatorSize.tab,
-          dividerColor: Colors.transparent,
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: _tabs.map((tab) {
-          return _buildListing(colors, tab, controller);
-        }).toList(),
-      ),
+      // body: TabBarView(
+      //   controller: _tabController,
+      //   children: _tabs.map((tab) {
+      //     return _buildListing(colors, tab, controller);
+      //   }).toList(),
+      // ),
     );
   }
 

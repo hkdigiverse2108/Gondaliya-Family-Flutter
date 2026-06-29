@@ -9,8 +9,8 @@ import '../../../../routes/app_pages.dart';
 import 'package:get/get.dart';
 import '../../../../global_widgets/neomorphic_text_field.dart';
 import '../../widgets/verified_businesses_section.dart';
-import '../../widgets/marketplace_section.dart';
-import '../../controllers/navigation_controller.dart';
+// import '../../widgets/marketplace_section.dart';
+// import '../../controllers/navigation_controller.dart';
 import '../../../../../core/values/sizes.dart';
 import '../../../announcements/controllers/announcements_controller.dart';
 import '../../../announcements/views/announcements_view.dart';
@@ -136,17 +136,16 @@ class HomeTabView extends StatelessWidget {
                         SizedBox(height: AppSizes.spacingM.h),
                         VerifiedBusinessesSection(colors: colors),
 
-                        SizedBox(height: AppSizes.spacingXXL.h),
+                        // SizedBox(height: AppSizes.spacingXXL.h),
 
-                        _buildSectionHeader(
-                          'hot_on_marketplace'.tr,
-                          'see_all'.tr,
-                          colors,
-                          onTap: () => Get.find<NavigationController>().changeTab(2),
-                        ),
-                        SizedBox(height: AppSizes.spacingM.h),
-                        MarketplaceSection(colors: colors),
-
+                        // _buildSectionHeader(
+                        //   'hot_on_marketplace'.tr,
+                        //   'see_all'.tr,
+                        //   colors,
+                        //   onTap: () => Get.find<NavigationController>().changeTab(2),
+                        // ),
+                        // SizedBox(height: AppSizes.spacingM.h),
+                        // MarketplaceSection(colors: colors),
                         SizedBox(height: AppSizes.spacingXXL.h),
 
                         _buildSectionHeader(
@@ -286,15 +285,15 @@ class HomeTabView extends StatelessWidget {
                               borderRadius: BorderRadius.circular(
                                 AppSizes.radiusM.r,
                               ),
-                                onTap: () {
-                                  Get.toNamed(
-                                    Routes.business,
-                                    arguments: {
-                                      'userId': b.ownerId,
-                                      'businessId': b.id,
-                                    },
-                                  );
-                                },
+                              onTap: () {
+                                Get.toNamed(
+                                  Routes.business,
+                                  arguments: {
+                                    'userId': b.ownerId,
+                                    'businessId': b.id,
+                                  },
+                                );
+                              },
                               child: Padding(
                                 padding: EdgeInsets.all(AppSizes.spacingM.w),
                                 child: Column(
